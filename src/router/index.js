@@ -4,6 +4,7 @@ import TicketList from '../components/ticket_list.vue'
 import UserManagement from '../components/userManagement.vue'
 import Login from '../components/login.vue'
 import InstitutionManagement from '../components/institutionManagement.vue'
+import EditInstitution from '../components/EditInstitution.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL || '/'),
@@ -23,10 +24,15 @@ const router = createRouter({
       name: 'UserManagement',
       component: UserManagement
     },
-      {
+    {
       path: '/institution-management',
       name: 'InstitutionManagement',
       component: InstitutionManagement
+    },
+     {
+      path: '/institutions/edit/:id',
+      name: 'edit-institution',
+      component: EditInstitution
     },
     {
       path: '/login',

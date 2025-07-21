@@ -54,9 +54,21 @@
              
             </td>
             <td>
-              <button class="delete-btn" @click="handleDeleteUser(user.id)">
-                Delete
-              </button>
+              <div class="button-group">
+                <button class="delete-btn" @click="handleDeleteInstitution(institution.id)">
+                  Delete
+                </button>
+                <RouterLink :to="`/institutions/edit/${institution.id}`"> 
+                  <button class="" >
+                    Edit
+                  </button>
+                </RouterLink>
+                <!--
+                <button class="" @click="handleDeleteUser(institution.id)">
+                  Edit
+                </button>
+                -->
+              </div>
             </td>
           </tr>
         </tbody>
@@ -108,31 +120,8 @@ export default {
         console.error('Error fetching institutions:', error);
       }
     };
-/*
-    const handleAddUser = async () => {
-      try {
-        const response = await fetch('http://localhost:8080/api/users/create', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(newUser.value)
-        });
-        if (!response.ok) throw new Error('Failed to add user');
-        await fetchUsers();
-        // Reset form
-        newUser.value = {
-          name:'',
-          email: '',
-          password: '',
-          isAdmin: false,
-          issueType: 'payment'
-        };
-      } catch (error) {
-        console.error('Error adding user:', error);
-      }
-    };
-    */
+
+   
 
     
     const handleAddInstitution = async () => {
@@ -145,7 +134,7 @@ export default {
           body: JSON.stringify(newInstitution.value)
         });
         if (!response.ok) throw new Error('Failed to add institution');
-        await fetchUsers();
+        await fetchInstitutions();
         // Reset form
         newInstitution.value = {
           name:'',
@@ -158,58 +147,20 @@ export default {
       }
     };
 
-    /*
-    const handleDeleteUser = async (userId) => {
-      if (!confirm('Are you sure you want to delete this user?')) return;
+
+       const handleDeleteInstitution = async (instID) => {
+      if (!confirm('Are you sure you want to delete this Institution?')) return;
       try {
-        const response = await fetch(`http://localhost:8080/api/users/${userId}`, {
+        const response = await fetch(`http://localhost:8080/api/institutions/${instID}`, {
           method: 'DELETE'
         });
-        if (!response.ok) throw new Error('Failed to delete user');
-        await fetchUsers();
+        if (!response.ok) throw new Error('Failed to delete institution');
+        await fetchInstitutions();
       } catch (error) {
-        console.error('Error deleting user:', error);
-      }
-    };
-*/
-/*
-    const handleRoleChange = async (user) => {
-      try {
-        const response = await fetch(`http://localhost:8000/api/users/${user.id}`, {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            isAdmin: user.isAdmin,
-            issueType: user.issueType
-          })
-        });
-        if (!response.ok) throw new Error('Failed to update user role');
-        await fetchUsers();
-      } catch (error) {
-        console.error('Error updating user role:', error);
+        console.error('Error deleting institution:', error);
       }
     };
 
-    const handleIssueTypeChange = async (user) => {
-      try {
-        const response = await fetch(`http://localhost:8000/api/users/${user.id}`, {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            issueType: user.issueType
-          })
-        });
-        if (!response.ok) throw new Error('Failed to update issue type');
-        await fetchUsers();
-      } catch (error) {
-        console.error('Error updating issue type:', error);
-      }
-    };
-*/
     onMounted(fetchInstitutions);
 
     return {
@@ -217,7 +168,8 @@ export default {
       institutions,
       newUser,
       newInstitution,
-      handleAddInstitution  
+      handleAddInstitution ,
+      handleDeleteInstitution 
     };
   }
 };
@@ -260,6 +212,7 @@ button {
   padding: 8px 16px;
   border-radius: 4px;
   cursor: pointer;
+  margin-right: 4px;
 }
 
 button:hover {
@@ -289,4 +242,10 @@ th, td {
 th {
   background-color: #f8f9fa;
 }
+
+
+.button-group{
+  display: flex;
+}
+
 </style>
