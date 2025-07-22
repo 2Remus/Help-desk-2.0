@@ -54,28 +54,32 @@
           <tr v-for="user in users" :key="user.id">
              <td>{{ user.name }}</td>
             <td>{{ user.email }}</td>
-            <td>
-              <select v-model="user.isAdmin" @change="handleRoleChange(user)">
-                <option :value="false">User</option>
-                <option :value="true">Admin</option>
-              </select>
+            <td >
+                <span v-if="user.admin">Admin</span>
+                <span v-else>User</span>
+              {{ user.isAdmin }}
             </td>
-            <td>
-              <select 
-                v-if="user.isAdmin" 
-                v-model="user.issueType" 
-                @change="handleIssueTypeChange(user)"
-              >
+            <td    v-if="user.admin" >
+             <select              
+                 @change="handleIssueTypeChange(user)" v-model="user.issueType">
                 <option value="payment">Payment</option>
                 <option value="service">Service</option>
                 <option value="account">Account</option>
               </select>
-              <span v-else>-</span>
+            
             </td>
+            <td v-else>{{ user.issueType }}</td>
             <td>
-              <button class="delete-btn" @click="handleDeleteUser(user.id)">
-                Delete
-              </button>
+             <div class="button-group">
+                <button class="delete-btn" @click="handleDeleteUser(user.id)">
+                  Delete
+                </button>
+                <RouterLink :to="`/users/edit/${user.id}`"> 
+                  <button class="">
+                    Edit
+                  </button>
+                </RouterLink>
+              </div>
             </td>
           </tr>
         </tbody>
@@ -104,6 +108,7 @@ export default {
         const response = await fetch('http://localhost:8080/api/users');
         if (!response.ok) throw new Error('Failed to fetch users');
         users.value = await response.json();
+        console.log('Fetched users:', users.value);
       } catch (error) {
         console.error('Error fetching users:', error);
       }
@@ -234,6 +239,7 @@ button {
   padding: 8px 16px;
   border-radius: 4px;
   cursor: pointer;
+  margin-right: 4px;
 }
 
 button:hover {
@@ -263,4 +269,9 @@ th, td {
 th {
   background-color: #f8f9fa;
 }
+
+.button-group{
+  display: flex;
+}
+
 </style>

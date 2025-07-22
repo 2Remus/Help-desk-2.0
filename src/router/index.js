@@ -5,6 +5,7 @@ import UserManagement from '../components/userManagement.vue'
 import Login from '../components/login.vue'
 import InstitutionManagement from '../components/institutionManagement.vue'
 import EditInstitution from '../components/EditInstitution.vue'
+import EditUser from '../components/EditUser.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL || '/'),
@@ -35,6 +36,11 @@ const router = createRouter({
       component: EditInstitution
     },
     {
+      path: '/users/edit/:id',
+      name: 'edit-user',
+      component: EditUser
+    },
+    {
       path: '/login',
       name: 'login',
       component: Login
@@ -43,7 +49,7 @@ const router = createRouter({
     { path: '/:pathMatch(.*)*', redirect: '/' }
   ]
 })
-
+/*
 router.beforeEach((to, from, next) => {
   const token = localStorage.getItem('token');
   const isLoggedIn = !!token;
@@ -57,6 +63,6 @@ router.beforeEach((to, from, next) => {
   } else {
     next(); // allow navigation
   }
-});
+});*/
 
 export default router
