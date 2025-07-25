@@ -100,10 +100,12 @@
 
 <script>
 import { ref, onMounted, nextTick } from 'vue';
+import { useRouter } from 'vue-router';
 
 export default {
     name: 'SubmitTicket',
     setup() {
+         const router = useRouter();
         const subject = ref('');
         const description = ref('');
         const priority = ref('low');
@@ -123,11 +125,25 @@ export default {
             { sender: 'Support', text: 'Thank you! We will look into it and get back to you shortly.' }
         ]);
 
+
+           // Redirect if token not found
+        onMounted(() => {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                router.push('/login');
+            } else {
+                fetchTickets(); // only fetch tickets if token is present
+            }
+        });
+
+
         const handleSubmit = async () => {  // Remove event parameter
             try {
+                const token = localStorage.getItem('token');
                 const response = await fetch('http://localhost:8080/api/tickets', {
                     method: 'POST',
                     headers: {
+                        "Authorization": "Bearer "+ token,
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
@@ -155,7 +171,15 @@ export default {
 
         const fetchTickets = async () => {
             try {
-                const response = await fetch('http://localhost:8080/api/tickets');
+                const token = localStorage.getItem('token');
+               
+                const response = await fetch('http://localhost:8080/api/tickets',
+                     {
+                    headers: {
+                        "Authorization": "Bearer "+ token,
+                         "Content-Type": "application/json"
+                    }
+                });
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
@@ -203,7 +227,14 @@ export default {
 
         const fetchMessages = async (ticketId) => {
             try {
-                const response = await fetch(`http://localhost:8080/api/tickets/${ticketId}/messages`);
+                const token = localStorage.getItem('token');
+                const response = await fetch(`http://localhost:8080/api/tickets/${ticketId}/messages`,
+                 {
+                    headers: {
+                        "Authorization": "Bearer "+ token,
+                         "Content-Type": "application/json"
+                    }
+                });
                 if (!response.ok) throw new Error('Failed to fetch messages');
                 chatMessages.value = await response.json();
             } catch (error) {
@@ -216,9 +247,11 @@ export default {
             if (!newMessage.value.trim()) return;
 
             try {
+                const token = localStorage.getItem('token');
                 const response = await fetch(`http://localhost:8080/api/tickets/${selectedTicketId.value}/message`, {
                     method: 'POST',
                     headers: {
+                         'Authorization': 'Bearer '+ token,
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({

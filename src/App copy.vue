@@ -2,37 +2,17 @@
 <script setup>
 //test commit comment
 //dev branch
-import { ref, onMounted  } from 'vue';
-import { RouterView, useRouter } from 'vue-router';
-const router = useRouter();
-//const isLoading = ref(false);
-const isLoggedIn = ref(false);
+import { ref } from 'vue';
 
-/* Changed
+import { RouterView } from 'vue-router';
+
+
+const isLoading = ref(false);
+const isLoggedIn = ref(false);
 const handleLogout = () => {
             localStorage.removeItem('token');
             window.location.href = '/help-desk/login';
         };
-        */
-
-const handleLogout = () => {
-  localStorage.removeItem('token');
-  isLoggedIn.value = false;
-  router.push('/login');
-};
-
-/*Added */
-onMounted(() => {
-  const token = localStorage.getItem('token');
-  isLoggedIn.value = !!token;
-  if (!isLoggedIn.value && router.currentRoute.value.path !== '/login') {
-    router.replace('/login');
-  } else if (isLoggedIn.value && router.currentRoute.value.path === '/') {
-    router.replace('/'); // Already on Client.vue
-  }
-});
-
-
 
 </script>
 
@@ -41,17 +21,7 @@ onMounted(() => {
     <nav class="nav-bar">
       <h1>Help Desk System</h1>
       <button @click="handleLogout"  v-if="isloggedIn" class="logout-button">Logout</button>
-            <button @click="handleLogout"  class="logout-button">Logout</button>
-
-   
     </nav>
-
-    <nav>
-    <div>
-      <span v-if="user">Welcome, {{ user.email }} ({{ user.is_admin ? 'Admin' : 'User' }})</span>
-      <button v-if="user" @click="logout">Logout</button>
-    </div>
-  </nav>
     <div class="content">
       <RouterView v-slot="{ Component }">
         <Transition mode="out-in">

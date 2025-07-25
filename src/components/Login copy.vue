@@ -13,13 +13,11 @@
             <button type="submit">Login</button>
         </form>
         <div v-if="error" class="error">{{ error }}</div>
-        <p v-if="error" class="error">{{ error }}</p>
     </div>
 </template>
 
 <script>
 import { ref } from 'vue';
-import { useRouter } from 'vue-router';
 
 export default {
     name: 'Login',
@@ -27,7 +25,6 @@ export default {
         const email = ref('');
         const password = ref('');
         const error = ref('');
-        const router = useRouter();
 
         const handleLogin = async (event) => {
             event.preventDefault();
@@ -46,11 +43,9 @@ export default {
                 const data = await response.json();
                 if (response.ok) {
                     localStorage.setItem('token', data.token);
-                    localStorage.setItem('user', JSON.stringify(data.user));
-                   emit('login-success', data.user); // Pass the user data including is_admin
-                   router.push('/')
+                    emit('login-success', data.user); // Pass the user data including is_admin
                 } else {
-                    error.value = data.detail ;
+                    error.value = data.detail;
                 }
             } catch (err) {
                 error.value = 'Login failed. Please try again.';

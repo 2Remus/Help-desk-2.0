@@ -111,7 +111,8 @@ export default {
                 const token = localStorage.getItem('token');
                 const response = await fetch('http://localhost:8080/api/tickets', {
                     headers: {
-                        'Authorization': `Bearer ${token}`
+                         "Authorization": "Bearer "+ token,
+                         "Content-Type": "application/json"
                     }
                 });
                 if (!response.ok) {
