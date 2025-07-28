@@ -29,6 +29,7 @@
         
       
         <button type="submit">Save</button>
+        <RouterLink to="/institution-management"><button>Cancel</button></RouterLink>
       </form>
     </div>
 
