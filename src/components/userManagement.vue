@@ -105,7 +105,14 @@ export default {
 
     const fetchUsers = async () => {
       try {
-        const response = await fetch('http://localhost:8080/api/users');
+        const token = localStorage.getItem('token');
+        const response = await fetch('http://localhost:8080/api/users',
+                     {
+                    headers: {
+                        "Authorization": "Bearer "+ token,
+                         "Content-Type": "application/json"
+                    }
+                });
         if (!response.ok) throw new Error('Failed to fetch users');
         users.value = await response.json();
         console.log('Fetched users:', users.value);

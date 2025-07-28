@@ -127,15 +127,17 @@ export default {
 
 
            // Redirect if token not found
-        onMounted(() => {
+       /* onMounted(() => {
             const token = localStorage.getItem('token');
+
             if (!token) {
                 router.push('/login');
             } else {
+               
                 fetchTickets(); // only fetch tickets if token is present
             }
         });
-
+*/
 
         const handleSubmit = async () => {  // Remove event parameter
             try {
@@ -289,7 +291,6 @@ export default {
 
         onMounted(() => {
             fetchTickets();
-            
             // Return cleanup function
             return () => {
                 stopMessagePolling();

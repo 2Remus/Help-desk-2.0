@@ -22,6 +22,7 @@ const handleLogout = () => {
 };
 
 /*Added */
+/*
 onMounted(() => {
   const token = localStorage.getItem('token');
   isLoggedIn.value = !!token;
@@ -31,7 +32,7 @@ onMounted(() => {
     router.replace('/'); // Already on Client.vue
   }
 });
-
+*/
 
 
 </script>

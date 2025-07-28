@@ -50,7 +50,7 @@ const router = createRouter({
   ]
 })
 
-
+/*
 router.beforeEach((to, from, next) => {
   const token = localStorage.getItem('token');
   const isLoggedIn = !!token;
@@ -66,7 +66,7 @@ router.beforeEach((to, from, next) => {
   }
 });
 
-/*
+
 router.beforeEach((to, from, next) => {
   const token = localStorage.getItem('token');
   const user = JSON.parse(localStorage.getItem('user'));
@@ -79,6 +79,22 @@ router.beforeEach((to, from, next) => {
     next();
   }
 });
-*/
+
+
+router.beforeEach((to, from, next) => {
+  const publicPages = ['/login'];
+  const authRequired = !publicPages.includes(to.path);
+  const token = localStorage.getItem('token');
+
+  if (authRequired && !token) {
+    return next('/login');
+  }
+
+  if (to.path === '/' && token) {
+    return next('/'); // or your main page after login
+  }
+
+  next();
+});*/
 
 export default router
