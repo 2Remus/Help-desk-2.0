@@ -43,7 +43,7 @@ export default {
   name: 'InstitutionManagement',
   setup() {
     const route = useRoute();
- const router = useRouter();
+    const router = useRouter();
   //   const existingInstitution = ref([]);
     const instId = route.params.id;
     const existingInstitution = ref({
@@ -59,7 +59,14 @@ export default {
 
   const fetchInstitution = async () => {
       try {
-        const response = await fetch(`http://localhost:8080/api/institutions/${instId}`);
+        const token = localStorage.getItem('token');
+        const response = await fetch(`http://localhost:8080/api/institutions/${instId}`, 
+        {
+                    headers: {
+                        "Authorization": "Bearer "+ token,
+                         "Content-Type": "application/json"
+                    }
+                });
         if (!response.ok) throw new Error('Failed to fetch institution');
         existingInstitution.value = await response.json();
         
@@ -73,9 +80,11 @@ export default {
     
    const handleEditInstitution = async () => {
       try {
+        const token = localStorage.getItem('token');
         const response = await fetch(`http://localhost:8080/api/institutions/edit/${instId}`, {
           method: 'PUT',
           headers: {
+             'Authorization': 'Bearer '+ token,
             'Content-Type': 'application/json'
           },
           body: JSON.stringify(existingInstitution.value)
@@ -87,7 +96,6 @@ export default {
       }
     };
 
-      
 
     onMounted(fetchInstitution);
 

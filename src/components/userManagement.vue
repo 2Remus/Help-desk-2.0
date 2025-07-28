@@ -51,30 +51,35 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="user in users" :key="user.id">
-             <td>{{ user.name }}</td>
-            <td>{{ user.email }}</td>
-            <td >
-                <span v-if="user.admin">Admin</span>
+          <tr v-for="sysuser in users" :key="sysuser.id">
+             <td>{{ sysuser.name }}</td>
+            <td>{{ sysuser.email }}</td>
+           <td v-if="isAdmin">
+                <select @change="handleRoleChange(sysuser)" v-model="sysuser.admin">
+                  <option :value="true">Admin</option>
+                  <option :value="false">User</option>
+                </select>
+              </td>
+              <td v-else>
+                <span v-if="sysuser.admin">Admin</span>
                 <span v-else>User</span>
-              {{ user.isAdmin }}
-            </td>
-            <td    v-if="user.admin" >
+          </td>
+            <td v-if="isAdmin">
              <select              
-                 @change="handleIssueTypeChange(user)" v-model="user.issueType">
+                 @change="handleIssueTypeChange(sysuser)" v-model="sysuser.issueType">
                 <option value="payment">Payment</option>
                 <option value="service">Service</option>
                 <option value="account">Account</option>
               </select>
             
             </td>
-            <td v-else>{{ user.issueType }}</td>
+            <td v-else>{{ sysuser.issueType }}</td>
             <td>
              <div class="button-group">
-                <button class="delete-btn" @click="handleDeleteUser(user.id)">
+                <button class="delete-btn" @click="handleDeleteUser(sysuser.id)">
                   Delete
                 </button>
-                <RouterLink :to="`/users/edit/${user.id}`"> 
+                <RouterLink :to="`/users/edit/${sysuser.id}`"> 
                   <button class="">
                     Edit
                   </button>
@@ -90,10 +95,16 @@
 
 <script>
 import { ref, onMounted } from 'vue';
+import { jwtDecode } from 'jwt-decode';
+import { computed } from 'vue';
 
 export default {
   name: 'UserManagement',
   setup() {
+    const isAdmin = computed(() => {
+  return currentUser.value?.admin === true;
+});
+    const currentUser = ref(null);
     const users = ref([]);
     const newUser = ref({
       name: '',
@@ -106,6 +117,8 @@ export default {
     const fetchUsers = async () => {
       try {
         const token = localStorage.getItem('token');
+         if (!token) return;
+        currentUser.value = jwtDecode(token);
         const response = await fetch('http://localhost:8080/api/users',
                      {
                     headers: {
@@ -115,17 +128,20 @@ export default {
                 });
         if (!response.ok) throw new Error('Failed to fetch users');
         users.value = await response.json();
-        console.log('Fetched users:', users.value);
       } catch (error) {
         console.error('Error fetching users:', error);
       }
     };
 
+
+
     const handleAddUser = async () => {
       try {
+        const token = localStorage.getItem('token');
         const response = await fetch('http://localhost:8080/api/users/create', {
           method: 'POST',
           headers: {
+            'Authorization': 'Bearer '+ token,
             'Content-Type': 'application/json'
           },
           body: JSON.stringify(newUser.value)
@@ -145,11 +161,18 @@ export default {
       }
     };
 
+
+
     const handleDeleteUser = async (userId) => {
       if (!confirm('Are you sure you want to delete this user?')) return;
       try {
+        const token = localStorage.getItem('token');
         const response = await fetch(`http://localhost:8080/api/users/${userId}`, {
-          method: 'DELETE'
+          method: 'DELETE',
+          headers: {
+            'Authorization': 'Bearer '+ token,
+            'Content-Type': 'application/json'
+          },
         });
         if (!response.ok) throw new Error('Failed to delete user');
         await fetchUsers();
@@ -158,15 +181,20 @@ export default {
       }
     };
 
+
+
+    /**Functional 28-July-2025 */
     const handleRoleChange = async (user) => {
       try {
-        const response = await fetch(`http://localhost:8000/api/users/${user.id}`, {
-          method: 'PATCH',
+        const token = localStorage.getItem('token');
+        const response = await fetch(`http://localhost:8080/api/users/edit/role/${user.id}`, {
+          method: 'PUT',
           headers: {
+            'Authorization': 'Bearer '+token,
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            isAdmin: user.isAdmin,
+            admin: user.admin,
             issueType: user.issueType
           })
         });
@@ -177,14 +205,19 @@ export default {
       }
     };
 
+
+    /*Functional 28-July-2025*/
     const handleIssueTypeChange = async (user) => {
       try {
-        const response = await fetch(`http://localhost:8000/api/users/${user.id}`, {
-          method: 'PATCH',
+        const token = localStorage.getItem('token');
+        const response = await fetch(`http://localhost:8080/api/users/edit/role/${user.id}`, {
+          method: 'PUT',
           headers: {
+            'Authorization': 'Bearer '+token,
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
+            admin: user.admin,
             issueType: user.issueType
           })
         });
@@ -195,15 +228,19 @@ export default {
       }
     };
 
+
     onMounted(fetchUsers);
 
     return {
       users,
       newUser,
+      currentUser,
+      isAdmin,
       handleAddUser,
       handleDeleteUser,
       handleRoleChange,
-      handleIssueTypeChange
+      handleIssueTypeChange,
+      
     };
   }
 };
