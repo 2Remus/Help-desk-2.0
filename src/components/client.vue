@@ -56,7 +56,9 @@
                     <td>{{ ticket.subject }}</td>
                     <td>{{ ticket.status }}</td>
                     <td>{{ ticket.priority }}</td>
-                    <td>{{ new Date(ticket.created_at).toLocaleDateString() }}</td>
+                    <td>{{ formatDate(ticket.createdAt) }}</td>
+
+                    
                     <td>
                         <button class="chat-btn" @click="openChat(ticket.id)">
                             💬 Chat
@@ -105,6 +107,24 @@ import { useRouter } from 'vue-router';
 export default {
     name: 'SubmitTicket',
     setup() {
+
+
+          function formatDate(dateString) {
+            if (!dateString) return '';
+            
+            // Convert to valid ISO if using space instead of T
+            const cleaned = dateString.replace(' ', 'T');
+            
+            const date = new Date(cleaned);
+
+            if (isNaN(date.getTime())) {
+                return 'Invalid Date';
+            }
+
+        return date.toLocaleString(); // e.g., "7/15/2025, 9:44 AM"
+        }
+
+
          const router = useRouter();
         const subject = ref('');
         const description = ref('');
@@ -174,7 +194,6 @@ export default {
         const fetchTickets = async () => {
             try {
                 const token = localStorage.getItem('token');
-               
                 const response = await fetch('http://localhost:8080/api/tickets',
                      {
                     headers: {
@@ -303,7 +322,9 @@ export default {
             tickets, handleSubmit, showChat, 
             selectedTicketId, newMessage, 
             chatMessages, sendMessage, handleLogout, 
-            openChat, closeChat 
+            openChat, closeChat ,
+                        formatDate
+
         };
     }
 };
