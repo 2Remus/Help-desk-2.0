@@ -162,7 +162,7 @@ export default {
         const handleSubmit = async () => {  // Remove event parameter
             try {
                 const token = localStorage.getItem('token');
-                const response = await fetch('http://localhost:8080/api/tickets', {
+                const response = await fetch('http://localhost:8080/api/tickets/create', {
                     method: 'POST',
                     headers: {
                         "Authorization": "Bearer "+ token,
@@ -184,7 +184,7 @@ export default {
                 description.value = '';
                 priority.value = 'low';
                 type.value = 'payment';  // Reset type to default
-                fetchTickets(); // Refresh the ticket list
+                fetchMyTickets(); // Refresh the ticket list
             } catch (error) {
                 errorMessage.value = `Error submitting ticket: ${error.message}`;
                 successMessage.value = '';
@@ -209,6 +209,27 @@ export default {
                 console.error('Error fetching tickets:', error);
             }
         };
+    const fetchMyTickets = async () => {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch('http://localhost:8080/api/myTickets',
+                     {
+                    headers: {
+                        "Authorization": "Bearer "+ token,
+                         "Content-Type": "application/json"
+                    }
+                });
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                tickets.value = await response.json();
+            } catch (error) {
+                console.error('Error fetching tickets:', error);
+            }
+        };
+
+
+
 
         // Add polling interval ref
         let messagePollingInterval = null;
@@ -309,7 +330,7 @@ export default {
         };
 
         onMounted(() => {
-            fetchTickets();
+            fetchMyTickets();
             // Return cleanup function
             return () => {
                 stopMessagePolling();
@@ -323,7 +344,7 @@ export default {
             selectedTicketId, newMessage, 
             chatMessages, sendMessage, handleLogout, 
             openChat, closeChat ,
-                        formatDate
+                        formatDate,fetchMyTickets
 
         };
     }

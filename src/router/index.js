@@ -50,6 +50,21 @@ const router = createRouter({
   ]
 })
 
+router.beforeEach((to, from, next) => {
+  const token = localStorage.getItem('token');
+  const isLoggedIn = !!token;
+
+  // Allow access to login page without token
+  if (to.path === '/login') {
+    next();
+  } else if (!isLoggedIn) {
+    // Redirect all other routes to /login if not logged in
+    next('/login');
+  } else {
+    next(); // allow navigation
+  }
+});
+
 /*
 router.beforeEach((to, from, next) => {
   const token = localStorage.getItem('token');
