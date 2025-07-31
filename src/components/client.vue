@@ -60,6 +60,10 @@
                     <td>
                         <button class="chat-btn" @click="openChat(ticket.id)">
                             💬 Chat
+                            <span
+                              v-if="ticket.unreadCount && ticket.unreadCount > 0"
+                              class="unread-indicator"
+                            ></span>
                         </button>
                     </td>
                 </tr>
@@ -107,23 +111,33 @@ export default {
         const subject = ref('');
         const description = ref('');
         const priority = ref('low');
-        const type = ref('payment'); // Add this line with default value
+        const type = ref('payment');
         const successMessage = ref('');
         const errorMessage = ref('');
         const tickets = ref([]);
         const showChat = ref(false);
         const selectedTicketId = ref(null);
         const newMessage = ref('');
-        const chatMessages = ref([
-            { sender: 'You', text: 'Hi, I need help with my ticket.' },
-            { sender: 'Support', text: 'How can we assist you today?' },
-            { sender: 'You', text: 'I have a question about my ticket.' },
-            { sender: 'Support', text: 'Please provide your ticket ID for reference.' },
-            { sender: 'You', text: 'My ticket ID is 12345.' },
-            { sender: 'Support', text: 'Thank you! We will look into it and get back to you shortly.' }
-        ]);
+        const chatMessages = ref([]);
 
-        const handleSubmit = async () => {  // Remove event parameter
+        // Fetch unread count for each ticket
+        const fetchUnreadCounts = async () => {
+            for (const ticket of tickets.value) {
+                try {
+                    const res = await fetch(`http://localhost:8080/api/tickets/${ticket.id}/unread`);
+                    if (res.ok) {
+                        const data = await res.json();
+                        ticket.unreadCount = data.unread;
+                    } else {
+                        ticket.unreadCount = 0;
+                    }
+                } catch {
+                    ticket.unreadCount = 0;
+                }
+            }
+        };
+
+        const handleSubmit = async () => {
             try {
                 const response = await fetch('http://localhost:8080/api/tickets', {
                     method: 'POST',
@@ -145,8 +159,8 @@ export default {
                 subject.value = '';
                 description.value = '';
                 priority.value = 'low';
-                type.value = 'payment';  // Reset type to default
-                fetchTickets(); // Refresh the ticket list
+                type.value = 'payment';
+                await fetchTickets();
             } catch (error) {
                 errorMessage.value = `Error submitting ticket: ${error.message}`;
                 successMessage.value = '';
@@ -160,6 +174,7 @@ export default {
                     throw new Error('Network response was not ok');
                 }
                 tickets.value = await response.json();
+                await fetchUnreadCounts();
             } catch (error) {
                 console.error('Error fetching tickets:', error);
             }
@@ -169,7 +184,6 @@ export default {
         let messagePollingInterval = null;
 
         const startMessagePolling = (ticketId) => {
-            // Poll every 2 seconds
             messagePollingInterval = setInterval(async () => {
                 if (showChat.value) {
                     await fetchMessages(ticketId);
@@ -184,15 +198,26 @@ export default {
             }
         };
 
-        // Update openChat to start polling
+        // Mark messages as read when chat is opened
+        const markMessagesAsRead = async (ticketId) => {
+            try {
+                await fetch(`http://localhost:8080/api/tickets/${ticketId}/read`, { method: 'POST' });
+                // Update unread count for this ticket
+                const ticket = tickets.value.find(t => t.id === ticketId);
+                if (ticket) ticket.unreadCount = 0;
+            } catch (e) {
+                // ignore error
+            }
+        };
+
         const openChat = async (ticketId) => {
             selectedTicketId.value = ticketId;
             showChat.value = true;
             await fetchMessages(ticketId);
+            await markMessagesAsRead(ticketId);
             startMessagePolling(ticketId);
         };
 
-        // Update closeChat to stop polling
         const closeChat = () => {
             showChat.value = false;
             selectedTicketId.value = null;
@@ -228,7 +253,6 @@ export default {
 
                 if (!response.ok) throw new Error('Failed to send message');
 
-                // Add message to chat
                 chatMessages.value.push({
                     sender: 'You',
                     text: newMessage.value.trim(),
@@ -237,7 +261,6 @@ export default {
 
                 newMessage.value = '';
 
-                // Scroll to bottom
                 nextTick(() => {
                     const chatContainer = document.querySelector('.chat-messages');
                     if (chatContainer) {
@@ -256,15 +279,13 @@ export default {
 
         onMounted(() => {
             fetchTickets();
-            
-            // Return cleanup function
             return () => {
                 stopMessagePolling();
             };
         });
 
         return { 
-            subject, description, priority, type, // Add type here
+            subject, description, priority, type,
             successMessage, errorMessage, 
             tickets, handleSubmit, showChat, 
             selectedTicketId, newMessage, 
@@ -442,37 +463,49 @@ h2 {
 .chat-messages {
     padding: 15px;
     height: 300px;
-    overflow-y: auto;
-    background: #fff;
-    scroll-behavior: smooth;
-    display: flex;
+    color: #888;auto;
+    padding: 20px;ff;
+    font-style: italic;ooth;
+}   display: flex;
     flex-direction: column;
-}
-
-/* Headings */
-h2 {
-    text-align: center;
-    margin-bottom: 20px;
-    color: #333;
-}
-
-/* No tickets message */
-.no-tickets {
-    text-align: center;
-    color: #888;
-    padding: 20px;
-    font-style: italic;
-}
-
 /* Chat modal positioning */
 .chat-modal {
     position: fixed;
     bottom: 24px;
-    right: 24px;
-    width: 360px;
+    right: 24px;center;
+    width: 360px;: 20px;
     background: #ffffff;
     border-radius: 12px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    z-index: 1000;age */
+}no-tickets {
+    text-align: center;
+.unread-indicator {
+  display: inline-block;
+  margin-left: 6px;lic;
+  width: 12px;
+  height: 12px;
+  background: #dc3545;ing */
+  border-radius: 50%;
+  border: 2px solid #fff;
+  vertical-align: middle;
+  box-shadow: 0 0 2px #dc3545;
+}   width: 360px;
+</style>ground: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
     z-index: 1000;
+}
+
+.unread-indicator {
+  display: inline-block;
+  margin-left: 6px;
+  width: 12px;
+  height: 12px;
+  background: #dc3545;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  vertical-align: middle;
+  box-shadow: 0 0 2px #dc3545;
 }
 </style>

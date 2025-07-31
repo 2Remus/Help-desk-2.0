@@ -1,27 +1,41 @@
-
 <script setup>
 //test commit comment
 //dev branch
 import { ref } from 'vue';
+import { RouterView, useRouter } from 'vue-router';
+import Sidebar from './components/Sidebar.vue';
 
-import { RouterView } from 'vue-router';
-
+const router = useRouter();
 
 const isLoading = ref(false);
 const isLoggedIn = ref(false);
-const handleLogout = () => {
-            localStorage.removeItem('token');
-            window.location.href = '/help-desk/login';
-        };
+const isAdmin = ref(false); // Add this ref for admin status
 
+// Example: Set admin status based on your auth logic
+if (localStorage.getItem('token')) {
+  isLoggedIn.value = true;
+  // Replace this with your actual admin check
+  isAdmin.value = localStorage.getItem('role') === 'admin';
+}
+
+const handleLogout = () => {
+  localStorage.removeItem('token');
+  localStorage.removeItem('role');
+  isLoggedIn.value = false;
+  isAdmin.value = false;
+  router.push('/help-desk/login');
+};
 </script>
 
 <template>
   <div class="container" v-cloak>
     <nav class="nav-bar">
       <h1>Help Desk System</h1>
-      <button @click="handleLogout"  v-if="isloggedIn" class="logout-button">Logout</button>
+      <button @click="handleLogout" v-if="isLoggedIn" class="logout-button">Logout</button>
     </nav>
+
+    <Sidebar /> <!-- Only visible for logged-in admins v-if="isLoggedIn && isAdmin"  -->
+
     <div class="content">
       <RouterView v-slot="{ Component }">
         <Transition mode="out-in">
@@ -34,6 +48,67 @@ const handleLogout = () => {
 
 
 <style scoped>
+
+
+.sidebar {
+  width: 220px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: #fff;
+  padding: 32px 16px;
+  border-right: 1px solid #eee;
+  box-shadow: 2px 0 8px rgba(0,0,0,0.04);
+  border-radius: 0 16px 16px 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+}
+
+.sidebar li {
+  margin-bottom: 18px;
+  width: 100%;
+}
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  color: #333;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s;
+}
+
+.sidebar-link i {
+  font-size: 1.2rem;
+  color: #007bff;
+  min-width: 24px;
+  text-align: center;
+}
+
+.sidebar-link:hover,
+.sidebar-link.router-link-active {
+  background: #f0f4ff;
+  color: #007bff;
+}
+
+.sidebar-link.router-link-active i {
+  color: #0056b3;
+}
+
+
 .container {
   max-width: 1200px;
   margin: 0 auto;
