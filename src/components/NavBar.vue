@@ -1,30 +1,25 @@
 <script setup>
+import { useAuthStore } from '../stores/auth';
+//import { useAuthStore } from '@/stores/auth';
 import { ref, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { defineEmits } from 'vue';
 
+const auth = useAuthStore();
 const router = useRouter();
 const emit = defineEmits(['logout']);
 
-const user = ref(null);
+//const user = ref(null);
+const isLoggedIn = computed(() => auth.isLoggedIn);
+const userEmail = computed(() => auth.user?.email);
 
-onMounted(() => {
-  const storedUser = localStorage.getItem('user');
-  if (storedUser) {
-    user.value = JSON.parse(storedUser);
-  }
-});
-
-const isLoggedIn = computed(() => {
-  return user.value !== null;
-});
 
 
 const handleLogout = () => {
-  localStorage.removeItem('token');
+/*  localStorage.removeItem('token');
   localStorage.removeItem('user');
-  user.value = null;
-  emit('logout'); // optionally notify parent
+  user.value = null;*/
+  auth.logout();
   router.push('/login');
 };
 </script>
@@ -34,20 +29,32 @@ const handleLogout = () => {
     <h1>Help Desk System</h1>
 
     <div class="nav-right" v-if="isLoggedIn">
-      <span class="user-email">Logged in as: {{ user.email }}</span>
+      <span class="user-email">Logged in as: {{ userEmail }}</span>
       <button @click="handleLogout" class="logout-button">Logout</button>
     </div>
   </nav>
 </template>
 
 <style scoped>
-.nav-bar {
+.nav-bar1 {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #2c3e50;
-  color: white;
+  background-color: white;
+  color: #2c3e50;
   padding: 1rem;
+  border: solid thin#DDD;
+  border-radius: 10px;
+}
+
+.nav-bar{
+      display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background-color: #f8f9fa;
+  margin-bottom: 2rem;
+  border-radius: 8px;
 }
 
 .nav-right {

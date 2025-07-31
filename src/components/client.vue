@@ -103,10 +103,11 @@
 <script>
 import { ref, onMounted, nextTick } from 'vue';
 import { useRouter } from 'vue-router';
-
+import { useAuthStore } from '../stores/auth';
 export default {
     name: 'SubmitTicket',
     setup() {
+        const auth = useAuthStore();
 
 
           function formatDate(dateString) {
@@ -310,15 +311,16 @@ export default {
         };
 
         const handleLogout = () => {
-            localStorage.removeItem('token');
-           // window.location.href = '/help-desk//login';
+            auth.logout();
             router.push('/login');
         };
 
         onMounted(() => {
             const token = localStorage.getItem('token');
+            
             if(!token){
                 handleLogout()
+              
             }
             fetchMyTickets();
             // Return cleanup function

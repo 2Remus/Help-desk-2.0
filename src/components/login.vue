@@ -13,13 +13,13 @@
             <button type="submit">Login</button>
         </form>
         <div v-if="error" class="error">{{ error }}</div>
-        <p v-if="error" class="error">{{ error }}</p>
     </div>
 </template>
 
 <script>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { useAuthStore } from '../stores/auth';
 
 export default {
     name: 'Login',
@@ -28,6 +28,7 @@ export default {
         const password = ref('');
         const error = ref('');
         const router = useRouter();
+        const auth = useAuthStore();
 
         const handleLogin = async (event) => {
             event.preventDefault(); 
@@ -47,13 +48,14 @@ export default {
                 if (response.ok) {
                     localStorage.setItem('token', data.token);
                     localStorage.setItem('user', JSON.stringify(data.user));
-                   emit('login-success', data.user); // Pass the user data including is_admin
-                   
+                    auth.setUser(data.user, data.token); // store both
+                    emit('login-success', data.user); // Pass the user data including is_admin
+                
                    if (data.user.admin) {
-                router.push('/tickets');
-            } else {
-                router.push('/');
-            }
+                        router.push('/tickets');
+                    } else {
+                        router.push('/');
+                    }
                 } else {
                     error.value = data.detail ;
                 }
