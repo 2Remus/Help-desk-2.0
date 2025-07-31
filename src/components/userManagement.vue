@@ -97,13 +97,16 @@
 import { ref, onMounted } from 'vue';
 import { jwtDecode } from 'jwt-decode';
 import { computed } from 'vue';
+import { useRouter } from 'vue-router';
 
 export default {
   name: 'UserManagement',
   setup() {
     const isAdmin = computed(() => {
-  return currentUser.value?.admin === true;
-});
+      return currentUser.value?.admin === true;
+    });
+        const router = useRouter();
+
     const currentUser = ref(null);
     const users = ref([]);
     const newUser = ref({
@@ -119,6 +122,10 @@ export default {
         const token = localStorage.getItem('token');
          if (!token) return;
         currentUser.value = jwtDecode(token);
+        if(!currentUser.value.admin){
+          router.push('/')
+
+        }
         const response = await fetch('http://localhost:8080/api/users',
                      {
                     headers: {
@@ -227,9 +234,21 @@ export default {
         console.error('Error updating issue type:', error);
       }
     };
+ 
+ 
+    const handleLogout = () => {
+            localStorage.removeItem('token');
+            router.push('/login');
+        };
 
-
-    onMounted(fetchUsers);
+  //  onMounted(fetchUsers);
+     onMounted(() => {
+      const token = localStorage.getItem('token');
+            if(!token){
+                handleLogout()
+            }
+            fetchUsers()
+     });
 
     return {
       users,

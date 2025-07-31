@@ -1,12 +1,51 @@
 
 <script setup>
-import NavBar from './components/NavBar.vue';
+//test commit comment
+//dev branch
+import { ref, onMounted  } from 'vue';
+import { RouterView, useRouter } from 'vue-router';
+import { computed } from 'vue';
+
+const router = useRouter();
+const user = ref(null);
+// Load user from localStorage on mount
+onMounted(() => {
+  const storedUser = localStorage.getItem('user');
+  if (storedUser) {
+    user.value = JSON.parse(storedUser);
+  }
+});
+
+const isLoggedIn = computed(() => {
+  return user.value !== null;
+});
+
+
+const handleLogout = () => {
+  localStorage.removeItem('token');
+  localStorage.removeItem('user');
+  user.value = null;
+  router.push('/login');
+};
+
+
 </script>
 
 <template>
- <div class="container" v-cloak>
-    <NavBar @logout="() => {}" />
+  <div class="container" v-cloak>
+    <nav class="nav-bar">
+      <h1>Help Desk System</h1>
+      <button @click="handleLogout" v-if="isLoggedIn" class="logout-button">
+        Logout
+      </button>
+ 
+    </nav>
 
+    <nav>
+    <div>
+  <span v-if="isLoggedIn">Welcome, {{ user.email }} </span>
+    </div>
+  </nav>
     <div class="content">
       <RouterView v-slot="{ Component }">
         <Transition mode="out-in">
@@ -24,7 +63,7 @@ import NavBar from './components/NavBar.vue';
   margin: 0 auto;
   padding: 20px;
 }
-/*
+
 .nav-bar {
   display: flex;
   justify-content: space-between;
@@ -33,7 +72,7 @@ import NavBar from './components/NavBar.vue';
   background-color: #f8f9fa;
   margin-bottom: 2rem;
   border-radius: 8px;
-}*/
+}
 
 .logout-btn {
   padding: 8px 16px;

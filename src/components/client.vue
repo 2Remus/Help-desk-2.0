@@ -111,16 +111,12 @@ export default {
 
           function formatDate(dateString) {
             if (!dateString) return '';
-            
             // Convert to valid ISO if using space instead of T
             const cleaned = dateString.replace(' ', 'T');
-            
             const date = new Date(cleaned);
-
             if (isNaN(date.getTime())) {
                 return 'Invalid Date';
             }
-
         return date.toLocaleString(); // e.g., "7/15/2025, 9:44 AM"
         }
 
@@ -146,18 +142,7 @@ export default {
         ]);
 
 
-           // Redirect if token not found
-       /* onMounted(() => {
-            const token = localStorage.getItem('token');
-
-            if (!token) {
-                router.push('/login');
-            } else {
-               
-                fetchTickets(); // only fetch tickets if token is present
-            }
-        });
-*/
+        
 
         const handleSubmit = async () => {  // Remove event parameter
             try {
@@ -326,10 +311,15 @@ export default {
 
         const handleLogout = () => {
             localStorage.removeItem('token');
-            window.location.href = '/login';
+           // window.location.href = '/help-desk//login';
+            router.push('/login');
         };
 
         onMounted(() => {
+            const token = localStorage.getItem('token');
+            if(!token){
+                handleLogout()
+            }
             fetchMyTickets();
             // Return cleanup function
             return () => {

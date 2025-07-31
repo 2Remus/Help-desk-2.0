@@ -50,6 +50,26 @@ const router = createRouter({
   ]
 })
 
+/*
+router.beforeEach((to, from, next) => {
+  const token = localStorage.getItem('token');
+  const user = JSON.parse(localStorage.getItem('user'));
+
+  if (!token && to.path !== '/login') {
+    // No token, redirect to login
+    next('/login');
+  } else if (to.path === '/login' && token) {
+    // Already logged in, redirect based on role
+    if (user?.admin) {
+      next('/tickets');
+    } else {
+      next('/');
+    }
+  } else {
+    next(); // Allow normal navigation
+  }
+});*/
+/*
 router.beforeEach((to, from, next) => {
   const token = localStorage.getItem('token');
   const isLoggedIn = !!token;
@@ -64,6 +84,8 @@ router.beforeEach((to, from, next) => {
     next(); // allow navigation
   }
 });
+*/
+
 
 /*
 router.beforeEach((to, from, next) => {

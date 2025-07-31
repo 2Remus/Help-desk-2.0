@@ -30,7 +30,7 @@ export default {
         const router = useRouter();
 
         const handleLogin = async (event) => {
-            event.preventDefault();
+            event.preventDefault(); 
             try {
                 const response = await fetch('http://localhost:8080/api/login', {
                     method: 'POST',
@@ -48,7 +48,12 @@ export default {
                     localStorage.setItem('token', data.token);
                     localStorage.setItem('user', JSON.stringify(data.user));
                    emit('login-success', data.user); // Pass the user data including is_admin
-                   router.push('/')
+                   
+                   if (data.user.admin) {
+                router.push('/tickets');
+            } else {
+                router.push('/');
+            }
                 } else {
                     error.value = data.detail ;
                 }
