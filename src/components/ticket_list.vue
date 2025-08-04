@@ -27,6 +27,7 @@
                             @change="updateTicketStatus(ticket.id, ticket.status)"
                             :class="['status-select', ticket.status.toLowerCase()]"
                         >
+                           
                             <option value="open">Open</option>
                             <option value="in-progress">In Progress</option>
                             <option value="closed">Closed</option>
@@ -43,7 +44,7 @@
                             <option value="high">High</option>
                         </select>
                     </td>
-                    <td>{{ formatDate(ticket.created_at) }}</td>
+                    <td>{{ formatDate(ticket.createdAt) }}</td>
                     <td>
                         <button class="chat-btn" @click="openChat(ticket.id)">
                             💬 Chat
@@ -102,16 +103,26 @@ export default {
         const userData = JSON.parse(localStorage.getItem('userData') || '{}');
         const currentUser = userData.email;
 
-        const formatDate = (dateString) => {
-            return new Date(dateString).toLocaleString();
-        };
+  
+        function formatDate(dateString) {
+            if (!dateString) return '';
+            // Convert to valid ISO if using space instead of T
+            const cleaned = dateString.replace(' ', 'T');
+            const date = new Date(cleaned);
+            if (isNaN(date.getTime())) {
+                return 'Invalid Date';
+            }
+            return date.toLocaleString(); // e.g., "7/15/2025, 9:44 AM"
+        }
+
 
         const fetchTickets = async () => {
             try {
                 const token = localStorage.getItem('token');
                 const response = await fetch('http://localhost:8080/api/tickets', {
                     headers: {
-                        'Authorization': `Bearer ${token}`
+                         "Authorization": "Bearer "+ token,
+                         "Content-Type": "application/json"
                     }
                 });
                 if (!response.ok) {
@@ -122,6 +133,8 @@ export default {
                 console.error('Error fetching tickets:', error);
             }
         };
+
+
 
         const openChat = async (ticketId) => {
             selectedTicketId.value = ticketId;
@@ -137,6 +150,7 @@ export default {
             chatMessages.value = [];
             stopMessagePolling();
         };
+
 
         const fetchMessages = async (ticketId) => {
             try {
@@ -154,6 +168,7 @@ export default {
                 chatMessages.value = [];
             }
         };
+
 
         const sendMessage = async () => {
             if (!newMessage.value.trim()) return;
@@ -197,6 +212,7 @@ export default {
             }
         };
 
+
         let messagePollingInterval = null;
 
         const startMessagePolling = (ticketId) => {
@@ -207,6 +223,7 @@ export default {
             }, 3000); // Poll every 3 seconds
         };
 
+
         const stopMessagePolling = () => {
             if (messagePollingInterval) {
                 clearInterval(messagePollingInterval);
@@ -214,16 +231,18 @@ export default {
             }
         };
 
+        
+        /**Functional 28-July-2025 */
         const updateTicketStatus = async (ticketId, status) => {
             try {
                 const token = localStorage.getItem('token');
-                const response = await fetch(`http://localhost:8080/api/tickets/${ticketId}/status`, {
-                    method: 'PATCH',
+                const response = await fetch(`http://localhost:8080/api/tickets/status/${ticketId}`, {
+                    method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
+                        'Authorization': 'Bearer '+ token
                     },
-                    body: JSON.stringify({ status })
+                    body: JSON.stringify({status})
                 });
                 
                 if (!response.ok) {
@@ -242,14 +261,15 @@ export default {
             }
         };
 
+
         const updateTicketPriority = async (ticketId, priority) => {
             try {
                 const token = localStorage.getItem('token');
-                const response = await fetch(`http://localhost:8080/api/tickets/${ticketId}/priority`, {
-                    method: 'PATCH',
+                const response = await fetch(`http://localhost:8080/api/tickets/priority/${ticketId}`, {
+                    method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
+                        'Authorization': 'Bearer '+ token,
                     },
                     body: JSON.stringify({ priority })
                 });
@@ -270,9 +290,11 @@ export default {
             }
         };
 
+
         const switchToUserManagement = () => {
             window.location.href = '/help-desk/user-management ';
         };
+
 
         // Set up polling for updates
         onMounted(() => {
@@ -306,6 +328,7 @@ export default {
     }
 };
 </script>
+
 
 <style scoped>
 /* Modern Font Import - Add this at the top */

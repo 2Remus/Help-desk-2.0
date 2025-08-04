@@ -78,13 +78,21 @@
 </template>
 
 <script>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted,computed } from 'vue';
+import { jwtDecode } from 'jwt-decode';
+
+import { useRouter } from 'vue-router';
 
 export default {
   name: 'InstitutionManagement',
   setup() {
     const users = ref([]);
     const institutions = ref([]);
+    const router = useRouter();
+    const currentUser = ref(null);
+    const isAdmin = computed(() => {
+      return currentUser.value?.admin === true;
+    });
     const newUser = ref({
       name: '',
       email: '',
@@ -101,19 +109,23 @@ export default {
     });
 
 
-    /*const fetchUsers = async () => {
-      try {
-        const response = await fetch('http://localhost:8080/api/users');
-        if (!response.ok) throw new Error('Failed to fetch users');
-        users.value = await response.json();
-      } catch (error) {
-        console.error('Error fetching users:', error);
-      }
-    };*/
-
+   
     const fetchInstitutions = async () => {
       try {
-        const response = await fetch('http://localhost:8080/api/institutions');
+        const token = localStorage.getItem('token');
+           if (!token) return;
+        currentUser.value = jwtDecode(token);
+        if(!currentUser.value.admin){
+          router.push('/')
+
+        }
+        const response = await fetch('http://localhost:8080/api/institutions',
+        {
+                    headers: {
+                        "Authorization": "Bearer "+ token,
+                         "Content-Type": "application/json"
+                    }
+                });
         if (!response.ok) throw new Error('Failed to fetch institutions');
         institutions.value = await response.json();
       } catch (error) {
@@ -161,6 +173,12 @@ export default {
       }
     };
 
+
+    const handleLogout = () => {
+            localStorage.removeItem('token');
+            router.push('/login');
+        };
+
     onMounted(fetchInstitutions);
 
     return {
@@ -168,6 +186,8 @@ export default {
       institutions,
       newUser,
       newInstitution,
+      currentUser,
+      isAdmin,
       handleAddInstitution ,
       handleDeleteInstitution 
     };

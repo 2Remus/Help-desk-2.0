@@ -18,6 +18,8 @@
 
 <script>
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { useAuthStore } from '../stores/auth';
 
 export default {
     name: 'Login',
@@ -25,11 +27,13 @@ export default {
         const email = ref('');
         const password = ref('');
         const error = ref('');
+        const router = useRouter();
+        const auth = useAuthStore();
 
         const handleLogin = async (event) => {
-            event.preventDefault();
+            event.preventDefault(); 
             try {
-                const response = await fetch('http://localhost:8000/api/login', {
+                const response = await fetch('http://localhost:8080/api/login', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -42,10 +46,18 @@ export default {
                 
                 const data = await response.json();
                 if (response.ok) {
-                    localStorage.setItem('token', data.access_token);
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    auth.setUser(data.user, data.token); // store both
                     emit('login-success', data.user); // Pass the user data including is_admin
+                
+                   if (data.user.admin) {
+                        router.push('/tickets');
+                    } else {
+                        router.push('/');
+                    }
                 } else {
-                    error.value = data.detail;
+                    error.value = data.detail ;
                 }
             } catch (err) {
                 error.value = 'Login failed. Please try again.';

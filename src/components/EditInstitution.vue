@@ -29,6 +29,7 @@
         
       
         <button type="submit">Save</button>
+        <RouterLink to="/institution-management"><button>Cancel</button></RouterLink>
       </form>
     </div>
 
@@ -36,15 +37,13 @@
 </template>
 
 <script>
-//import { router } from 'json-server';
 import { ref, onMounted } from 'vue';
  import { useRoute, useRouter } from 'vue-router';
 export default {
   name: 'InstitutionManagement',
   setup() {
     const route = useRoute();
- const router = useRouter();
-  //   const existingInstitution = ref([]);
+    const router = useRouter();
     const instId = route.params.id;
     const existingInstitution = ref({
       name: '',
@@ -59,7 +58,14 @@ export default {
 
   const fetchInstitution = async () => {
       try {
-        const response = await fetch(`http://localhost:8080/api/institutions/${instId}`);
+        const token = localStorage.getItem('token');
+        const response = await fetch(`http://localhost:8080/api/institutions/${instId}`, 
+        {
+                    headers: {
+                        "Authorization": "Bearer "+ token,
+                         "Content-Type": "application/json"
+                    }
+                });
         if (!response.ok) throw new Error('Failed to fetch institution');
         existingInstitution.value = await response.json();
         
@@ -73,9 +79,11 @@ export default {
     
    const handleEditInstitution = async () => {
       try {
+        const token = localStorage.getItem('token');
         const response = await fetch(`http://localhost:8080/api/institutions/edit/${instId}`, {
           method: 'PUT',
           headers: {
+             'Authorization': 'Bearer '+ token,
             'Content-Type': 'application/json'
           },
           body: JSON.stringify(existingInstitution.value)
@@ -87,7 +95,6 @@ export default {
       }
     };
 
-      
 
     onMounted(fetchInstitution);
 

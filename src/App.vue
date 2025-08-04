@@ -1,27 +1,12 @@
 
 <script setup>
-//test commit comment
-//dev branch
-import { ref } from 'vue';
-
-import { RouterView } from 'vue-router';
-
-
-const isLoading = ref(false);
-const isLoggedIn = ref(false);
-const handleLogout = () => {
-            localStorage.removeItem('token');
-            window.location.href = '/help-desk/login';
-        };
-
+import NavBar from './components/NavBar.vue';
 </script>
 
 <template>
-  <div class="container" v-cloak>
-    <nav class="nav-bar">
-      <h1>Help Desk System</h1>
-      <button @click="handleLogout"  v-if="isloggedIn" class="logout-button">Logout</button>
-    </nav>
+ <div class="container" v-cloak>
+    <NavBar @logout="() => {}" />
+
     <div class="content">
       <RouterView v-slot="{ Component }">
         <Transition mode="out-in">
@@ -39,7 +24,7 @@ const handleLogout = () => {
   margin: 0 auto;
   padding: 20px;
 }
-
+/*
 .nav-bar {
   display: flex;
   justify-content: space-between;
@@ -48,7 +33,7 @@ const handleLogout = () => {
   background-color: #f8f9fa;
   margin-bottom: 2rem;
   border-radius: 8px;
-}
+}*/
 
 .logout-btn {
   padding: 8px 16px;
