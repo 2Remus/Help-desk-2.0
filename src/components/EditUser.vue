@@ -6,9 +6,7 @@
     <div class="add-user-form">
       <h3>Edit User</h3>
       <form @submit.prevent="handleEditUser">
-                 
         <div class="form-group">
-          <label for="email">Email:</label>
             <input type="hidden" id="id" v-model="user.id" required />        </div>
         <div class="form-group">
           <label for="email">Email:</label>
@@ -35,6 +33,7 @@
           </select>
         </div>
         <button type="submit">Save</button>
+       <RouterLink to="/user-management"><button>Cancel</button></RouterLink>
       </form>
     </div>
 
@@ -65,7 +64,13 @@ export default {
 
       const fetchUser = async () => {
       try {
-        const response = await fetch(`http://localhost:8080/api/users/${usId}`);
+        const token = localStorage.getItem('token');
+        const response = await fetch(`http://localhost:8080/api/users/${usId}`,  {
+                    headers: {
+                        "Authorization": "Bearer "+ token,
+                         "Content-Type": "application/json"
+                    }
+                });
         if (!response.ok) throw new Error('Failed to fetch user');
         user.value = await response.json();
       } catch (error) {
@@ -77,9 +82,11 @@ export default {
 
    const handleEditUser = async () => {
       try {
+        const token = localStorage.getItem('token');
         const response = await fetch(`http://localhost:8080/api/users/edit/${usId}`, {
           method: 'PUT',
           headers: {
+            'Authorization': 'Bearer '+ token,
             'Content-Type': 'application/json'
           },
           body: JSON.stringify(user.value)

@@ -56,7 +56,9 @@
                     <td>{{ ticket.subject }}</td>
                     <td>{{ ticket.status }}</td>
                     <td>{{ ticket.priority }}</td>
-                    <td>{{ new Date(ticket.created_at).toLocaleDateString() }}</td>
+                    <td>{{ formatDate(ticket.createdAt) }}</td>
+
+                    
                     <td>
                         <button class="chat-btn" @click="openChat(ticket.id)">
                             💬 Chat
@@ -104,10 +106,27 @@
 
 <script>
 import { ref, onMounted, nextTick } from 'vue';
-
+import { useRouter } from 'vue-router';
+import { useAuthStore } from '../stores/auth';
 export default {
     name: 'SubmitTicket',
     setup() {
+        const auth = useAuthStore();
+
+
+          function formatDate(dateString) {
+            if (!dateString) return '';
+            // Convert to valid ISO if using space instead of T
+            const cleaned = dateString.replace(' ', 'T');
+            const date = new Date(cleaned);
+            if (isNaN(date.getTime())) {
+                return 'Invalid Date';
+            }
+        return date.toLocaleString(); // e.g., "7/15/2025, 9:44 AM"
+        }
+
+
+         const router = useRouter();
         const subject = ref('');
         const description = ref('');
         const priority = ref('low');
@@ -118,6 +137,7 @@ export default {
         const showChat = ref(false);
         const selectedTicketId = ref(null);
         const newMessage = ref('');
+
         const chatMessages = ref([]);
 
         // Fetch unread count for each ticket
@@ -138,10 +158,26 @@ export default {
         };
 
         const handleSubmit = async () => {
+
+        const chatMessages = ref([
+            { sender: 'You', text: 'Hi, I need help with my ticket.' },
+            { sender: 'Support', text: 'How can we assist you today?' },
+            { sender: 'You', text: 'I have a question about my ticket.' },
+            { sender: 'Support', text: 'Please provide your ticket ID for reference.' },
+            { sender: 'You', text: 'My ticket ID is 12345.' },
+            { sender: 'Support', text: 'Thank you! We will look into it and get back to you shortly.' }
+        ]);
+
+
+        
+
+        const handleSubmit = async () => {  // Remove event parameter
             try {
-                const response = await fetch('http://localhost:8080/api/tickets', {
+                const token = localStorage.getItem('token');
+                const response = await fetch('http://localhost:8080/api/tickets/create', {
                     method: 'POST',
                     headers: {
+                        "Authorization": "Bearer "+ token,
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
@@ -159,8 +195,13 @@ export default {
                 subject.value = '';
                 description.value = '';
                 priority.value = 'low';
+
                 type.value = 'payment';
                 await fetchTickets();
+
+                type.value = 'payment';  // Reset type to default
+                fetchMyTickets(); // Refresh the ticket list
+
             } catch (error) {
                 errorMessage.value = `Error submitting ticket: ${error.message}`;
                 successMessage.value = '';
@@ -169,7 +210,14 @@ export default {
 
         const fetchTickets = async () => {
             try {
-                const response = await fetch('http://localhost:8080/api/tickets');
+                const token = localStorage.getItem('token');
+                const response = await fetch('http://localhost:8080/api/tickets',
+                     {
+                    headers: {
+                        "Authorization": "Bearer "+ token,
+                         "Content-Type": "application/json"
+                    }
+                });
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
@@ -179,6 +227,27 @@ export default {
                 console.error('Error fetching tickets:', error);
             }
         };
+
+
+        const fetchMyTickets = async () => {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch('http://localhost:8080/api/myTickets',
+                     {
+                    headers: {
+                        "Authorization": "Bearer "+ token,
+                         "Content-Type": "application/json"
+                    }
+                });
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                tickets.value = await response.json();
+            } catch (error) {
+                console.error('Error fetching tickets:', error);
+            }
+        };
+
 
         // Add polling interval ref
         let messagePollingInterval = null;
@@ -226,9 +295,17 @@ export default {
             stopMessagePolling();
         };
 
+
         const fetchMessages = async (ticketId) => {
             try {
-                const response = await fetch(`http://localhost:8080/api/tickets/${ticketId}/messages`);
+                const token = localStorage.getItem('token');
+                const response = await fetch(`http://localhost:8080/api/tickets/${ticketId}/messages`,
+                 {
+                    headers: {
+                        "Authorization": "Bearer "+ token,
+                         "Content-Type": "application/json"
+                    }
+                });
                 if (!response.ok) throw new Error('Failed to fetch messages');
                 chatMessages.value = await response.json();
             } catch (error) {
@@ -237,13 +314,16 @@ export default {
             }
         };
 
+
         const sendMessage = async () => {
             if (!newMessage.value.trim()) return;
 
             try {
+                const token = localStorage.getItem('token');
                 const response = await fetch(`http://localhost:8080/api/tickets/${selectedTicketId.value}/message`, {
                     method: 'POST',
                     headers: {
+                         'Authorization': 'Bearer '+ token,
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
@@ -272,13 +352,25 @@ export default {
             }
         };
 
+
         const handleLogout = () => {
-            localStorage.removeItem('token');
-            window.location.href = '/login';
+            auth.logout();
+            router.push('/login');
         };
 
+        
         onMounted(() => {
+
             fetchTickets();
+
+            const token = localStorage.getItem('token');
+            if(!token){
+                handleLogout()
+              
+            }
+            fetchMyTickets();
+            // Return cleanup function
+
             return () => {
                 stopMessagePolling();
             };
@@ -290,7 +382,9 @@ export default {
             tickets, handleSubmit, showChat, 
             selectedTicketId, newMessage, 
             chatMessages, sendMessage, handleLogout, 
-            openChat, closeChat 
+            openChat, closeChat ,
+                        formatDate,fetchMyTickets
+
         };
     }
 };

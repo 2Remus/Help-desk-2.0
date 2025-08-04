@@ -1,4 +1,5 @@
 <script setup>
+
 //test commit comment
 //dev branch
 import { ref } from 'vue';
@@ -35,6 +36,14 @@ const handleLogout = () => {
     </nav>
 
     <Sidebar  v-if="isLoggedIn && isAdmin"/> <!-- Only visible for logged-in admins v-if="isLoggedIn && isAdmin"  -->
+=======
+import NavBar from './components/NavBar.vue';
+</script>
+
+<template>
+ <div class="container" v-cloak>
+    <NavBar @logout="() => {}" />
+
 
     <div class="content">
       <RouterView v-slot="{ Component }">
@@ -114,7 +123,7 @@ const handleLogout = () => {
   margin: 0 auto;
   padding: 20px;
 }
-
+/*
 .nav-bar {
   display: flex;
   justify-content: space-between;
@@ -123,7 +132,7 @@ const handleLogout = () => {
   background-color: #f8f9fa;
   margin-bottom: 2rem;
   border-radius: 8px;
-}
+}*/
 
 .logout-btn {
   padding: 8px 16px;
