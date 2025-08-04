@@ -34,7 +34,7 @@ const handleLogout = () => {
       <button @click="handleLogout" v-if="isLoggedIn" class="logout-button">Logout</button>
     </nav>
 
-    <Sidebar /> <!-- Only visible for logged-in admins v-if="isLoggedIn && isAdmin"  -->
+    <Sidebar  v-if="isLoggedIn && isAdmin"/> <!-- Only visible for logged-in admins v-if="isLoggedIn && isAdmin"  -->
 
     <div class="content">
       <RouterView v-slot="{ Component }">
