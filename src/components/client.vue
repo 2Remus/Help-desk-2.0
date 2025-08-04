@@ -463,35 +463,41 @@ h2 {
 .chat-messages {
     padding: 15px;
     height: 300px;
-    color: #888;auto;
-    padding: 20px;ff;
-    font-style: italic;ooth;
-}   display: flex;
+    color: #888;
+    font-style: italic;
+    display: flex;
     flex-direction: column;
+}
 /* Chat modal positioning */
 .chat-modal {
     position: fixed;
     bottom: 24px;
-    right: 24px;center;
-    width: 360px;: 20px;
+    right: 24px;
+    width: 360px;
     background: #ffffff;
     border-radius: 12px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-    z-index: 1000;age */
-}no-tickets {
+    z-index: 1000;
+}
+.no-tickets {
     text-align: center;
+}
+
 .unread-indicator {
-  display: inline-block;
-  margin-left: 6px;lic;
-  width: 12px;
-  height: 12px;
-  background: #dc3545;ing */
-  border-radius: 50%;
-  border: 2px solid #fff;
-  vertical-align: middle;
-  box-shadow: 0 0 2px #dc3545;
-}   width: 360px;
-</style>ground: #ffffff;
+    display: inline-block;
+    margin-left: 6px;
+    width: 12px;
+    height: 12px;
+    background: #dc3545;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    vertical-align: middle;
+    box-shadow: 0 0 2px #dc3545;
+}
+
+.chat-modal {
+    width: 360px;
+    background: #ffffff;
     border-radius: 12px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
     z-index: 1000;
