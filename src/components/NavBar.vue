@@ -27,7 +27,7 @@ const handleLogout = () => {
 
     <div class="nav-right" v-if="isLoggedIn">
       <span class="user-email">Logged in as: {{ userEmail }}</span>
-      <button @click="handleLogout" class="logout-button">Logout</button>
+    <!--  <button @click="handleLogout" class="logout-button">Logout</button>-->
     </div>
   </nav>
 </template>

@@ -1,4 +1,5 @@
 <template>
+  <MainTemplate>
   <div class="user-management">
     <h2>User Management</h2>
 
@@ -91,6 +92,7 @@
       </table>
     </div>
   </div>
+  </MainTemplate>
 </template>
 
 <script>
@@ -98,9 +100,13 @@ import { ref, onMounted } from 'vue';
 import { jwtDecode } from 'jwt-decode';
 import { computed } from 'vue';
 import { useRouter } from 'vue-router';
+import MainTemplate from './MainTemplate.vue';
 
 export default {
   name: 'UserManagement',
+   components: {
+    MainTemplate
+  },
   setup() {
     const isAdmin = computed(() => {
       return currentUser.value?.admin === true;

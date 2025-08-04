@@ -1,4 +1,5 @@
 <template>
+    <MainTemplate>
    <div class="ticket-list-container">
         <div class="header-buttons">
             <button class="nav-btn" @click="switchToUserManagement">
@@ -86,13 +87,17 @@
             </div>
         </div>
    </div>
+   </MainTemplate>
 </template>
 
 <script>
 import { ref, onMounted, nextTick } from 'vue';
-
+import MainTemplate from './MainTemplate.vue';
 export default {
     name: 'TicketList',
+    components: {
+    MainTemplate
+  },
     setup() {
         const tickets = ref([]);
         const showChat = ref(false);

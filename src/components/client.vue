@@ -1,8 +1,5 @@
 <template>
-    <div class="header">
-        <h1>Help Desk</h1>
-       
-    </div>
+      <MainTemplate>
     <div class="SubmitTicket">
         <h2> Submit A Ticket</h2>
         <form @submit.prevent="handleSubmit">
@@ -98,14 +95,21 @@
             </div>
         </div>
     </div>
+
+    </MainTemplate>
 </template>
 
 <script>
 import { ref, onMounted, nextTick } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '../stores/auth';
+import MainTemplate from './MainTemplate.vue';
 export default {
     name: 'SubmitTicket',
+
+     components: {
+    MainTemplate
+  },
     setup() {
         const auth = useAuthStore();
 
