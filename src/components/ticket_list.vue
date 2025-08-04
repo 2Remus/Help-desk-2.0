@@ -48,6 +48,10 @@
                     <td>
                         <button class="chat-btn" @click="openChat(ticket.id)">
                             💬 Chat
+                            <span
+                              v-if="ticket.unreadCount && ticket.unreadCount > 0"
+                              class="unread-indicator"
+                            ></span>
                         </button>
                     </td>
                 </tr>
@@ -116,6 +120,26 @@ export default {
         }
 
 
+        // Fetch unread count for each ticket
+        const fetchUnreadCounts = async () => {
+            for (const ticket of tickets.value) {
+                try {
+                    const token = localStorage.getItem('token');
+                    const res = await fetch(`http://localhost:8080/api/tickets/${ticket.id}/unread`, {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    if (res.ok) {
+                        const data = await res.json();
+                        ticket.unreadCount = data.unread;
+                    } else {
+                        ticket.unreadCount = 0;
+                    }
+                } catch {
+                    ticket.unreadCount = 0;
+                }
+            }
+        };
+
         const fetchTickets = async () => {
             try {
                 const token = localStorage.getItem('token');
@@ -129,6 +153,7 @@ export default {
                     throw new Error('Network response was not ok');
                 }
                 tickets.value = await response.json();
+                await fetchUnreadCounts();
             } catch (error) {
                 console.error('Error fetching tickets:', error);
             }
@@ -614,5 +639,15 @@ select:focus {
 
 .nav-btn:hover {
     background-color: #4338ca;
+}
+
+/* Unread Indicator */
+.unread-indicator {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #3b82f6;
+    margin-left: 4px;
 }
 </style>
