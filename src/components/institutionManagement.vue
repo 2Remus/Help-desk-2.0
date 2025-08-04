@@ -1,4 +1,5 @@
 <template>
+<MainTemplate>
   <div class="user-management">
     <h2>Institution Management</h2>
 
@@ -75,16 +76,20 @@
       </table>
     </div>
   </div>
+  </MainTemplate>
 </template>
 
 <script>
 import { ref, onMounted,computed } from 'vue';
 import { jwtDecode } from 'jwt-decode';
-
 import { useRouter } from 'vue-router';
+import MainTemplate from './MainTemplate.vue';
 
 export default {
   name: 'InstitutionManagement',
+  components: {
+    MainTemplate
+  },
   setup() {
     const users = ref([]);
     const institutions = ref([]);

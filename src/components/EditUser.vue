@@ -1,4 +1,5 @@
 <template>
+  <MainTemplate>
   <div class="user-management">
     <h2>User Management</h2>
 
@@ -39,14 +40,19 @@
 
    
   </div>
+  </MainTemplate>
 </template>
 
 <script>
 import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import MainTemplate from './MainTemplate.vue';
 
 export default {
   name: 'UserManagement',
+  components: {
+    MainTemplate
+  },
   setup() {
   
    const route = useRoute();

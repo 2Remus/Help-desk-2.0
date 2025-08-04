@@ -50,7 +50,7 @@
             <tbody>
                 <tr v-for="ticket in tickets" :key="ticket.id">
                     <td>{{ ticket.id }}</td>
-                    <td>{{ ticket.subject }}</td>
+                    <td><RouterLink :to="`/tickets/view/${ticket.id}`">{{ ticket.subject }}</RouterLink></td>
                     <td>{{ ticket.status }}</td>
                     <td>{{ ticket.priority }}</td>
                     <td>{{ formatDate(ticket.createdAt) }}</td>
@@ -181,25 +181,6 @@ export default {
             }
         };
 
-        const fetchTickets = async () => {
-            try {
-                const token = localStorage.getItem('token');
-                const response = await fetch('http://localhost:8080/api/tickets',
-                     {
-                    headers: {
-                        "Authorization": "Bearer "+ token,
-                         "Content-Type": "application/json"
-                    }
-                });
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                tickets.value = await response.json();
-            } catch (error) {
-                console.error('Error fetching tickets:', error);
-            }
-        };
-
 
         const fetchMyTickets = async () => {
             try {
@@ -276,6 +257,7 @@ export default {
             }
         };
 
+        
 
         const sendMessage = async () => {
             if (!newMessage.value.trim()) return;
@@ -327,7 +309,6 @@ export default {
             const token = localStorage.getItem('token');
             if(!token){
                 handleLogout()
-              
             }
             fetchMyTickets();
             // Return cleanup function

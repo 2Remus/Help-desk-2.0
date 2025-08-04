@@ -1,11 +1,12 @@
 <template>
     <MainTemplate>
    <div class="ticket-list-container">
-        <div class="header-buttons">
+    <!--  <div class="header-buttons">
             <button class="nav-btn" @click="switchToUserManagement">
                 👥 User Management
             </button>
         </div>
+        -->  
         <h1>Tickets</h1>
         <table>
             <thead>
@@ -21,7 +22,7 @@
             <tbody>
                 <tr v-for="ticket in tickets" :key="ticket.id">
                     <td>{{ ticket.id }}</td>
-                    <td>{{ ticket.subject }}</td>
+                    <td><RouterLink :to="`/tickets/view/${ticket.id}`">{{ ticket.subject }}</RouterLink></td>
                     <td>
                         <select 
                             v-model="ticket.status" 

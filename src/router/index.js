@@ -6,7 +6,7 @@ import Login from '../components/Login.vue'
 import InstitutionManagement from '../components/institutionManagement.vue'
 import EditInstitution from '../components/EditInstitution.vue'
 import EditUser from '../components/EditUser.vue'
-
+import ViewTicket from '../components/ViewTicket.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL || '/'),
   routes: [
@@ -39,6 +39,11 @@ const router = createRouter({
       path: '/users/edit/:id',
       name: 'edit-user',
       component: EditUser
+    },
+     {
+      path: '/tickets/view/:id',
+      name: 'view-ticket',
+      component: ViewTicket
     },
     {
       path: '/login',

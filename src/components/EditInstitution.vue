@@ -1,4 +1,5 @@
 <template>
+  <MainTemplate>
   <div class="user-management">
     <h2>Institution Management</h2>
 
@@ -34,13 +35,18 @@
     </div>
 
   </div>
+  </MainTemplate>
 </template>
 
 <script>
 import { ref, onMounted } from 'vue';
  import { useRoute, useRouter } from 'vue-router';
+ import MainTemplate from './MainTemplate.vue';
 export default {
   name: 'InstitutionManagement',
+   components: {
+    MainTemplate
+  },
   setup() {
     const route = useRoute();
     const router = useRouter();
