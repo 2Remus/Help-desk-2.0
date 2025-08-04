@@ -2,6 +2,7 @@
 
 //test commit comment
 //dev branch
+import NavBar from './components/NavBar.vue';
 import { ref } from 'vue';
 import { RouterView, useRouter } from 'vue-router';
 import Sidebar from './components/Sidebar.vue';
@@ -31,16 +32,15 @@ const handleLogout = () => {
 <template>
   <div class="container" v-cloak>
     <nav class="nav-bar">
-      <h1>Help Desk System</h1>
       <button @click="handleLogout" v-if="isLoggedIn" class="logout-button">Logout</button>
     </nav>
-
+</div>
     <Sidebar  v-if="isLoggedIn && isAdmin"/> <!-- Only visible for logged-in admins v-if="isLoggedIn && isAdmin"  -->
-=======
-import NavBar from './components/NavBar.vue';
-</script>
 
-<template>
+
+
+
+
  <div class="container" v-cloak>
     <NavBar @logout="() => {}" />
 
