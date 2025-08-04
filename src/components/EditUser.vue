@@ -7,7 +7,6 @@
       <h3>Edit User</h3>
       <form @submit.prevent="handleEditUser">
         <div class="form-group">
-          <label for="email">Email:</label>
             <input type="hidden" id="id" v-model="user.id" required />        </div>
         <div class="form-group">
           <label for="email">Email:</label>

@@ -103,23 +103,16 @@ export default {
         const userData = JSON.parse(localStorage.getItem('userData') || '{}');
         const currentUser = userData.email;
 
-       /* const formatDate = (dateString) => {
-            return new Date(dateString).toLocaleString();
-        };*/
-
+  
         function formatDate(dateString) {
-        if (!dateString) return '';
-        
-        // Convert to valid ISO if using space instead of T
-        const cleaned = dateString.replace(' ', 'T');
-        
-        const date = new Date(cleaned);
-
-        if (isNaN(date.getTime())) {
-            return 'Invalid Date';
-        }
-
-        return date.toLocaleString(); // e.g., "7/15/2025, 9:44 AM"
+            if (!dateString) return '';
+            // Convert to valid ISO if using space instead of T
+            const cleaned = dateString.replace(' ', 'T');
+            const date = new Date(cleaned);
+            if (isNaN(date.getTime())) {
+                return 'Invalid Date';
+            }
+            return date.toLocaleString(); // e.g., "7/15/2025, 9:44 AM"
         }
 
 
@@ -159,7 +152,6 @@ export default {
         };
 
 
-
         const fetchMessages = async (ticketId) => {
             try {
                 const token = localStorage.getItem('token');
@@ -176,7 +168,6 @@ export default {
                 chatMessages.value = [];
             }
         };
-
 
 
         const sendMessage = async () => {
@@ -222,7 +213,6 @@ export default {
         };
 
 
-
         let messagePollingInterval = null;
 
         const startMessagePolling = (ticketId) => {
@@ -233,6 +223,7 @@ export default {
             }, 3000); // Poll every 3 seconds
         };
 
+
         const stopMessagePolling = () => {
             if (messagePollingInterval) {
                 clearInterval(messagePollingInterval);
@@ -240,8 +231,7 @@ export default {
             }
         };
 
-
-
+        
         /**Functional 28-July-2025 */
         const updateTicketStatus = async (ticketId, status) => {
             try {
@@ -270,8 +260,6 @@ export default {
                 await fetchTickets();
             }
         };
-
-
 
 
         const updateTicketPriority = async (ticketId, priority) => {
@@ -303,12 +291,9 @@ export default {
         };
 
 
-
-
         const switchToUserManagement = () => {
             window.location.href = '/help-desk/user-management ';
         };
-
 
 
         // Set up polling for updates
@@ -343,6 +328,7 @@ export default {
     }
 };
 </script>
+
 
 <style scoped>
 /* Modern Font Import - Add this at the top */

@@ -195,7 +195,9 @@ export default {
                 console.error('Error fetching tickets:', error);
             }
         };
-    const fetchMyTickets = async () => {
+
+
+        const fetchMyTickets = async () => {
             try {
                 const token = localStorage.getItem('token');
                 const response = await fetch('http://localhost:8080/api/myTickets',
@@ -213,8 +215,6 @@ export default {
                 console.error('Error fetching tickets:', error);
             }
         };
-
-
 
 
         // Add polling interval ref
@@ -253,6 +253,7 @@ export default {
             stopMessagePolling();
         };
 
+
         const fetchMessages = async (ticketId) => {
             try {
                 const token = localStorage.getItem('token');
@@ -270,6 +271,7 @@ export default {
                 chatMessages.value = [];
             }
         };
+
 
         const sendMessage = async () => {
             if (!newMessage.value.trim()) return;
@@ -310,14 +312,15 @@ export default {
             }
         };
 
+
         const handleLogout = () => {
             auth.logout();
             router.push('/login');
         };
 
+        
         onMounted(() => {
             const token = localStorage.getItem('token');
-            
             if(!token){
                 handleLogout()
               

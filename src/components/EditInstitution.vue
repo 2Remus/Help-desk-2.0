@@ -37,7 +37,6 @@
 </template>
 
 <script>
-//import { router } from 'json-server';
 import { ref, onMounted } from 'vue';
  import { useRoute, useRouter } from 'vue-router';
 export default {
@@ -45,7 +44,6 @@ export default {
   setup() {
     const route = useRoute();
     const router = useRouter();
-  //   const existingInstitution = ref([]);
     const instId = route.params.id;
     const existingInstitution = ref({
       name: '',

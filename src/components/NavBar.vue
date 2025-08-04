@@ -16,9 +16,6 @@ const userEmail = computed(() => auth.user?.email);
 
 
 const handleLogout = () => {
-/*  localStorage.removeItem('token');
-  localStorage.removeItem('user');
-  user.value = null;*/
   auth.logout();
   router.push('/login');
 };
