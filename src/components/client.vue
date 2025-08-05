@@ -104,6 +104,7 @@ import { ref, onMounted, nextTick } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '../stores/auth';
 import MainTemplate from './MainTemplate.vue';
+import { toast } from 'vue3-toastify';
 export default {
     name: 'SubmitTicket',
 
@@ -149,7 +150,7 @@ export default {
 
         
 
-        const handleSubmit = async () => {  // Remove event parameter
+        const handleSubmit = async () => {  
             try {
                 const token = localStorage.getItem('token');
                 const response = await fetch('http://localhost:8080/api/tickets/create', {
@@ -174,6 +175,11 @@ export default {
                 description.value = '';
                 priority.value = 'low';
                 type.value = 'payment';  // Reset type to default
+               
+                toast.success('Ticket submitted successfylly.',{
+                    autoClose: 3000,
+                });
+               
                 fetchMyTickets(); // Refresh the ticket list
             } catch (error) {
                 errorMessage.value = `Error submitting ticket: ${error.message}`;

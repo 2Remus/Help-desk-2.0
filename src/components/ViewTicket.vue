@@ -42,6 +42,7 @@ const messages = ref([]);
 const token = localStorage.getItem('token');
 
 const fetchTicketDetails = async () => {
+  const token = localStorage.getItem('token');
   try {
     const res = await fetch(`http://localhost:8080/api/tickets/view/${ticketId}`, {
       headers: {

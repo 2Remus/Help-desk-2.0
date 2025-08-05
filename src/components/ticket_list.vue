@@ -8,6 +8,55 @@
         </div>
         -->  
         <h1>Tickets</h1>
+        <!--
+        <div class="search-bar mb-4">
+            <input
+                v-model="searchQuery"
+                type="text"
+                placeholder="Search by subject, status, or priority..."
+                class="search-input"
+            />
+        </div>
+-->
+
+        <div class="filters mb-4 grid grid-cols-1 md:grid-cols-4 gap-4">
+  <input
+    v-model="searchQuery"
+    type="text"
+    placeholder="Search subject..."
+    class="filter-input"
+  />
+
+  <input
+    v-model="dateFrom"
+    type="date"
+    class="filter-input"
+    placeholder="From date"
+  />
+
+  <input
+    v-model="dateTo"
+    type="date"
+    class="filter-input"
+    placeholder="To date"
+  />
+
+  <select v-model="selectedStatus" class="filter-input">
+    <option value="">All Statuses</option>
+    <option value="open">Open</option>
+    <option value="closed">Closed</option>
+    <option value="in Progress">In Progress</option>
+  </select>
+
+  <select v-model="selectedPriority" class="filter-input">
+    <option value="">All Priorities</option>
+    <option value="low">Low</option>
+    <option value="medium">Medium</option>
+    <option value="high">High</option>
+  </select>
+</div>
+
+
         <table>
             <thead>
                 <tr>
@@ -20,7 +69,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="ticket in tickets" :key="ticket.id">
+                <tr v-for="ticket in filteredTickets" :key="ticket.id">
                     <td>{{ ticket.id }}</td>
                     <td><RouterLink :to="`/tickets/view/${ticket.id}`">{{ ticket.subject }}</RouterLink></td>
                     <td>
@@ -92,7 +141,8 @@
 </template>
 
 <script>
-import { ref, onMounted, nextTick } from 'vue';
+import { ref, onMounted, nextTick, computed} from 'vue';
+
 import MainTemplate from './MainTemplate.vue';
 export default {
     name: 'TicketList',
@@ -110,6 +160,55 @@ export default {
         const currentUser = userData.email;
 
   
+
+       // const searchQuery = ref('');
+/*
+        const filteredTickets = computed(() => {
+            if (!searchQuery.value.trim()) return tickets.value;
+                const query = searchQuery.value.toLowerCase();
+                return tickets.value.filter(ticket =>
+                    (ticket.subject && ticket.subject.toLowerCase().includes(query)) ||
+                    (ticket.status && ticket.status.toLowerCase().includes(query)) ||
+                    (ticket.priority && ticket.priority.toLowerCase().includes(query))
+                    );
+            });
+*/
+
+
+
+
+
+
+const searchQuery = ref('');
+const dateFrom = ref('');
+const dateTo = ref('');
+const selectedStatus = ref('');
+const selectedPriority = ref('');
+
+const filteredTickets = computed(() => {
+  return tickets.value.filter(ticket => {
+    const subjectMatch = ticket.subject?.toLowerCase().includes(searchQuery.value.toLowerCase());
+
+    const statusMatch = !selectedStatus.value || ticket.status === selectedStatus.value;
+    const priorityMatch = !selectedPriority.value || ticket.priority === selectedPriority.value;
+
+    const createdAt = new Date(ticket.created_at);
+
+    const dateFromMatch = !dateFrom.value || createdAt >= new Date(dateFrom.value);
+    const dateToMatch = !dateTo.value || createdAt <= new Date(dateTo.value + 'T23:59:59');
+
+    return subjectMatch && statusMatch && priorityMatch && dateFromMatch && dateToMatch;
+  });
+});
+
+
+
+
+
+
+
+
+
         function formatDate(dateString) {
             if (!dateString) return '';
             // Convert to valid ISO if using space instead of T
@@ -329,8 +428,18 @@ export default {
             updateTicketStatus,
             updateTicketPriority,
             currentUser,
-            switchToUserManagement
+            switchToUserManagement,
+            filteredTickets,
+            searchQuery,
+            dateFrom,
+            dateTo,
+            selectedStatus,
+            selectedPriority,
+
         };
+
+        
+
     }
 };
 </script>
@@ -620,5 +729,21 @@ select:focus {
 
 .nav-btn:hover {
     background-color: #4338ca;
+}
+
+.search-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 16px;
+}
+
+.filter-input {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
 }
 </style>
