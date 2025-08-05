@@ -290,7 +290,8 @@ export default {
 <style scoped>
 .user-management {
   padding: 20px;
-  max-width: 1000px;
+ /* max-width: 1000px;*/
+ width: 100%;
   margin: 0 auto;
 }
 

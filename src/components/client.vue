@@ -177,7 +177,7 @@ export default {
                 priority.value = 'low';
                 type.value = 'payment';  // Reset type to default
                
-              toast.success('Ticket submitted successfully!')
+                toast.success('Ticket submitted successfully!')
 
                
                 fetchMyTickets(); // Refresh the ticket list
