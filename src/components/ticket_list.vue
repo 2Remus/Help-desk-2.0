@@ -142,6 +142,7 @@
 
 <script>
 import { ref, onMounted, nextTick, computed} from 'vue';
+import { useToast } from 'vue-toastification'
 
 import MainTemplate from './MainTemplate.vue';
 export default {
@@ -150,6 +151,7 @@ export default {
     MainTemplate
   },
     setup() {
+        const toast = useToast();
         const tickets = ref([]);
         const showChat = ref(false);
         const selectedTicketId = ref(null);
@@ -236,6 +238,7 @@ const filteredTickets = computed(() => {
                 tickets.value = await response.json();
             } catch (error) {
                 console.error('Error fetching tickets:', error);
+                toast.error('Error fetching tickets');
             }
         };
 
@@ -351,16 +354,20 @@ const filteredTickets = computed(() => {
                 });
                 
                 if (!response.ok) {
+                     toast.error('Failed to update ticket status');
                     throw new Error('Failed to update ticket status');
+
                 }
                 
                 // Update local state
                 const ticket = tickets.value.find(t => t.id === ticketId);
                 if (ticket) {
                     ticket.status = status;
+                    toast.success('Ticket status updated');
                 }
             } catch (error) {
                 console.error('Error updating ticket status:', error);
+                toast.error('Error updating ticket status');
                 // Revert the change on error
                 await fetchTickets();
             }
@@ -387,9 +394,13 @@ const filteredTickets = computed(() => {
                 const ticket = tickets.value.find(t => t.id === ticketId);
                 if (ticket) {
                     ticket.priority = priority;
+                    toast.success('Ticket priority updated');
+
                 }
             } catch (error) {
                 console.error('Error updating ticket priority:', error);
+                toast.error('Error updating ticket priority');
+
                 // Revert the change on error
                 await fetchTickets();
             }

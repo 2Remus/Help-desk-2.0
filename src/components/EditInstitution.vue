@@ -39,15 +39,18 @@
 </template>
 
 <script>
-import { ref, onMounted } from 'vue';
- import { useRoute, useRouter } from 'vue-router';
- import MainTemplate from './MainTemplate.vue';
+  import { ref, onMounted } from 'vue';
+  import { useRoute, useRouter } from 'vue-router';
+  import MainTemplate from './MainTemplate.vue';
+  import { useToast } from 'vue-toastification'
+
 export default {
   name: 'InstitutionManagement',
    components: {
     MainTemplate
   },
   setup() {
+    const toast = useToast();
     const route = useRoute();
     const router = useRouter();
     const instId = route.params.id;
@@ -77,6 +80,7 @@ export default {
         
       } catch (error) {
         console.error('Error fetching institution:', error);
+        toast.error('Error fetching institution')
       }
     };
    
@@ -95,9 +99,11 @@ export default {
           body: JSON.stringify(existingInstitution.value)
         });
         if (!response.ok) throw new Error('Failed to edit institution');
+        toast.success('Institution edited successfully');
           router.push('/institution-management');
       } catch (error) {
         console.error('Error editing institution:', error);
+        toast.error('Error editing institution');
       }
     };
 

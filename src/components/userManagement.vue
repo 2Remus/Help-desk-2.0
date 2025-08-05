@@ -101,6 +101,7 @@ import { jwtDecode } from 'jwt-decode';
 import { computed } from 'vue';
 import { useRouter } from 'vue-router';
 import MainTemplate from './MainTemplate.vue';
+import { useToast } from 'vue-toastification'
 
 export default {
   name: 'UserManagement',
@@ -111,8 +112,9 @@ export default {
     const isAdmin = computed(() => {
       return currentUser.value?.admin === true;
     });
-        const router = useRouter();
 
+    const toast = useToast()
+    const router = useRouter();
     const currentUser = ref(null);
     const users = ref([]);
     const newUser = ref({
@@ -160,6 +162,9 @@ export default {
           body: JSON.stringify(newUser.value)
         });
         if (!response.ok) throw new Error('Failed to add user');
+        
+        toast.success('User created successfully!')
+
         await fetchUsers();
         // Reset form
         newUser.value = {
@@ -171,6 +176,8 @@ export default {
         };
       } catch (error) {
         console.error('Error adding user:', error);
+        toast.error('Something went wrong!')
+
       }
     };
 
@@ -188,9 +195,12 @@ export default {
           },
         });
         if (!response.ok) throw new Error('Failed to delete user');
+        toast.success('User DELETED successfully!')
         await fetchUsers();
       } catch (error) {
         console.error('Error deleting user:', error);
+        toast.error('Something went wrong! User not deleted!')
+
       }
     };
 
@@ -212,9 +222,12 @@ export default {
           })
         });
         if (!response.ok) throw new Error('Failed to update user role');
+        toast.success('User role updated successfully!')
         await fetchUsers();
       } catch (error) {
         console.error('Error updating user role:', error);
+        toast.error('Error updating user role')
+
       }
     };
 
@@ -235,9 +248,13 @@ export default {
           })
         });
         if (!response.ok) throw new Error('Failed to update issue type');
+        toast.success('User issue type updated successfully!')
+
         await fetchUsers();
       } catch (error) {
         console.error('Error updating issue type:', error);
+        toast.error('Error updating issue type')
+
       }
     };
  
@@ -247,7 +264,6 @@ export default {
             router.push('/login');
         };
 
-  //  onMounted(fetchUsers);
      onMounted(() => {
       const token = localStorage.getItem('token');
             if(!token){

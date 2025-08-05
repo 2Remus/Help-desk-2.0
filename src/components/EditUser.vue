@@ -47,6 +47,7 @@
 import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import MainTemplate from './MainTemplate.vue';
+import { useToast } from 'vue-toastification'
 
 export default {
   name: 'UserManagement',
@@ -54,10 +55,10 @@ export default {
     MainTemplate
   },
   setup() {
-  
-   const route = useRoute();
-   const router = useRouter();
-   const usId = route.params.id;
+    const toast = useToast()
+    const route = useRoute();
+    const router = useRouter();
+    const usId = route.params.id;
     const user = ref({
       name: '',
       email: '',
@@ -81,6 +82,8 @@ export default {
         user.value = await response.json();
       } catch (error) {
         console.error('Error fetching user:', error);
+        toast.error('Error fetching user!')
+
       }
     };
 
@@ -98,10 +101,13 @@ export default {
           body: JSON.stringify(user.value)
         });
         if (!response.ok) throw new Error('Failed to add user');
+        toast.success('User updated successfully!')
         router.push('/user-management');
        
       } catch (error) {
-        console.error('Error adding user:', error);
+        console.error('Error editing user:', error);
+        toast.error('Error editing user!')
+
       }
     };
 

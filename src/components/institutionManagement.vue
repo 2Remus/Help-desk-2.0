@@ -84,6 +84,7 @@ import { ref, onMounted,computed } from 'vue';
 import { jwtDecode } from 'jwt-decode';
 import { useRouter } from 'vue-router';
 import MainTemplate from './MainTemplate.vue';
+import { useToast } from 'vue-toastification'
 
 export default {
   name: 'InstitutionManagement',
@@ -91,6 +92,7 @@ export default {
     MainTemplate
   },
   setup() {
+    const toast = useToast();
     const users = ref([]);
     const institutions = ref([]);
     const router = useRouter();
@@ -135,6 +137,7 @@ export default {
         institutions.value = await response.json();
       } catch (error) {
         console.error('Error fetching institutions:', error);
+        toast.error('Error fetching institutions');
       }
     };
 
@@ -143,15 +146,19 @@ export default {
     
     const handleAddInstitution = async () => {
       try {
+        const token = localStorage.getItem('token');
         const response = await fetch('http://localhost:8080/api/institutions/create', {
           method: 'POST',
           headers: {
+            'Authorization': 'Bearer '+ token,
             'Content-Type': 'application/json'
           },
           body: JSON.stringify(newInstitution.value)
         });
         if (!response.ok) throw new Error('Failed to add institution');
+        toast.success('Institution added successfully.');
         await fetchInstitutions();
+
         // Reset form
         newInstitution.value = {
           name:'',
@@ -161,6 +168,7 @@ export default {
         };
       } catch (error) {
         console.error('Error adding institution:', error);
+        toast.error('Error adding institution');
       }
     };
 
@@ -168,13 +176,21 @@ export default {
        const handleDeleteInstitution = async (instID) => {
       if (!confirm('Are you sure you want to delete this Institution?')) return;
       try {
+        const token = localStorage.getItem('token');
         const response = await fetch(`http://localhost:8080/api/institutions/${instID}`, {
-          method: 'DELETE'
+          method: 'DELETE',
+           headers: {
+            'Authorization': 'Bearer '+ token,
+            'Content-Type': 'application/json'
+          },
         });
         if (!response.ok) throw new Error('Failed to delete institution');
+        toast.success('Institution deleted successfully.');
         await fetchInstitutions();
       } catch (error) {
         console.error('Error deleting institution:', error);
+        toast.error('Error deleting institution');
+
       }
     };
 

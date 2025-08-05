@@ -104,7 +104,8 @@ import { ref, onMounted, nextTick } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '../stores/auth';
 import MainTemplate from './MainTemplate.vue';
-import { toast } from 'vue3-toastify';
+import { useToast } from 'vue-toastification'
+
 export default {
     name: 'SubmitTicket',
 
@@ -125,9 +126,9 @@ export default {
             }
         return date.toLocaleString(); // e.g., "7/15/2025, 9:44 AM"
         }
-
-
-         const router = useRouter();
+        
+        const toast = useToast()
+        const router = useRouter();
         const subject = ref('');
         const description = ref('');
         const priority = ref('low');
@@ -176,14 +177,15 @@ export default {
                 priority.value = 'low';
                 type.value = 'payment';  // Reset type to default
                
-                toast.success('Ticket submitted successfylly.',{
-                    autoClose: 3000,
-                });
+              toast.success('Ticket submitted successfully!')
+
                
                 fetchMyTickets(); // Refresh the ticket list
             } catch (error) {
                 errorMessage.value = `Error submitting ticket: ${error.message}`;
                 successMessage.value = '';
+                toast.error('Something went wrong!')
+
             }
         };
 
