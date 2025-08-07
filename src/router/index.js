@@ -7,6 +7,8 @@ import InstitutionManagement from '../components/institutionManagement.vue'
 import EditInstitution from '../components/EditInstitution.vue'
 import EditUser from '../components/EditUser.vue'
 import ViewTicket from '../components/ViewTicket.vue'
+import ForgotPassword from '../components/ForgotPassword.vue'
+import ResetPassword from '../components/ResetPassword.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL || '/'),
   routes: [
@@ -49,6 +51,14 @@ const router = createRouter({
       path: '/login',
       name: 'login',
       component: Login
+    },
+      {
+      path: '/forgot-password',
+      component: ForgotPassword
+    },
+    {
+      path: '/reset-password',
+      component: ResetPassword
     },
 
     { path: '/:pathMatch(.*)*', redirect: '/' }

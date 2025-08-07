@@ -102,6 +102,7 @@ import { computed } from 'vue';
 import { useRouter } from 'vue-router';
 import MainTemplate from './MainTemplate.vue';
 import { useToast } from 'vue-toastification'
+import { useAuthStore } from '../stores/auth';
 
 export default {
   name: 'UserManagement',
@@ -112,6 +113,7 @@ export default {
     const isAdmin = computed(() => {
       return currentUser.value?.admin === true;
     });
+  const auth = useAuthStore();
 
     const toast = useToast()
     const router = useRouter();
@@ -128,7 +130,9 @@ export default {
     const fetchUsers = async () => {
       try {
         const token = localStorage.getItem('token');
-         if (!token) return;
+         if (!token){
+            handleLogout();
+         } 
         currentUser.value = jwtDecode(token);
         if(!currentUser.value.admin){
           router.push('/')
@@ -145,6 +149,7 @@ export default {
         users.value = await response.json();
       } catch (error) {
         console.error('Error fetching users:', error);
+        toast.error('Error getting users.');
       }
     };
 
@@ -260,12 +265,15 @@ export default {
  
  
     const handleLogout = () => {
-            localStorage.removeItem('token');
+            auth.logout();
             router.push('/login');
         };
 
      onMounted(() => {
       const token = localStorage.getItem('token');
+          if(!auth.user){
+            handleLogout();
+          }
             if(!token){
                 handleLogout()
             }
@@ -281,6 +289,7 @@ export default {
       handleDeleteUser,
       handleRoleChange,
       handleIssueTypeChange,
+      handleLogout
       
     };
   }
