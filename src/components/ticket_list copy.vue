@@ -1,51 +1,62 @@
 <template>
     <MainTemplate>
-    <!-- Ticket Form -->
-    <div  class="ticket-form">
-      <!-- Your existing form content -->
-       <div class="ticket-list-container">
+   <div class="ticket-list-container">
+    <!--  <div class="header-buttons">
+            <button class="nav-btn" @click="switchToUserManagement">
+                👥 User Management
+            </button>
+        </div>
+        -->  
         <h1>Tickets</h1>
+        <!--
+        <div class="search-bar mb-4">
+            <input
+                v-model="searchQuery"
+                type="text"
+                placeholder="Search by subject, status, or priority..."
+                class="search-input"
+            />
+        </div>
+-->
 
-        <div class="filters">
-        <input
-            v-model="searchQuery"
-            type="text"
-            placeholder="Search subject..."
-            class="filter-input"
-        />
+        <div class="filters mb-4 grid grid-cols-1 md:grid-cols-4 gap-4">
+  <input
+    v-model="searchQuery"
+    type="text"
+    placeholder="Search subject..."
+    class="filter-input"
+  />
 
-        <input
-            v-model="dateFrom"
-            type="date"
-            class="filter-input"
-            placeholder="From date"
-        />
+  <input
+    v-model="dateFrom"
+    type="date"
+    class="filter-input"
+    placeholder="From date"
+  />
 
-        <input
-            v-model="dateTo"
-            type="date"
-            class="filter-input"
-            placeholder="To date"
-        />
+  <input
+    v-model="dateTo"
+    type="date"
+    class="filter-input"
+    placeholder="To date"
+  />
 
-        <select v-model="selectedStatus" class="filter-input">
-            <option value="">All Statuses</option>
-            <option value="open">Open</option>
-            <option value="closed">Closed</option>
-            <option value="in Progress">In Progress</option>
-        </select>
+  <select v-model="selectedStatus" class="filter-input">
+    <option value="">All Statuses</option>
+    <option value="open">Open</option>
+    <option value="closed">Closed</option>
+    <option value="in Progress">In Progress</option>
+  </select>
 
-        <select v-model="selectedPriority" class="filter-input">
-            <option value="">All Priorities</option>
-            <option value="low">Low</option>
-            <option value="medium">Medium</option>
-            <option value="high">High</option>
-        </select>
-            </div>
-            </div>
- </div>
+  <select v-model="selectedPriority" class="filter-input">
+    <option value="">All Priorities</option>
+    <option value="low">Low</option>
+    <option value="medium">Medium</option>
+    <option value="high">High</option>
+  </select>
+</div>
 
- <div class="ticket-table">
+
         <table>
             <thead>
                 <tr>
@@ -93,9 +104,6 @@
                 </tr>
             </tbody>
         </table>
-        </div>
-
-
         <div v-if="tickets.length === 0" class="no-tickets">
             <p>No tickets available.</p>
         </div>
@@ -128,12 +136,12 @@
                 </div>
             </div>
         </div>
-  
+   </div>
    </MainTemplate>
 </template>
 
 <script>
-import { ref, onMounted, nextTick, computed, onUnmounted} from 'vue';
+import { ref, onMounted, nextTick, computed,onUnmounted} from 'vue';
 import { useToast } from 'vue-toastification'
 
 import MainTemplate from './MainTemplate.vue';
@@ -152,7 +160,23 @@ export default {
         const chatContainer = ref(null);
         const userData = JSON.parse(localStorage.getItem('userData') || '{}');
         const currentUser = userData.email;
-        const showForm = ref(true);
+
+  
+
+       // const searchQuery = ref('');
+/*
+        const filteredTickets = computed(() => {
+            if (!searchQuery.value.trim()) return tickets.value;
+                const query = searchQuery.value.toLowerCase();
+                return tickets.value.filter(ticket =>
+                    (ticket.subject && ticket.subject.toLowerCase().includes(query)) ||
+                    (ticket.status && ticket.status.toLowerCase().includes(query)) ||
+                    (ticket.priority && ticket.priority.toLowerCase().includes(query))
+                    );
+            });
+*/
+
+
 
 
 
@@ -170,7 +194,7 @@ const filteredTickets = computed(() => {
     const statusMatch = !selectedStatus.value || ticket.status === selectedStatus.value;
     const priorityMatch = !selectedPriority.value || ticket.priority === selectedPriority.value;
 
-    const createdAt = new Date(ticket.createdAt);
+    const createdAt = new Date(ticket.created_at);
 
     const dateFromMatch = !dateFrom.value || createdAt >= new Date(dateFrom.value);
     const dateToMatch = !dateTo.value || createdAt <= new Date(dateTo.value + 'T23:59:59');
@@ -383,23 +407,28 @@ const filteredTickets = computed(() => {
         };
 
 
-     const toggleForm = () => {
-        showForm.value = !showForm.value;
+        const switchToUserManagement = () => {
+            window.location.href = '/help-desk/user-management ';
         };
+
 
         // Set up polling for updates
         onMounted(() => {
             fetchTickets();
             // Poll for updates every 30 seconds
             const pollInterval = setInterval(fetchTickets, 30000);
-             // Clean up interval on component unmount
+           /* 
+            // Clean up interval on component unmount
             return () => {
                 clearInterval(pollInterval);
                 stopMessagePolling();
-            };
+            };*/
         });
 
-     
+        onUnmounted(() => {
+              clearInterval(pollInterval);
+        stopMessagePolling();
+            });
 
         return { 
             tickets, 
@@ -415,15 +444,13 @@ const filteredTickets = computed(() => {
             updateTicketStatus,
             updateTicketPriority,
             currentUser,
+            switchToUserManagement,
             filteredTickets,
             searchQuery,
             dateFrom,
             dateTo,
             selectedStatus,
-            selectedPriority, 
-            toggleForm,
-            showForm
-            
+            selectedPriority,
 
         };
 
@@ -438,104 +465,34 @@ const filteredTickets = computed(() => {
 /* Modern Font Import - Add this at the top */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
 
-.view-ticket {
-  padding: 20px;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-
-
-/* Mobile adjustments */
-@media (max-width: 768px) {
-  .view-ticket {
-    padding: 10px;
-  }
-
- 
-
-  .ticket-form {
-    margin-bottom: 15px;
-  }
-}
-
-
-
-/* Table responsiveness */
-.ticket-table {
-  width: 100%;
-  overflow-x: auto; /* allow horizontal scroll if needed */
-}
 /* Base Styles */
 .ticket-list-container {
-  width: 100%;
-  max-width: 100%; /* Fill available space */
-  margin: 0;
-  padding: 16px;
-  border-radius: 16px;
-  background-color: #ffffff;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  box-sizing: border-box;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 24px;
+    border: none;
+    border-radius: 16px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-/* Headings */
 h1 {
-  text-align: center;
-  font-weight: 600;
-  color: #1a1a1a;
-  font-size: clamp(1.5rem, 2vw, 1.75rem); /* Scales with screen size */
-  margin-bottom: 16px;
+    text-align: center;
+    font-weight: 600;
+    color: #1a1a1a;
+    font-size: 1.75rem;
+    margin-bottom: 24px;
 }
-/* Table wrapper for horizontal scroll on small screens */
+
+/* Table Styles */
 table {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-  margin: 16px 0;
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: 16px 0;
 }
 
-@media (max-width: 768px) {
-  table {
-    display: block;
-    overflow-x: auto;
-    white-space: nowrap;
-  }
-}
-
-/* Smaller mobile adjustments */
-@media (max-width: 500px) {
-  .ticket-list-container {
-    padding: 12px;
-    border-radius: 8px;
-  }
-  th, td {
-    padding: 8px;
-    font-size: 0.85rem;
-  }
-
-  .chat-modal {
-    bottom: 8px;
-    right: 8px;
-    width: 95%;
-    height: 75%;
-  }
-}
-/* Filters layout */
-.filters {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 12px;
-}
-
-.filter-input {
-  width: 100%;
-  padding: 8px 10px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font-size: 14px;
-  box-sizing: border-box;
-}
 th, td {
     padding: 12px 16px;
     text-align: left;
@@ -580,7 +537,7 @@ td {
     color: #64748b;
 }
 
-/* Chat Modal Styles 
+/* Chat Modal Styles */
 .chat-modal {
     position: fixed;
     bottom: 24px;
@@ -593,19 +550,6 @@ td {
     z-index: 1000;
     display: flex;
     flex-direction: column;
-}*/
-.chat-modal {
-  position: fixed;
-  bottom: 16px;
-  right: 16px;
-  width: min(90%, 360px); /* Shrinks on mobile */
-  height: min(80%, 480px);
-  background: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-  z-index: 1000;
-  display: flex;
-  flex-direction: column;
 }
 
 .chat-content {

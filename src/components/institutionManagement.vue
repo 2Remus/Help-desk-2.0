@@ -1,12 +1,12 @@
 <template>
 <MainTemplate>
-  <div class="user-management">
+   <div class="">
     <h2>Institution Management</h2>
-
-    <!-- Add User Form -->
-    <div class="add-institution-form">
-      <h3>Add New Institution</h3>
-      <form @submit.prevent="handleAddInstitution">
+    <!-- Add insitution Form -->
+    <div class="institution-form-container">
+    
+      <form class="add-institution-form" @submit.prevent="handleAddInstitution">
+          <h3>Add New Institution</h3>
           <div class="form-group">
           <label for="name">Name:</label>
           <input type="name" id="name" v-model="newInstitution.name" required />
@@ -26,12 +26,12 @@
        
         
       
-        <button type="submit">Add</button>
+        <button type="submit"><i class="pi pi-check" style="font-size: 1rem"></i>Add</button>
       </form>
     </div>
 
     <!-- User List -->
-    <div class="institution-list">
+    <div class="listings">
       <h3>Institutions</h3>
       <table>
         <thead>
@@ -56,19 +56,13 @@
             </td>
             <td>
               <div class="button-group">
-                <button class="delete-btn" @click="handleDeleteInstitution(institution.id)">
-                  Delete
-                </button>
+                          
                 <RouterLink :to="`/institutions/edit/${institution.id}`"> 
-                  <button class="" >
-                    Edit
-                  </button>
+                  <i class="pi pi-pencil" style="font-size: 1rem" title="Edit"></i>
                 </RouterLink>
-                <!--
-                <button class="" @click="handleDeleteUser(institution.id)">
-                  Edit
-                </button>
-                -->
+
+                <i class="pi pi-trash" style="font-size: 1rem"  @click="handleDeleteInstitution(institution.id)" title="Delete"></i>
+              
               </div>
             </td>
           </tr>
@@ -217,10 +211,16 @@ export default {
 </script>
 
 <style scoped>
-.user-management {
+/*.user-management {
   padding: 20px;
   max-width: 1000px;
   margin: 0 auto;
+}*/
+.main-content{
+  display: flex;
+  background-color: pink;
+  padding:10px;
+  width: 100%;
 }
 
 .add-institution-form {
@@ -287,6 +287,32 @@ th {
 
 .button-group{
   display: flex;
+}
+
+
+.institution-form-container {
+  width: 100%;
+  max-width: 500px;
+  padding: 10px;
+  display: flex;
+  margin: auto;
+  box-sizing: border-box;
+  
+}
+
+.add-institution-form {
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  padding: 30px;
+  border: #DDD solid thin;
+/* box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);*/
+  width: 100%;
+}
+
+.add-institution-form h2 {
+  margin-bottom: 20px;
+  text-align: center;
+  color: #333;
 }
 
 </style>

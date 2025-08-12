@@ -1,12 +1,12 @@
 <template>
   <MainTemplate>
-  <div class="user-management">
+  <div class="">
     <h2>User Management</h2>
 
     <!-- Add User Form -->
-    <div class="add-user-form">
-      <h3>Add New User</h3>
-      <form @submit.prevent="handleAddUser">
+    <div class="user-form-container">
+      <form class="add-user-form" @submit.prevent="handleAddUser">
+        <h3>Add New User</h3>
         <div class="form-group">
           <label for="email">Email:</label>
           <input type="email" id="email" v-model="newUser.email" required />
@@ -34,7 +34,7 @@
             <option value="account">Account</option>
           </select>
         </div>
-        <button type="submit">Add User</button>
+        <button type="submit"><i class="pi pi-check" style="font-size: 1rem"></i>Add User</button>
       </form>
     </div>
 
@@ -48,6 +48,7 @@
             <th>Email</th>
             <th>Role</th>
             <th>Issue Type</th>
+            <th>Status</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -75,16 +76,23 @@
             
             </td>
             <td v-else>{{ sysuser.issueType }}</td>
+            <td v-if="isAdmin">
+             <select              
+                 @change="handleActiveStatusChange(sysuser)" v-model="sysuser.active">
+                <option value="true">Active</option>
+                <option value="false">Inactive</option>
+              </select>
+            
+            </td>
             <td>
              <div class="button-group">
-                <button class="delete-btn" @click="handleDeleteUser(sysuser.id)">
-                  Delete
-                </button>
+              <!--  <button class="delete-btn" @click="handleDeleteUser(sysuser.id)"><i class="pi pi-trash" style="font-size: 1rem"></i></button>-->
+               
                 <RouterLink :to="`/users/edit/${sysuser.id}`"> 
-                  <button class="">
-                    Edit
-                  </button>
+                  <i class="pi pi-pencil" style="font-size: 1rem" title="Edit"></i>
                 </RouterLink>
+
+                 <i class="pi pi-trash" style="font-size: 1rem" @click="handleDeleteUser(sysuser.id)" title="Delete"></i>
               </div>
             </td>
           </tr>
@@ -263,6 +271,30 @@ export default {
       }
     };
  
+
+     const handleActiveStatusChange = async (user) => {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await fetch(`http://localhost:8080/api/users/edit/activeStatus/${user.id}`, {
+          method: 'PUT',
+          headers: {
+            'Authorization': 'Bearer '+token,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            active: user.active
+          })
+        });
+        if (!response.ok) throw new Error('Failed to update issue type');
+        toast.success('User status updated successfully!')
+
+        await fetchUsers();
+      } catch (error) {
+        console.error('Error updating status:', error);
+        toast.error('Error updating status')
+
+      }
+    };
  
     const handleLogout = () => {
             auth.logout();
@@ -289,7 +321,8 @@ export default {
       handleDeleteUser,
       handleRoleChange,
       handleIssueTypeChange,
-      handleLogout
+      handleLogout,
+      handleActiveStatusChange
       
     };
   }
@@ -305,14 +338,48 @@ export default {
 }
 
 .add-user-form {
-  background: #f8f9fa;
-  padding: 20px;
-  border-radius: 8px;
-  margin-bottom: 20px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  padding: 30px;
+  border: #DDD solid thin;
+/* box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);*/
+  width: 100%;
 }
+
+.add-user-form h2 {
+  margin-bottom: 20px;
+  text-align: center;
+  color: #333;
+}
+
 
 .form-group {
   margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: bold;
+  color: #555;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 16px;
+}
+
+
+
+.form-group select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 16px;
 }
 
 label {
@@ -342,7 +409,7 @@ button:hover {
 }
 
 .delete-btn {
-  background: #dc3545;
+/*  background: #dc3545;*/
 }
 
 .delete-btn:hover {
@@ -368,5 +435,72 @@ th {
 .button-group{
   display: flex;
 }
+i{
+  margin-right: 10px;
+}
+i:hover{
+  cursor: pointer;
+}
+a{
+  text-decoration: none;
+  text-emphasis-color: none;
+}
+li a {
+    text-decoration: none;
+    text-emphasis-color: none;
+}
 
+
+.user-form-container {
+  width: 100%;
+  max-width: 500px;
+  padding: 10px;
+  display: flex;
+  margin: auto;
+  box-sizing: border-box;
+  
+}
+/* Table styling */
+.user-list ,table {
+  width: 100%;
+  border-collapse: collapse;
+ 
+  
+}
+.user-list th,
+.user-list td {
+  /*border: 1px solid #ddd;*/
+   border-collapse: collapse;
+  padding: 8px;
+}
+
+/* Responsive table for mobile */
+@media (max-width: 768px) {
+  .user-list table,
+  .user-list thead,
+  .user-list tbody,
+  .user-list th,
+  .user-list td,
+  .user-list tr {
+    display: block;
+  }
+  .user-list thead tr {
+    display: none;
+  }
+  .user-list tr {
+    margin-bottom: 20px;
+    border-bottom: 2px solid #ddd;
+  }
+  .user-list td {
+    padding-left: 50%;
+    position: relative;
+    text-align: left;
+  }
+  .user-list td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 15px;
+    font-weight: bold;
+  }
+}
 </style>

@@ -1,12 +1,11 @@
 <template>
   <MainTemplate>
-  <div class="user-management">
+  <div class="">
     <h2>User Management</h2>
-
     <!-- Add User Form -->
-    <div class="add-user-form">
+    <div class="form-container">
       <h3>Edit User</h3>
-      <form @submit.prevent="handleEditUser">
+      <form class="add-form" @submit.prevent="handleEditUser">
         <div class="form-group">
             <input type="hidden" id="id" v-model="user.id" required />        </div>
         <div class="form-group">
@@ -33,8 +32,8 @@
             <option value="account">Account</option>
           </select>
         </div>
-        <button type="submit">Save</button>
-       <RouterLink to="/user-management"><button>Cancel</button></RouterLink>
+        <button type="submit"><i class="pi pi-check" style="font-size: 1rem"></i>Save</button>
+       <RouterLink to="/user-management"><button><i class="pi pi-ban" style="font-size: 1rem"></i>Cancel</button></RouterLink>
       </form>
     </div>
 
@@ -125,22 +124,7 @@ export default {
 </script>
 
 <style scoped>
-.user-management {
-  padding: 20px;
-  max-width: 1000px;
-  margin: 0 auto;
-}
 
-.add-user-form {
-  background: #f8f9fa;
-  padding: 20px;
-  border-radius: 8px;
-  margin-bottom: 20px;
-}
-
-.form-group {
-  margin-bottom: 15px;
-}
 
 label {
   display: block;

@@ -1,0 +1,108 @@
+i{
+  margin-right: 10px;
+}
+i:hover{
+  cursor: pointer;
+}
+a{
+  text-decoration: none;
+  text-emphasis-color: none;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: bold;
+  color: #555;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 16px;
+}
+
+.form-container {
+  padding: 20px;
+ /* max-width: 1000px;*/
+// width: 100%;
+  margin: 0 auto;
+}
+
+.form-group select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 16px;
+}
+
+
+.add-form {
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  padding: 30px;
+  border: #DDD solid thin;
+/* box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);*/
+  width: 100%;
+}
+
+.add-form h2 {
+  margin-bottom: 20px;
+  text-align: center;
+  color: #333;
+}
+
+/* Table styling */
+.listings ,table {
+  width: 100%;
+  border-collapse: collapse;
+ 
+  
+}
+.listings th,
+.listings td {
+  /*border: 1px solid #ddd;*/
+   border-collapse: collapse;
+  padding: 8px;
+}
+
+.highlight{
+    background-color:orange;
+}
+
+/* Responsive table for mobile */
+@media (max-width: 768px) {
+  .listings table,
+  .listings thead,
+  .listings tbody,
+  .listings th,
+  .listings td,
+  .listings tr {
+    display: block;
+  }
+  .listings thead tr {
+    display: none;
+  }
+  .listings tr {
+    margin-bottom: 20px;
+    border-bottom: 2px solid #ddd;
+  }
+  .listings td {
+    padding-left: 50%;
+    position: relative;
+    text-align: left;
+  }
+  .listings td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 15px;
+    font-weight: bold;
+  }
+}

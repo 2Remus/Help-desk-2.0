@@ -1,8 +1,10 @@
 <template>
       <MainTemplate>
+        <div> 
     <div class="SubmitTicket">
-        <h2> Submit A Ticket</h2>
-        <form @submit.prevent="handleSubmit">
+        <form class="add-ticket-form" @submit.prevent="handleSubmit">
+                    <h2> Submit A Ticket</h2>
+
             <div class="form-group">
                 <label for="subject">Subject:</label>
                 <input type="text" id="subject" v-model="subject" required />
@@ -28,13 +30,13 @@
                 </select>
 
             </div>
-            <button type="submit">Submit Ticket</button>
+            <button type="submit"><i class="pi pi-check" style="font-size: 1rem"></i>Submit Ticket</button>
         </form>
         <div v-if="successMessage" class="success">{{ successMessage }}</div>
         <div v-if="errorMessage" class="error">{{ errorMessage }}</div> 
     </div>
 
-    <div class="my-tickets">
+    <div class="tickets-list">
         <h2>My Tickets</h2>
         <table>
             <thead>
@@ -94,6 +96,8 @@
                 <button @click="sendMessage">Send</button>
             </div>
         </div>
+    </div>
+
     </div>
 
     </MainTemplate>
@@ -341,7 +345,7 @@ export default {
 
 <style scoped>
 /* Main container classes */
-.SubmitTicket,
+/*.SubmitTicket,*/
 .my-tickets,
 .ticket-chatbox {
     max-width: 800px;
@@ -352,9 +356,34 @@ export default {
     background-color: #f9f9f9;
 }
 
-/* Form styling */
+
 .form-group {
-    margin-bottom: 15px;
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: bold;
+  color: #555;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 16px;
+}
+
+
+
+.form-group select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 16px;
 }
 
 label {
@@ -538,5 +567,70 @@ h2 {
     border-radius: 12px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
     z-index: 1000;
+}
+
+
+.SubmitTicket {
+  width: 100%;
+  max-width: 500px;
+  padding: 10px;
+  display: flex;
+  margin: auto;
+  box-sizing: border-box;
+  
+}
+
+.add-ticket-form {
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  padding: 30px;
+  border: #DDD solid thin;
+/* box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);*/
+  width: 100%;
+}
+
+
+/* Table styling */
+.tickets-list ,table {
+  width: 100%;
+  border-collapse: collapse;
+ 
+  
+}
+.tickets-list th,
+.tickets-list td {
+  /*border: 1px solid #ddd;*/
+   border-collapse: collapse;
+  padding: 8px;
+}
+
+/* Responsive table for mobile */
+@media (max-width: 768px) {
+  .tickets-list table,
+  .tickets-list thead,
+  .tickets-list tbody,
+  .tickets-list th,
+  .tickets-list td,
+  .tickets-list tr {
+    display: block;
+  }
+  .tickets-list thead tr {
+    display: none;
+  }
+  .tickets-list tr {
+    margin-bottom: 20px;
+    border-bottom: 2px solid #ddd;
+  }
+  .tickets-list td {
+    padding-left: 50%;
+    position: relative;
+    text-align: left;
+  }
+  .tickets-list td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 15px;
+    font-weight: bold;
+  }
 }
 </style>

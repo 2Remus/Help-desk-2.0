@@ -1,12 +1,13 @@
 <template>
   <MainTemplate>
-  <div class="user-management">
-    <h2>Institution Management</h2>
+  
+
 
     <!-- Add User Form -->
-    <div class="add-institution-form">
-      <h3>Edit Institution</h3>
-      <form @submit.prevent="handleEditInstitution">
+    <div class="form-container">
+     
+      <form class="add-form" @submit.prevent="handleEditInstitution">
+         <h3>Edit Institution</h3>
           <div class="form-group">
           <input type="hidden" id="id" v-model="existingInstitution.id" required />
         </div>
@@ -29,12 +30,12 @@
        
         
       
-        <button type="submit">Save</button>
-        <RouterLink to="/institution-management"><button>Cancel</button></RouterLink>
+        <button type="submit"><i class="pi pi-check" style="font-size: 1rem"></i>Save</button>
+        <RouterLink to="/institution-management"><button><i class="pi pi-ban" style="font-size: 1rem"></i>Cancel</button></RouterLink>
       </form>
     </div>
 
-  </div>
+ 
   </MainTemplate>
 </template>
 

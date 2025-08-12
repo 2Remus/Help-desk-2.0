@@ -5,4 +5,7 @@ import vue from '@vitejs/plugin-vue'
 export default defineConfig({
   plugins: [vue()],
   base: '/help-desk', // Set the base path for the application
+   server: {
+    historyApiFallback: true
+  }
 })

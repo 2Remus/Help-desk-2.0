@@ -1,6 +1,6 @@
 <template>
   <MainTemplate>
-    <div class="view-ticket p-4">
+    <div class="view-ticket p-8 ">
       <h2 class="text-xl font-bold mb-4">Ticket Details</h2>
 
       <div v-if="ticket">
@@ -90,11 +90,50 @@ onMounted(() => {
 <style scoped>
 .view-ticket {
   padding: 20px;
+  max-width: 1200px; /* Center on large screens */
+  width: 100%;
+  margin: 0 auto;
+  box-sizing: border-box;
 }
+
 .message {
-  padding: 10px;
+  padding: 15px;
   background: #f7f7f7;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   border-radius: 5px;
+  font-size: 1rem;
+  line-height: 1.4;
+  word-wrap: break-word; /* Prevent overflow from long text */
+}
+
+/* Tablet */
+@media (max-width: 1024px) {
+  .view-ticket {
+    padding: 15px;
+    max-width: 100%;
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .view-ticket {
+    padding: 10px;
+    width: 100%;
+  }
+
+  .message {
+    font-size: 0.95rem;
+    padding: 12px;
+  }
+}
+
+/* Small mobile (portrait) */
+@media (max-width: 480px) {
+  .message {
+    font-size: 0.9rem;
+    padding: 10px;
+  }
 }
 </style>
+
+

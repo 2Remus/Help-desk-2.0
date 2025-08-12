@@ -1,6 +1,13 @@
-<template>
+<template>  
+    <div align="center">        
+        <img src="../assets/cardtp.png" alt="cardtp logo" class="logo"  />
+    <!--  <img src="../assets/vswift.png" alt="vswift logo" class="logo" />-->  
+        <h2>Help Desk</h2>
+    </div>
     <div class="login-form">
-        <h2>Login</h2>
+        
+       <!--<h2>Login</h2>--> 
+      
         <form @submit="handleLogin">
             <div class="form-group">
                 <label for="email">Email:</label>
@@ -12,6 +19,9 @@
             </div>
             <button type="submit">Login</button>
         </form>
+        <br/>
+        <div>
+        <RouterLink to="/register">Register</RouterLink></div>
         <div v-if="error" class="error">{{ error }}</div>
     </div>
 </template>
@@ -75,6 +85,9 @@ export default {
 </script>
 
 <style scoped>
+.logo {
+  height: 80px;
+}
 .login-form {
     max-width: 400px;
     margin: 40px auto;

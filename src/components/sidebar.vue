@@ -1,177 +1,209 @@
 <script setup>
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '../stores/auth';
-import {  computed } from 'vue';
-
 
 const auth = useAuthStore();
 const router = useRouter();
+
 const isLoggedIn = computed(() => auth.isLoggedIn);
 const isAdmin = computed(() => auth.user?.admin);
+
+const sidebarOpen = ref(false); // For mobile toggle
+
+const toggleSidebar = () => {
+  sidebarOpen.value = !sidebarOpen.value;
+};
+
+const closeSidebar = () => {
+  sidebarOpen.value = false;
+};
+
 const handleLogout = () => {
   auth.logout();
   router.push('/login');
 };
+
 const goToUsers = () => window.location.href = '/help-desk/user-management';
 const goToInstitutions = () => window.location.href = '/help-desk/institution-management';
 const goToTickets = () => window.location.href = '/help-desk/tickets';
 const goToSubmitTicket = () => window.location.href = '/help-desk/';
+
+// Optional: close menu on ESC key
+const handleKeydown = (e) => {
+  if (e.key === 'Escape' && sidebarOpen.value) closeSidebar();
+};
+
+onMounted(() => {
+  window.addEventListener('keydown', handleKeydown);
+});
+onBeforeUnmount(() => {
+  window.removeEventListener('keydown', handleKeydown);
+});
 </script>
 
-
 <template>
-  <div class="container" v-cloak>
-    <div class="sidebar-header">
-      <img src="../assets/cardtp.png" alt="cardtp logo" class="sidebar-logo cardtp-logo" />
-      <img src="../assets/vswift.png" alt="vswift logo" class="sidebar-logo vswift-logo" />
-    </div>
-    <nav class="sidebar">
+  <div class="layout" v-cloak>
+    <!-- Topbar -->
+    <header class="topbar">
+      <button class="hamburger" @click="toggleSidebar">☰</button>
+      <div class="topbar-title">
+        <img src="../assets/cardtp.png" alt="cardtp logo" class="logo" />
+        <img src="../assets/vswift.png" alt="vswift logo" class="logo" />
+      </div>
+    </header>
+
+    <!-- Overlay for mobile -->
+    <div 
+      v-if="sidebarOpen" 
+      class="overlay" 
+      @click="closeSidebar"
+    ></div>
+
+    <!-- Sidebar -->
+    <nav class="sidebar" :class="{ open: sidebarOpen }">
       <ul>
         <li v-if="isAdmin">
           <button class="sidebar-link" @click="goToUsers">
-            <i class="fas fa-users"></i>
-            <span>Users</span>
+            <i class="pi pi-users"></i><span>Users</span>
           </button>
         </li>
         <li>
           <button class="sidebar-link" @click="goToSubmitTicket">
-            <i class="fas fa-users"></i>
-            <span>Submit a ticket</span>
+            <i class="pi pi-plus"></i><span>Submit a ticket</span>
           </button>
         </li>
         <li v-if="isAdmin">
           <button class="sidebar-link" @click="goToInstitutions">
-            <i class="fas fa-university"></i>
-            <span>Institutions</span>
+            <i class="pi pi-building-columns"></i><span>Institutions</span>
           </button>
         </li>
         <li v-if="isAdmin">
           <button class="sidebar-link" @click="goToTickets">
-            <i class="fas fa-ticket-alt"></i>
-            <span>Tickets</span>
+            <i class="pi pi-list-check"></i><span>Tickets</span>
           </button>
         </li>
         <li v-if="isLoggedIn">
-          <button class="sidebar-link logout-button" @click="handleLogout">
-            <i class="fas fa-ticket-alt"></i>
-            <span>Logout</span>
+          <button class="sidebar-link" @click="handleLogout">
+            <i class="pi pi-sign-out"></i><span>Logout</span>
           </button>
         </li>
-
-      
       </ul>
     </nav>
+
+    <!-- Main Content -->
+    <main class="content">
+      <slot></slot>
+    </main>
   </div>
 </template>
 
 <style scoped>
-.sidebar-header {
-  width: 220px;
-  position: fixed;
-  top: 2rem;
-  left: 0;
-  z-index: 11;
+.layout {
   display: flex;
-  flex-direction: row;
+  min-height: 100vh;
+}
+
+.topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: #007bff;
+  color: white;
+  display: flex;
+  align-items: center;
+  padding: 0 1rem;
+  z-index: 200;
+}
+
+.topbar-title {
+  display: flex;
   align-items: center;
   gap: 10px;
+}
+
+.logo {
+  height: 40px;
+}
+
+.hamburger {
+  font-size: 1.5rem;
   background: transparent;
-  padding-left: 16px;
-  margin-bottom: 8px;
+  border: none;
+  color: white;
+  cursor: pointer;
+  margin-right: 1rem;
 }
 
-.sidebar-logo {
-  height: 60px;
-  width: auto;
-  /* Remove background color */
-  background: transparent;
-  border-radius: 6px;
-  box-shadow: 0 1px 0px rgba(0,123,255,0.07);
-  padding: 4px 8px;
-  object-fit: contain;
-  display: block;
-}
-
-.cardtp-logo {
-  margin-right: 8px;
-}
-
-.vswift-logo {
-  margin-left: auto;
-}
-
+/* Sidebar */
 .sidebar {
-  width: 220px;
   position: fixed;
-  top: 7rem; /* Adjust so it sits below the header */
+  top: 60px;
   left: 0;
-  height: 80%;
-  background: #fff;
-  padding: 32px 16px;
+  width: 220px;
+  height: calc(100% - 60px);
+  background: white;
   border-right: 1px solid #eee;
-  box-shadow: 2px 0 8px rgba(0,0,0,0.04);
-  border-radius: 0 16px 16px 0;
-  z-index: 10;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+  padding: 1rem;
+  overflow-y: auto;
+  transition: transform 0.3s ease-in-out;
+  z-index: 300;
 }
 
 .sidebar ul {
   list-style: none;
   padding: 0;
   margin: 0;
-  width: 100%;
-}
-
-.sidebar li {
-  margin-bottom: 18px;
-  width: 100%;
 }
 
 .sidebar-link {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 12px 16px;
-  border-radius: 8px;
-  color: #333;
-  font-weight: 500;
+  padding: 12px;
+  border: none;
   background: transparent;
-  border: none;
-  outline: none;
   width: 100%;
-  cursor: pointer;
-  transition: background 0.2s, color 0.2s;
   text-align: left;
-}
-
-.sidebar-link i {
-  font-size: 1.2rem;
-  color: #007bff;
-  min-width: 24px;
-  text-align: center;
-}
-
-.sidebar-link:hover,
-.sidebar-link.active {
-  background: #f0f4ff;
-  color: #007bff;
-}
-
-.sidebar-link.active i {
-  color: #0056b3;
-}
-
-
-.logout-button {
-  background-color: #e74c3c;
-  border: none;
-  color: white;
-  padding: 0.5rem 1rem;
+  font-weight: 500;
   cursor: pointer;
-  border-radius: 4px;
 }
 
-/* ...existing styles... */
+.sidebar-link:hover {
+  background: #f0f4ff;
+}
+
+/* Main content */
+.content {
+  flex: 1;
+  margin-left: 220px;
+  padding: 80px 20px 20px;
+}
+
+/* Overlay for mobile */
+.overlay {
+  position: fixed;
+  top: 60px;
+  left: 0;
+  width: 100%;
+  height: calc(100% - 60px);
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 250;
+}
+
+/* Mobile & Tablet */
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+  }
+  .sidebar.open {
+    transform: translateX(0);
+  }
+  .content {
+    margin-left: 0;
+    padding: 80px 20px 20px;
+  }
+}
 </style>
