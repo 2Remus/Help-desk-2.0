@@ -45,7 +45,7 @@
             </div>
  </div>
 
- <div class="ticket-table">
+ <div class="ticket-list">
         <table>
             <thead>
                 <tr>
@@ -86,9 +86,11 @@
                     </td>
                     <td>{{ formatDate(ticket.createdAt) }}</td>
                     <td>
-                        <button class="chat-btn" @click="openChat(ticket.id)">
+                       <!-- <button class="chat-btn" @click="openChat(ticket.id)">
                             💬 Chat
-                        </button>
+                        </button>--> 
+                        <i class="pi pi-comments" @click="openChat(ticket.id)" style="font-size: 1.3rem" title="Chat"></i>
+                        <i ></i>
                     </td>
                 </tr>
             </tbody>
@@ -494,14 +496,19 @@ table {
   border-spacing: 0;
   margin: 16px 0;
 }
-
+/*
 @media (max-width: 768px) {
-  table {
+/*  table {
     display: block;
     overflow-x: auto;
     white-space: nowrap;
   }
-}
+   table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+}*/
 
 /* Smaller mobile adjustments */
 @media (max-width: 500px) {
@@ -519,6 +526,7 @@ table {
     right: 8px;
     width: 95%;
     height: 75%;
+    box-sizing: border-box;
   }
 }
 /* Filters layout */
@@ -536,6 +544,7 @@ table {
   font-size: 14px;
   box-sizing: border-box;
 }
+
 th, td {
     padding: 12px 16px;
     text-align: left;
@@ -817,5 +826,35 @@ select:focus {
   border: 1px solid #ccc;
   border-radius: 6px;
   font-size: 14px;
+}
+
+
+@media (max-width: 768px) {
+  .ticket-list table,
+  .ticket-list thead,
+  .ticket-list tbody,
+  .ticket-list th,
+  .ticket-list td,
+  .ticket-list tr {
+    display: block;
+  }
+  .ticket-list thead tr {
+    display: none;
+  }
+  .ticket-list tr {
+    margin-bottom: 20px;
+    border-bottom: 2px solid #ddd;
+  }
+  .ticket-list td {
+  /*  padding-left: 50%;*/
+    position: relative;
+    text-align: left;
+  }
+  .ticket-list td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 15px;
+    font-weight: bold;
+  }
 }
 </style>

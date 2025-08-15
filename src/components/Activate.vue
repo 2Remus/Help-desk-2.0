@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="activation-page">
     <p v-if="status" :class="statusClass">{{ status }}</p>
   </div>
 </template>
@@ -26,6 +26,7 @@ const statusClass = computed(() => {
 
 
 onMounted(async () => {
+  console.log("Started!!")
   const token = route.query.token
   if (!token) {
     status.value = 'Invalid activation link'
@@ -39,6 +40,8 @@ onMounted(async () => {
         'Content-Type': 'application/json'
       }
     })
+  
+    
     status.value = await res.text()
     //router.push('/login')
   } catch (e) {
@@ -46,3 +49,9 @@ onMounted(async () => {
   }
 })
 </script>
+<style scoped>
+.activation-page {
+  padding: 2rem;
+  text-align: center;
+}
+</style>

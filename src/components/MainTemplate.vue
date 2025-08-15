@@ -28,7 +28,7 @@ const goToUsers = () => window.location.href = '/help-desk/user-management';
 const goToInstitutions = () => window.location.href = '/help-desk/institution-management';
 const goToTickets = () => window.location.href = '/help-desk/tickets';
 const goToSubmitTicket = () => window.location.href = '/help-desk/';
-
+const goToFequentlyAskedQuestions = () => window.location.href = '/help-desk/frequently-asked-questions';
 // Optional: close menu on ESC key
 const handleKeydown = (e) => {
   if (e.key === 'Escape' && sidebarOpen.value) closeSidebar();
@@ -49,14 +49,14 @@ onBeforeUnmount(() => {
       <button class="hamburger" @click="toggleSidebar">☰</button>
       <div class="topbar-title">
         <img src="../assets/cardtp.png" alt="cardtp logo" class="logo" />
-     <!--  <img src="../assets/vswift.png" alt="vswift logo" class="logo" />--> 
+        <!--  <img src="../assets/vswift.png" alt="vswift logo" class="logo" />--> 
         <div> <h2 class="title">Help Desk</h2></div>
 
       </div>
       
 <!-- User email on the right -->
   <div v-if="isLoggedIn" class="topbar-user">
-   <i class="pi pi-user"></i> {{ userEmail }}
+    <i class="pi pi-user"></i> {{ userEmail }}
   </div>
      
     </header>
@@ -91,6 +91,11 @@ onBeforeUnmount(() => {
         <li v-if="isAdmin">
           <button class="sidebar-link" @click="goToTickets">
             <i class="pi pi-list-check"></i><span>Tickets</span>
+          </button>
+        </li>
+         <li>
+          <button class="sidebar-link" @click="goToFequentlyAskedQuestions">
+            <i class="pi pi-question"></i><span>FAQ</span>
           </button>
         </li>
         <li v-if="isLoggedIn">

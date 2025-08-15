@@ -567,6 +567,7 @@ h2 {
     border-radius: 12px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
     z-index: 1000;
+    box-sizing: border-box;
 }
 
 
@@ -622,7 +623,7 @@ h2 {
     border-bottom: 2px solid #ddd;
   }
   .tickets-list td {
-    padding-left: 50%;
+    padding-left: 20px;
     position: relative;
     text-align: left;
   }
@@ -631,6 +632,14 @@ h2 {
     position: absolute;
     left: 15px;
     font-weight: bold;
+  }
+
+   .chat-modal {
+    bottom: 8px;
+    right: 8px;
+    width: 95%;
+    height: 75%;
+    box-sizing: border-box;
   }
 }
 </style>

@@ -30,9 +30,11 @@ a{
 
 .form-container {
   padding: 20px;
- /* max-width: 1000px;*/
+  max-width: 500px;
 // width: 100%;
-  margin: 0 auto;
+  margin: auto; 
+  box-sizing: border-box;
+  
 }
 
 .form-group select {
@@ -51,6 +53,7 @@ a{
   border: #DDD solid thin;
 /* box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);*/
   width: 100%;
+   box-sizing: border-box;
 }
 
 .add-form h2 {
@@ -105,4 +108,16 @@ a{
     left: 15px;
     font-weight: bold;
   }
+
+
+}
+  .button-group{
+    display:flex;
+  }
+  .button-group button, a{
+    margin-bottom:5px;
+  
+}
+.button-group a{
+  text-decoration:none;
 }

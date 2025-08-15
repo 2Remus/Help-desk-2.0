@@ -492,7 +492,7 @@ li a {
     border-bottom: 2px solid #ddd;
   }
   .user-list td {
-    padding-left: 50%;
+  /*  padding-left: 50%;*/
     position: relative;
     text-align: left;
   }

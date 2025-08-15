@@ -32,8 +32,10 @@
             <option value="account">Account</option>
           </select>
         </div>
+        <div class="button-group">
         <button type="submit"><i class="pi pi-check" style="font-size: 1rem"></i>Save</button>
-       <RouterLink to="/user-management"><button><i class="pi pi-ban" style="font-size: 1rem"></i>Cancel</button></RouterLink>
+       <RouterLink to="/user-management"><button><i class="pi pi-ban" style="font-size: 1rem"></i>  Cancel</button></RouterLink> 
+       </div>
       </form>
     </div>
 
@@ -136,6 +138,7 @@ input, select {
   padding: 8px;
   border: 1px solid #ddd;
   border-radius: 4px;
+   box-sizing: border-box;
 }
 
 button {
@@ -176,8 +179,10 @@ th {
   background-color: #f8f9fa;
 }
 
-.button-group{
-  display: flex;
+@media (max-width: 768px) {
+.button-group {
+    flex-direction: column;
+  }
 }
 
 </style>

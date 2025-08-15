@@ -24,45 +24,43 @@
   </div>
 </template>
 
-<script>
 
-export default {
-  data() {
-    return {
-      name: '',
-      email: '',
-      password: '',
-      message: ''
-    }
-  },
-  methods: {
-    async register() {
-      try {
-        const response = await fetch('http://localhost:8080/api/register', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            name: this.name, 
-            email: this.email,
-            password: this.password })
-        });
-        this.message = await response.text();
-      } catch (e) {
-        this.message = 'An error occurred';
-      }
-    }
+
+<script setup>
+import { ref } from 'vue'
+
+const name = ref('')
+const email = ref('')
+const password = ref('')
+const message = ref('')
+
+const register = async () => {
+  try {
+    const response = await fetch('http://localhost:8080/api/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: name.value,
+        email: email.value,
+        password: password.value
+      })
+    })
+    message.value = await response.text()
+  } catch (e) {
+    message.value = 'An error occurred'
   }
 }
 </script>
+
 <style scoped>
 .form-group {
     margin-bottom: 15px;
 }
 
 .login-container {
-  width: 100%;
+
  max-width: 500px;
-  padding: 20px;
+  padding: 10px;
   display: flex;
   margin: auto;
 }
@@ -99,6 +97,7 @@ export default {
   border: 1px solid #ccc;
   border-radius: 6px;
   font-size: 16px;
+  box-sizing: border-box;
 }
 
 

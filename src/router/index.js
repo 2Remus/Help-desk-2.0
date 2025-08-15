@@ -9,6 +9,7 @@ import EditUser from '../components/EditUser.vue'
 import ViewTicket from '../components/ViewTicket.vue'
 import RegisterForm from '../components/RegisterForm.vue'
 import ActivateView from '../components/Activate.vue'
+import FequentlyAskedQuestions from '../components/FequentlyAskedQuestions.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL || '/'),
@@ -62,6 +63,11 @@ const router = createRouter({
       path: '/activate',
       name: 'activate-account',
       component: ActivateView
+    },
+     {
+      path: '/frequently-asked-questions',
+      name: 'frequently-asked-questions',
+      component: FequentlyAskedQuestions
     },
     { path: '/:pathMatch(.*)*', redirect: '/' }
   ]

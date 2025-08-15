@@ -28,10 +28,10 @@
           <input type="text" id="phoneNumber" v-model="existingInstitution.phoneNumber" required />
         </div>
        
-        
-      
+        <div class="button-group">
         <button type="submit"><i class="pi pi-check" style="font-size: 1rem"></i>Save</button>
         <RouterLink to="/institution-management"><button><i class="pi pi-ban" style="font-size: 1rem"></i>Cancel</button></RouterLink>
+      </div>
       </form>
     </div>
 
@@ -192,6 +192,11 @@ th {
 
 .button-group{
   display: flex;
+}
+@media (max-width: 768px) {
+.button-group {
+    flex-direction: column;
+  }
 }
 
 </style>
