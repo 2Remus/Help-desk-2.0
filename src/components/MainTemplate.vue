@@ -29,6 +29,8 @@ const goToInstitutions = () => window.location.href = '/help-desk/institution-ma
 const goToTickets = () => window.location.href = '/help-desk/tickets';
 const goToSubmitTicket = () => window.location.href = '/help-desk/';
 const goToFequentlyAskedQuestions = () => window.location.href = '/help-desk/frequently-asked-questions';
+const goToIssueTypes = () => window.location.href = '/help-desk/issue-types';
+
 // Optional: close menu on ESC key
 const handleKeydown = (e) => {
   if (e.key === 'Escape' && sidebarOpen.value) closeSidebar();
@@ -86,6 +88,12 @@ onBeforeUnmount(() => {
         <li v-if="isAdmin">
           <button class="sidebar-link" @click="goToInstitutions">
             <i class="pi pi-building-columns"></i><span>Institutions</span>
+          </button>
+        </li>
+
+        <li v-if="isAdmin">
+          <button class="sidebar-link" @click="goToIssueTypes">
+            <i class="pi pi-building-columns"></i><span>Issue Types</span>
           </button>
         </li>
         <li v-if="isAdmin">

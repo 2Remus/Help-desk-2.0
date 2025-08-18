@@ -23,11 +23,13 @@
                 </select>
 
                 <label for="type">Type:</label>
-                <select id="type" v-model="type" required>
-                    <option value="payment">payment</option>
-                    <option value="service">service</option>
-                    <option value="account">account</option>
-                </select>
+               
+                 <select id="type" v-model="type" required>
+                    <option disabled value="">-- Select Type --</option>
+                    <option v-for="issue in issueTypes" :key="issue.id" :value="issue.name">
+                        {{ issue.name }}
+                    </option>
+                 </select>
 
             </div>
             <button type="submit"><i class="pi pi-check" style="font-size: 1rem"></i>Submit Ticket</button>
@@ -151,7 +153,7 @@ export default {
             { sender: 'You', text: 'My ticket ID is 12345.' },
             { sender: 'Support', text: 'Thank you! We will look into it and get back to you shortly.' }
         ]);
-
+        const issueTypes = ref([]);
 
         
 
@@ -316,6 +318,28 @@ export default {
             router.push('/login');
         };
 
+
+        
+    const fetchIssueTypes = async () => {
+      try {
+        const token = localStorage.getItem('token');
+           if (!token) return;
+       
+        const response = await fetch('http://localhost:8080/api/issue-types',
+        {
+                    headers: {
+                        "Authorization": "Bearer "+ token,
+                         "Content-Type": "application/json"
+                    }
+                });
+        if (!response.ok) throw new Error('Failed to fetch Issues');
+        issueTypes.value = await response.json();
+        console.log("Issues "+issueTypes.value)
+      } catch (error) {
+        console.error('Error fetching issue types:', error);
+        toast.error('Error fetching issue types');
+      }
+    };
         
         onMounted(() => {
             const token = localStorage.getItem('token');
@@ -323,6 +347,7 @@ export default {
                 handleLogout()
             }
             fetchMyTickets();
+            fetchIssueTypes()
             // Return cleanup function
             return () => {
                 stopMessagePolling();
@@ -330,13 +355,24 @@ export default {
         });
 
         return { 
-            subject, description, priority, type, // Add type here
-            successMessage, errorMessage, 
-            tickets, handleSubmit, showChat, 
-            selectedTicketId, newMessage, 
-            chatMessages, sendMessage, handleLogout, 
-            openChat, closeChat ,
-                        formatDate,fetchMyTickets
+            subject, description, priority, 
+            type, // Add type here
+            successMessage, 
+            errorMessage, 
+            tickets,
+            handleSubmit, 
+            showChat, 
+            selectedTicketId, 
+            newMessage, 
+            chatMessages, 
+            sendMessage, 
+            handleLogout, 
+            openChat, 
+            closeChat ,
+            formatDate,
+            fetchMyTickets,
+            issueTypes,
+            fetchIssueTypes
 
         };
     }

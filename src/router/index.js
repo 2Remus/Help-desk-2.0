@@ -10,6 +10,7 @@ import ViewTicket from '../components/ViewTicket.vue'
 import RegisterForm from '../components/RegisterForm.vue'
 import ActivateView from '../components/Activate.vue'
 import FequentlyAskedQuestions from '../components/FequentlyAskedQuestions.vue'
+import IssueTypeManagement from '../components/IssueTypeManagement.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL || '/'),
@@ -68,6 +69,11 @@ const router = createRouter({
       path: '/frequently-asked-questions',
       name: 'frequently-asked-questions',
       component: FequentlyAskedQuestions
+    },
+    {
+      path: '/issue-types',
+      name: 'issue-types',
+      component: IssueTypeManagement
     },
     { path: '/:pathMatch(.*)*', redirect: '/' }
   ]

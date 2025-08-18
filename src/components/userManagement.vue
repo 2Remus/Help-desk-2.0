@@ -29,10 +29,12 @@
         <div class="form-group" v-if="newUser.isAdmin">
           <label for="issueType">Issue Type:</label>
           <select id="issueType" v-model="newUser.issueType">
-            <option value="payment">Payment</option>
-            <option value="service">Service</option>
-            <option value="account">Account</option>
+            <option v-for="issue in issueTypes" :key="issue.id" :value="issue.name">
+                        {{ issue.name }}
+                    </option>
           </select>
+          
+          
         </div>
         <button type="submit"><i class="pi pi-check" style="font-size: 1rem"></i>Add User</button>
       </form>
@@ -69,9 +71,9 @@
             <td v-if="isAdmin">
              <select              
                  @change="handleIssueTypeChange(sysuser)" v-model="sysuser.issueType">
-                <option value="payment">Payment</option>
-                <option value="service">Service</option>
-                <option value="account">Account</option>
+               <option v-for="issue in issueTypes" :key="issue.id" :value="issue.name">
+                        {{ issue.name }}
+                    </option>
               </select>
             
             </td>
@@ -134,6 +136,7 @@ export default {
       isAdmin: false,
       issueType: 'payment'
     });
+    const issueTypes = ref([]);
 
     const fetchUsers = async () => {
       try {
@@ -296,6 +299,26 @@ export default {
       }
     };
  
+
+       const fetchIssueTypes = async () => {
+      try {
+        const token = localStorage.getItem('token');
+           if (!token) return;
+       
+        const response = await fetch('http://localhost:8080/api/issue-types',
+        {
+                    headers: {
+                        "Authorization": "Bearer "+ token,
+                         "Content-Type": "application/json"
+                    }
+                });
+        if (!response.ok) throw new Error('Failed to fetch Issues');
+        issueTypes.value = await response.json();
+      } catch (error) {
+        console.error('Error fetching issue types:', error);
+        toast.error('Error fetching issue types');
+      }
+    };
     const handleLogout = () => {
             auth.logout();
             router.push('/login');
@@ -310,6 +333,7 @@ export default {
                 handleLogout()
             }
             fetchUsers()
+            fetchIssueTypes()
      });
 
     return {
@@ -322,7 +346,10 @@ export default {
       handleRoleChange,
       handleIssueTypeChange,
       handleLogout,
-      handleActiveStatusChange
+      handleActiveStatusChange,
+      issueTypes,
+      fetchIssueTypes
+
       
     };
   }
