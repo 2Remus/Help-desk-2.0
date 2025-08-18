@@ -434,9 +434,6 @@ button:hover {
   background: #0056b3;
 }
 
-.delete-btn {
-/*  background: #dc3545;*/
-}
 
 .delete-btn:hover {
   background: #c82333;
