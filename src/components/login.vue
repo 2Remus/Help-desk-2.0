@@ -1,12 +1,11 @@
 <template>  
     <div align="center">        
         <img src="../assets/cardtp.png" alt="cardtp logo" class="logo"  />
-    <!--  <img src="../assets/vswift.png" alt="vswift logo" class="logo" />-->  
         <h2>Help Desk</h2>
     </div>
     <div class="login-form">
         
-       <!--<h2>Login</h2>--> 
+   
       
         <form @submit="handleLogin">
             <div class="form-group">

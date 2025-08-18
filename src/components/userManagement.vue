@@ -88,7 +88,6 @@
             </td>
             <td>
              <div class="button-group">
-              <!--  <button class="delete-btn" @click="handleDeleteUser(sysuser.id)"><i class="pi pi-trash" style="font-size: 1rem"></i></button>-->
                
                 <RouterLink :to="`/users/edit/${sysuser.id}`"> 
                   <i class="pi pi-pencil" style="font-size: 1rem" title="Edit"></i>

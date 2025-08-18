@@ -211,11 +211,7 @@ export default {
 </script>
 
 <style scoped>
-/*.user-management {
-  padding: 20px;
-  max-width: 1000px;
-  margin: 0 auto;
-}*/
+
 .main-content{
   display: flex;
   background-color: pink;

@@ -93,7 +93,7 @@ onBeforeUnmount(() => {
 
         <li v-if="isAdmin">
           <button class="sidebar-link" @click="goToIssueTypes">
-            <i class="pi pi-building-columns"></i><span>Issue Types</span>
+            <i class="pi pi-objects-column"></i><span>Issue Types</span>
           </button>
         </li>
         <li v-if="isAdmin">

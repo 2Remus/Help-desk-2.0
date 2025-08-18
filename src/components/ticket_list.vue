@@ -2,7 +2,6 @@
     <MainTemplate>
     <!-- Ticket Form -->
     <div  class="ticket-form">
-      <!-- Your existing form content -->
        <div class="ticket-list-container">
         <h1>Tickets</h1>
 
@@ -86,9 +85,7 @@
                     </td>
                     <td>{{ formatDate(ticket.createdAt) }}</td>
                     <td>
-                       <!-- <button class="chat-btn" @click="openChat(ticket.id)">
-                            💬 Chat
-                        </button>--> 
+                  
                         <i class="pi pi-comments" @click="openChat(ticket.id)" style="font-size: 1.3rem" title="Chat"></i>
                         <i ></i>
                     </td>
@@ -496,19 +493,7 @@ table {
   border-spacing: 0;
   margin: 16px 0;
 }
-/*
-@media (max-width: 768px) {
-/*  table {
-    display: block;
-    overflow-x: auto;
-    white-space: nowrap;
-  }
-   table {
-    display: block;
-    overflow-x: auto;
-    white-space: nowrap;
-  }
-}*/
+
 
 /* Smaller mobile adjustments */
 @media (max-width: 500px) {
@@ -589,20 +574,7 @@ td {
     color: #64748b;
 }
 
-/* Chat Modal Styles 
-.chat-modal {
-    position: fixed;
-    bottom: 24px;
-    right: 24px;
-    width: 360px;
-    height: 480px;
-    background: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-    z-index: 1000;
-    display: flex;
-    flex-direction: column;
-}*/
+
 .chat-modal {
   position: fixed;
   bottom: 16px;

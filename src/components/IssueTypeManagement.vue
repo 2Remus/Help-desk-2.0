@@ -1,7 +1,7 @@
 <template>
 <MainTemplate>
    <div class="">
-    <h2>Institution Management</h2>
+    <h2>Issue Type Management</h2>
     <!-- Add insitution Form -->
     <div class="institution-form-container">
     
@@ -42,10 +42,7 @@
             <td>
               <div class="button-group">
                           
-                <RouterLink :to="`/issue-type/edit/${issueType.id}`"> 
-                  <i class="pi pi-pencil" style="font-size: 1rem" title="Edit"></i>
-                </RouterLink>
-
+              
                 <i class="pi pi-trash" style="font-size: 1rem"  @click="handleDeleteIssueType(issueType.id)" title="Delete"></i>
               
               </div>
@@ -158,63 +155,7 @@ export default {
 
       }
     };
-/*
-    
-    const handleAddInstitution = async () => {
-      try {
-        const token = localStorage.getItem('token');
-        const response = await fetch('http://localhost:8080/api/institutions/create', {
-          method: 'POST',
-          headers: {
-            'Authorization': 'Bearer '+ token,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(newInstitution.value)
-        });
-        if (!response.ok) throw new Error('Failed to add institution');
-        toast.success('Institution added successfully.');
-        await fetchInstitutions();
 
-        // Reset form
-        newInstitution.value = {
-          name:'',
-          address: '',
-          email: '',
-          phoneNumber: ''
-        };
-      } catch (error) {
-        console.error('Error adding institution:', error);
-        toast.error('Error adding institution');
-      }
-    };*/
-
-/*
-       const handleDeleteInstitution = async (instID) => {
-      if (!confirm('Are you sure you want to delete this Institution?')) return;
-      try {
-        const token = localStorage.getItem('token');
-        const response = await fetch(`http://localhost:8080/api/institutions/${instID}`, {
-          method: 'DELETE',
-           headers: {
-            'Authorization': 'Bearer '+ token,
-            'Content-Type': 'application/json'
-          },
-        });
-        if (!response.ok) throw new Error('Failed to delete institution');
-        toast.success('Institution deleted successfully.');
-        await fetchInstitutions();
-      } catch (error) {
-        console.error('Error deleting institution:', error);
-        toast.error('Error deleting institution');
-
-      }
-    };
-*/
-/*
-    const handleLogout = () => {
-            localStorage.removeItem('token');
-            router.push('/login');
-        };*/
 
     onMounted(fetchIssueTypes);
 
@@ -233,11 +174,7 @@ export default {
 </script>
 
 <style scoped>
-/*.user-management {
-  padding: 20px;
-  max-width: 1000px;
-  margin: 0 auto;
-}*/
+
 .main-content{
   display: flex;
   background-color: pink;

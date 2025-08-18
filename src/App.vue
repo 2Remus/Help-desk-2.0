@@ -7,8 +7,7 @@ import Sidebar from './components/sidebar.vue';
 
 <template>
  <div class="container" v-cloak>
-  <!--  <NavBar @logout="() => {}" />-->
-  <!--  <Sidebar /> Only visible for logged-in admins v-if="isLoggedIn && isAdmin"  -->
+
     <div class="content">
       <RouterView v-slot="{ Component }">
         <Transition mode="out-in">
@@ -87,16 +86,7 @@ import Sidebar from './components/sidebar.vue';
   margin: 0 auto;
   padding: 20px;
 }
-/*
-.nav-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem;
-  background-color: #f8f9fa;
-  margin-bottom: 2rem;
-  border-radius: 8px;
-}*/
+
 
 .logout-btn {
   padding: 8px 16px;
