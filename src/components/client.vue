@@ -160,7 +160,7 @@ export default {
         const handleSubmit = async () => {  
             try {
                 const token = localStorage.getItem('token');
-                const response = await fetch('http://localhost:8080/api/tickets/create', {
+                const response = await fetch('http://192.168.1.112:8080/api/tickets/create', {
                     method: 'POST',
                     headers: {
                         "Authorization": "Bearer "+ token,
@@ -199,7 +199,7 @@ export default {
         const fetchMyTickets = async () => {
             try {
                 const token = localStorage.getItem('token');
-                const response = await fetch('http://localhost:8080/api/myTickets',
+                const response = await fetch('http://192.168.1.112:8080/api/myTickets',
                      {
                     headers: {
                         "Authorization": "Bearer "+ token,
@@ -256,7 +256,7 @@ export default {
         const fetchMessages = async (ticketId) => {
             try {
                 const token = localStorage.getItem('token');
-                const response = await fetch(`http://localhost:8080/api/tickets/${ticketId}/messages`,
+                const response = await fetch(`http://192.168.1.112:8080/api/tickets/${ticketId}/messages`,
                  {
                     headers: {
                         "Authorization": "Bearer "+ token,
@@ -278,7 +278,7 @@ export default {
 
             try {
                 const token = localStorage.getItem('token');
-                const response = await fetch(`http://localhost:8080/api/tickets/${selectedTicketId.value}/message`, {
+                const response = await fetch(`http://192.168.1.112:8080/api/tickets/${selectedTicketId.value}/message`, {
                     method: 'POST',
                     headers: {
                          'Authorization': 'Bearer '+ token,
@@ -325,7 +325,7 @@ export default {
         const token = localStorage.getItem('token');
            if (!token) return;
        
-        const response = await fetch('http://localhost:8080/api/issue-types',
+        const response = await fetch('http://192.168.1.112:8080/api/issue-types',
         {
                     headers: {
                         "Authorization": "Bearer "+ token,

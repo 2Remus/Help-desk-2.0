@@ -201,7 +201,7 @@ const filteredTickets = computed(() => {
         const fetchTickets = async () => {
             try {
                 const token = localStorage.getItem('token');
-                const response = await fetch('http://localhost:8080/api/tickets', {
+                const response = await fetch('http://192.168.1.112:8080/api/tickets', {
                     headers: {
                          "Authorization": "Bearer "+ token,
                          "Content-Type": "application/json"
@@ -238,7 +238,7 @@ const filteredTickets = computed(() => {
         const fetchMessages = async (ticketId) => {
             try {
                 const token = localStorage.getItem('token');
-                const response = await fetch(`http://localhost:8080/api/tickets/${ticketId}/messages`, {
+                const response = await fetch(`http://192.168.1.112:8080/api/tickets/${ticketId}/messages`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -258,7 +258,7 @@ const filteredTickets = computed(() => {
 
             try {
                 const token = localStorage.getItem('token');
-                const response = await fetch(`http://localhost:8080/api/tickets/${selectedTicketId.value}/message`, {
+                const response = await fetch(`http://192.168.1.112:8080/api/tickets/${selectedTicketId.value}/message`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -319,7 +319,7 @@ const filteredTickets = computed(() => {
         const updateTicketStatus = async (ticketId, status) => {
             try {
                 const token = localStorage.getItem('token');
-                const response = await fetch(`http://localhost:8080/api/tickets/status/${ticketId}`, {
+                const response = await fetch(`http://192.168.1.112:8080/api/tickets/status/${ticketId}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -352,7 +352,7 @@ const filteredTickets = computed(() => {
         const updateTicketPriority = async (ticketId, priority) => {
             try {
                 const token = localStorage.getItem('token');
-                const response = await fetch(`http://localhost:8080/api/tickets/priority/${ticketId}`, {
+                const response = await fetch(`http://192.168.1.112:8080/api/tickets/priority/${ticketId}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
