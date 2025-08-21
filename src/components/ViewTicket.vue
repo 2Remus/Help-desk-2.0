@@ -8,6 +8,8 @@
         <p><strong>Status:</strong> {{ ticket.status }}</p>
         <p><strong>Created At:</strong> {{ formatDate(ticket.createdAt) }}</p>
         <p><strong>Created By:</strong> {{ ticket.reporter?.email || 'Unknown' }}</p>
+        <p><strong>Assignee:</strong> {{ ticket.assignedTo }}</p>
+
       </div>
       <div v-else>
         <p>Loading ticket details...</p>
@@ -44,7 +46,7 @@ const token = localStorage.getItem('token');
 const fetchTicketDetails = async () => {
   const token = localStorage.getItem('token');
   try {
-    const res = await fetch(`http://192.168.1.112:8080/api/tickets/view/${ticketId}`, {
+    const res = await fetch(`http://localhost:8080/api/tickets/view/${ticketId}`, {
       headers: {
         'Authorization': 'Bearer ' + token,
         'Content-Type': 'application/json',
@@ -60,7 +62,7 @@ const fetchTicketDetails = async () => {
 const fetchMessages = async () => {
   try {
     const token = localStorage.getItem('token');
-    const res = await fetch(`http://192.168.1.112:8080/api/tickets/${ticketId}/messages`, {
+    const res = await fetch(`http://localhost:8080/api/tickets/${ticketId}/messages`, {
       headers: {
         'Authorization': 'Bearer ' + token,
         'Content-Type': 'application/json',

@@ -52,8 +52,9 @@
                     <th>Subject</th>
                     <th>Status</th>
                     <th>Priority</th>
+                    <th>Assignee</th>
                     <th>Created At</th>
-                    <th>Actions</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -81,6 +82,15 @@
                             <option value="low">Low</option>
                             <option value="medium">Medium</option>
                             <option value="high">High</option>
+                        </select>
+                    </td>
+                      <td>
+                        <select 
+                            v-model="ticket.assignedTo"   @change="updateAssignedTo(ticket.id, ticket.assignedTo)">
+                            <option value="Unassigned"></option>
+                            <option v-for="sysuser in users" :key="sysuser.id" :value="sysuser.name">
+                                {{ sysuser.name }}
+                            </option>
                         </select>
                     </td>
                     <td>{{ formatDate(ticket.createdAt) }}</td>
@@ -152,31 +162,31 @@ export default {
         const userData = JSON.parse(localStorage.getItem('userData') || '{}');
         const currentUser = userData.email;
         const showForm = ref(true);
+        const users = ref([]);
 
 
 
+        const searchQuery = ref('');
+        const dateFrom = ref('');
+        const dateTo = ref('');
+        const selectedStatus = ref('');
+        const selectedPriority = ref('');
 
-const searchQuery = ref('');
-const dateFrom = ref('');
-const dateTo = ref('');
-const selectedStatus = ref('');
-const selectedPriority = ref('');
+            const filteredTickets = computed(() => {
+            return tickets.value.filter(ticket => {
+                const subjectMatch = ticket.subject?.toLowerCase().includes(searchQuery.value.toLowerCase());
 
-const filteredTickets = computed(() => {
-  return tickets.value.filter(ticket => {
-    const subjectMatch = ticket.subject?.toLowerCase().includes(searchQuery.value.toLowerCase());
+                const statusMatch = !selectedStatus.value || ticket.status === selectedStatus.value;
+                const priorityMatch = !selectedPriority.value || ticket.priority === selectedPriority.value;
 
-    const statusMatch = !selectedStatus.value || ticket.status === selectedStatus.value;
-    const priorityMatch = !selectedPriority.value || ticket.priority === selectedPriority.value;
+                const createdAt = new Date(ticket.createdAt);
 
-    const createdAt = new Date(ticket.createdAt);
+                const dateFromMatch = !dateFrom.value || createdAt >= new Date(dateFrom.value);
+                const dateToMatch = !dateTo.value || createdAt <= new Date(dateTo.value + 'T23:59:59');
 
-    const dateFromMatch = !dateFrom.value || createdAt >= new Date(dateFrom.value);
-    const dateToMatch = !dateTo.value || createdAt <= new Date(dateTo.value + 'T23:59:59');
-
-    return subjectMatch && statusMatch && priorityMatch && dateFromMatch && dateToMatch;
-  });
-});
+                return subjectMatch && statusMatch && priorityMatch && dateFromMatch && dateToMatch;
+            });
+            });
 
 
 
@@ -201,7 +211,7 @@ const filteredTickets = computed(() => {
         const fetchTickets = async () => {
             try {
                 const token = localStorage.getItem('token');
-                const response = await fetch('http://192.168.1.112:8080/api/tickets', {
+                const response = await fetch('http://localhost:8080/api/tickets', {
                     headers: {
                          "Authorization": "Bearer "+ token,
                          "Content-Type": "application/json"
@@ -238,7 +248,7 @@ const filteredTickets = computed(() => {
         const fetchMessages = async (ticketId) => {
             try {
                 const token = localStorage.getItem('token');
-                const response = await fetch(`http://192.168.1.112:8080/api/tickets/${ticketId}/messages`, {
+                const response = await fetch(`http://localhost:8080/api/tickets/${ticketId}/messages`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -258,7 +268,7 @@ const filteredTickets = computed(() => {
 
             try {
                 const token = localStorage.getItem('token');
-                const response = await fetch(`http://192.168.1.112:8080/api/tickets/${selectedTicketId.value}/message`, {
+                const response = await fetch(`http://localhost:8080/api/tickets/${selectedTicketId.value}/message`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -319,7 +329,7 @@ const filteredTickets = computed(() => {
         const updateTicketStatus = async (ticketId, status) => {
             try {
                 const token = localStorage.getItem('token');
-                const response = await fetch(`http://192.168.1.112:8080/api/tickets/status/${ticketId}`, {
+                const response = await fetch(`http://localhost:8080/api/tickets/status/${ticketId}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -352,7 +362,7 @@ const filteredTickets = computed(() => {
         const updateTicketPriority = async (ticketId, priority) => {
             try {
                 const token = localStorage.getItem('token');
-                const response = await fetch(`http://192.168.1.112:8080/api/tickets/priority/${ticketId}`, {
+                const response = await fetch(`http://localhost:8080/api/tickets/priority/${ticketId}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -382,6 +392,38 @@ const filteredTickets = computed(() => {
         };
 
 
+        const updateAssignedTo = async (ticketId, assignment) => {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`http://localhost:8080/api/tickets/assign/${ticketId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer '+ token,
+                    },
+                    body: JSON.stringify({ assignment })
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to update ticket');
+                }
+                
+                // Update local state
+                const ticket = tickets.value.find(t => t.id === ticketId);
+                if (ticket) {
+                    ticket.assignedTo = assignment;
+                    toast.success('Ticket updated');
+
+                }
+            } catch (error) {
+                console.error('Error updating ticket:', error);
+                toast.error('Error updating ticket');
+
+                // Revert the change on error
+                await fetchTickets();
+            }
+        };
+
      const toggleForm = () => {
         showForm.value = !showForm.value;
         };
@@ -389,6 +431,7 @@ const filteredTickets = computed(() => {
         // Set up polling for updates
         onMounted(() => {
             fetchTickets();
+            fetchUsers();
             // Poll for updates every 30 seconds
             const pollInterval = setInterval(fetchTickets, 30000);
              // Clean up interval on component unmount
@@ -399,6 +442,25 @@ const filteredTickets = computed(() => {
         });
 
      
+
+         const fetchUsers = async () => {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch('http://localhost:8080/api/users', {
+                    headers: {
+                         "Authorization": "Bearer "+ token,
+                         "Content-Type": "application/json"
+                    }
+                });
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                users.value = await response.json();
+            } catch (error) {
+                console.error('Error fetching Users:', error);
+            }
+        };
+
 
         return { 
             tickets, 
@@ -421,7 +483,10 @@ const filteredTickets = computed(() => {
             selectedStatus,
             selectedPriority, 
             toggleForm,
-            showForm
+            showForm,
+            users,
+            fetchUsers,
+            updateAssignedTo
             
 
         };
@@ -443,7 +508,12 @@ const filteredTickets = computed(() => {
   box-sizing: border-box;
 }
 
-
+select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
 
 /* Mobile adjustments */
 @media (max-width: 768px) {

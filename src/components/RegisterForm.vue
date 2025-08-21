@@ -36,7 +36,7 @@ const message = ref('')
 
 const register = async () => {
   try {
-    const response = await fetch('http://192.168.1.112:8080/api/register', {
+    const response = await fetch('http://localhost:8080/api/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
