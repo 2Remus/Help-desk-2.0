@@ -61,6 +61,7 @@ import { jwtDecode } from 'jwt-decode';
 import { useRouter } from 'vue-router';
 import MainTemplate from './MainTemplate.vue';
 import { useToast } from 'vue-toastification'
+import { useAuthStore } from '../stores/auth';
 
 export default {
   name: 'IssueTypeManagement',
@@ -81,19 +82,22 @@ export default {
       description: ''
    
     });
-
+    
+    const auth = useAuthStore();
 
    
     const fetchIssueTypes = async () => {
+      const token = auth.token;
+      console.log("Issues "+token)
       try {
-        const token = localStorage.getItem('token');
+       // const token = localStorage.getItem('token');
            if (!token) return;
         currentUser.value = jwtDecode(token);
         if(!currentUser.value.admin){
           router.push('/')
 
         }
-        const response = await fetch('http://192.168.1.112:8080/api/issue-types',
+        const response = await fetch('http://localhost:8080/api/issue-types',
         {
                     headers: {
                         "Authorization": "Bearer "+ token,
@@ -104,7 +108,7 @@ export default {
         issueTypes.value = await response.json();
       } catch (error) {
         console.error('Error fetching issue types:', error);
-        toast.error('Error fetching issue types');
+       // toast.error('Error fetching issue types');
       }
     };
 
@@ -112,7 +116,7 @@ export default {
      const handleAddIssueType = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch('http://192.168.1.112:8080/api/issue-types/create', {
+        const response = await fetch('http://localhost:8080/api/issue-types/create', {
           method: 'POST',
           headers: {
             'Authorization': 'Bearer '+ token,
@@ -139,7 +143,7 @@ export default {
       if (!confirm('Are you sure you want to delete this Issue type?')) return;
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`http://192.168.1.112:8080/api/issue-types/${issueTypeId}`, {
+        const response = await fetch(`http://localhost:8080/api/issue-types/${issueTypeId}`, {
           method: 'DELETE',
            headers: {
             'Authorization': 'Bearer '+ token,

@@ -219,7 +219,9 @@ onBeforeUnmount(() => {
 .content {
   flex: 1; /* Take all available space */
   padding: 80px 20px 20px; /* Top padding accounts for fixed topbar */
- /* margin-left: 220px;  Matches sidebar width */
+  /*margin-left: 220px;  /*Matches sidebar width */
+  margin-left: 20px; 
+
   box-sizing: border-box;
   max-width: 100%;
 }

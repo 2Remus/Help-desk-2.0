@@ -44,7 +44,7 @@
             </div>
  </div>
 
- <div class="ticket-list">
+ <div class="ticket-list  ">
         <table>
             <thead>
                 <tr>
@@ -144,14 +144,17 @@
 <script>
 import { ref, onMounted, nextTick, computed, onUnmounted} from 'vue';
 import { useToast } from 'vue-toastification'
+import { useAuthStore } from '../stores/auth';
 
 import MainTemplate from './MainTemplate.vue';
+import { useRouter } from 'vue-router';
 export default {
     name: 'TicketList',
     components: {
-    MainTemplate
+    MainTemplate,
   },
     setup() {
+        const auth = useAuthStore();
         const toast = useToast();
         const tickets = ref([]);
         const showChat = ref(false);
@@ -159,12 +162,12 @@ export default {
         const newMessage = ref('');
         const chatMessages = ref([]);
         const chatContainer = ref(null);
-        const userData = JSON.parse(localStorage.getItem('userData') || '{}');
-        const currentUser = userData.email;
+       // const userData = JSON.parse(localStorage.getItem('user') || '{}');
+        const currentUser = computed(() => auth.user?.email);
         const showForm = ref(true);
         const users = ref([]);
 
-
+        const router = useRouter();
 
         const searchQuery = ref('');
         const dateFrom = ref('');
@@ -206,12 +209,16 @@ export default {
             }
             return date.toLocaleString(); // e.g., "7/15/2025, 9:44 AM"
         }
-
+const handleLogout = () => {
+  auth.logout();
+  router.push('/login');
+};
 
         const fetchTickets = async () => {
+            const token = auth.token;  
+            if(token){
             try {
-                const token = localStorage.getItem('token');
-                const response = await fetch('http://localhost:8080/api/tickets', {
+               const response = await fetch('http://localhost:8080/api/tickets', {
                     headers: {
                          "Authorization": "Bearer "+ token,
                          "Content-Type": "application/json"
@@ -225,6 +232,8 @@ export default {
                 console.error('Error fetching tickets:', error);
               //  toast.error('Error fetching tickets');
             }
+            }        
+            
         };
 
 
@@ -428,24 +437,33 @@ export default {
         showForm.value = !showForm.value;
         };
 
-        // Set up polling for updates
+   
+        let pollInterval;
+         // Set up polling for updates
         onMounted(() => {
-            fetchTickets();
-            fetchUsers();
+            const token = auth.token;
+            if(token){
+                 fetchTickets();
+                 fetchUsers();
+            }else{
+                handleLogout();
+            }
+         
             // Poll for updates every 30 seconds
-            const pollInterval = setInterval(fetchTickets, 30000);
-             // Clean up interval on component unmount
-            return () => {
-                clearInterval(pollInterval);
-                stopMessagePolling();
-            };
+             pollInterval = setInterval(fetchTickets, 30000);
+            
         });
 
+        onUnmounted(() => {
+            clearInterval(pollInterval)
+            stopMessagePolling();
+        })
      
 
          const fetchUsers = async () => {
+             const token = localStorage.getItem('token');
             try {
-                const token = localStorage.getItem('token');
+               
                 const response = await fetch('http://localhost:8080/api/users', {
                     headers: {
                          "Authorization": "Bearer "+ token,
@@ -486,7 +504,7 @@ export default {
             showForm,
             users,
             fetchUsers,
-            updateAssignedTo
+            updateAssignedTo,handleLogout
             
 
         };
@@ -502,6 +520,13 @@ export default {
 /* Modern Font Import - Add this at the top */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
 
+
+.ticket-list{
+    width: 900px;
+   
+
+
+}
 .view-ticket {
   padding: 20px;
   width: 100%;
@@ -514,7 +539,11 @@ select {
   border: 1px solid #ddd;
   border-radius: 4px;
 }
-
+.ticket-form {
+   
+   width: 980px;
+    
+  }
 /* Mobile adjustments */
 @media (max-width: 768px) {
   .view-ticket {
@@ -525,9 +554,27 @@ select {
 
   .ticket-form {
     margin-bottom: 15px;
+     width: 100%;
+  }
+  .table-list{
+    width: 100%;
   }
 }
+/* Mobile adjustments */
+@media (max-width: 500px) {
+  .view-ticket {
+    padding: 10px;
+  }
 
+ 
+
+  .ticket-form {
+    margin-bottom: 15px;
+    width: 100%;
+    
+  }
+  
+}
 
 
 /* Table responsiveness */
@@ -558,10 +605,10 @@ h1 {
 }
 /* Table wrapper for horizontal scroll on small screens */
 table {
-  width: 100%;
+  width: 980px;
   border-collapse: separate;
   border-spacing: 0;
-  margin: 16px 0;
+  margin: 16px 0 ;
 }
 
 
@@ -582,6 +629,11 @@ table {
     width: 95%;
     height: 75%;
     box-sizing: border-box;
+  }
+
+  .ticket-list{
+    width: 100%;
+    
   }
 }
 /* Filters layout */
@@ -897,6 +949,11 @@ select:focus {
     position: absolute;
     left: 15px;
     font-weight: bold;
+    
   }
+  .ticket-list{
+    width: 100%;
+  }
+  table{width: 100%;}
 }
 </style>

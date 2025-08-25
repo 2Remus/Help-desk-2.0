@@ -83,7 +83,7 @@
             <div class="chat-messages">
                 <div v-for="(message, index) in chatMessages" 
                      :key="index" 
-                     :class="['message', message.sender === 'You' ? 'sent' : 'received']">
+                     :class="['message', message.sender === currentUser ? 'sent' : 'received']">
                     <div class="message-content">
                         <p>{{ message.content }}</p>
                         <span class="message-sender">{{ message.sender }}</span>
@@ -108,7 +108,7 @@
 </template>
 
 <script>
-import { ref, onMounted, nextTick } from 'vue';
+import { ref, onMounted, nextTick ,computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '../stores/auth';
 import MainTemplate from './MainTemplate.vue';
@@ -122,7 +122,7 @@ export default {
   },
     setup() {
         const auth = useAuthStore();
-
+        const currentUser = computed(() => auth.user?.email);
 
           function formatDate(dateString) {
             if (!dateString) return '';
@@ -344,7 +344,7 @@ export default {
     };
         
         onMounted(() => {
-            const token = localStorage.getItem('token');
+            const token = auth.token;
             if(!token){
                 handleLogout()
             }
@@ -374,7 +374,7 @@ export default {
             formatDate,
             fetchMyTickets,
             issueTypes,
-            fetchIssueTypes
+            fetchIssueTypes,currentUser
 
         };
     }

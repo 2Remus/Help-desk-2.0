@@ -9,11 +9,12 @@ import Sidebar from './components/sidebar.vue';
  <div class="container" v-cloak>
 
     <div class="content">
-      <RouterView v-slot="{ Component }">
+   <!--   <RouterView v-slot="{ Component }">
         <Transition mode="out-in">
           <component :is="Component" />
         </Transition>
-      </RouterView>
+      </RouterView>-->
+      <RouterView/>
     </div>
   </div>
 </template>
