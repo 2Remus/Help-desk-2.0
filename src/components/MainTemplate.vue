@@ -30,6 +30,8 @@ const goToTickets = () => window.location.href = '/help-desk/tickets';
 const goToSubmitTicket = () => window.location.href = '/help-desk/';
 const goToFequentlyAskedQuestions = () => window.location.href = '/help-desk/frequently-asked-questions';
 const goToIssueTypes = () => window.location.href = '/help-desk/issue-types';
+const goToTicketStatuses = () => window.location.href = '/help-desk/ticket-statuses';
+
 
 // Optional: close menu on ESC key
 const handleKeydown = (e) => {
@@ -99,6 +101,11 @@ onBeforeUnmount(() => {
         <li v-if="isAdmin">
           <button class="sidebar-link" @click="goToTickets">
             <i class="pi pi-list-check"></i><span>Tickets</span>
+          </button>
+        </li>
+        <li v-if="isAdmin">
+          <button class="sidebar-link" @click="goToTicketStatuses">
+            <i class="pi pi-list-check"></i><span>Ticket Statuses</span>
           </button>
         </li>
          <li>

@@ -201,6 +201,7 @@ export default {
         const fetchMyTickets = async () => {
             try {
                 const token = localStorage.getItem('token');
+
                 const response = await fetch('http://localhost:8080/api/myTickets',
                      {
                     headers: {
@@ -336,7 +337,6 @@ export default {
                 });
         if (!response.ok) throw new Error('Failed to fetch Issues');
         issueTypes.value = await response.json();
-        console.log("Issues "+issueTypes.value)
       } catch (error) {
         console.error('Error fetching issue types:', error);
         toast.error('Error fetching issue types');

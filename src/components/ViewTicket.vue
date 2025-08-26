@@ -53,6 +53,7 @@ const fetchTicketDetails = async () => {
       },
     });
     const data = await res.json();
+    
     ticket.value = data; // Your endpoint returns a TicketResponseDTO directly
   } catch (error) {
     console.error('Error fetching ticket:', error);

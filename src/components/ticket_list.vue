@@ -68,9 +68,9 @@
                             :class="['status-select', ticket.status.toLowerCase()]"
                         >
                            
-                            <option value="open">Open</option>
-                            <option value="in-progress">In Progress</option>
-                            <option value="closed">Closed</option>
+                             <option v-for="ticketStatus in ticketStatuses" :key="ticketStatus.id" :value="ticketStatus.name">
+                                {{ ticketStatus.name }}
+                            </option>
                         </select>
                     </td>
                     <td>
@@ -145,6 +145,7 @@
 import { ref, onMounted, nextTick, computed, onUnmounted} from 'vue';
 import { useToast } from 'vue-toastification'
 import { useAuthStore } from '../stores/auth';
+import { jwtDecode } from 'jwt-decode';
 
 import MainTemplate from './MainTemplate.vue';
 import { useRouter } from 'vue-router';
@@ -162,20 +163,18 @@ export default {
         const newMessage = ref('');
         const chatMessages = ref([]);
         const chatContainer = ref(null);
-       // const userData = JSON.parse(localStorage.getItem('user') || '{}');
         const currentUser = computed(() => auth.user?.email);
         const showForm = ref(true);
         const users = ref([]);
-
         const router = useRouter();
-
         const searchQuery = ref('');
         const dateFrom = ref('');
         const dateTo = ref('');
         const selectedStatus = ref('');
         const selectedPriority = ref('');
+        const ticketStatuses = ref([]);
 
-            const filteredTickets = computed(() => {
+        const filteredTickets = computed(() => {
             return tickets.value.filter(ticket => {
                 const subjectMatch = ticket.subject?.toLowerCase().includes(searchQuery.value.toLowerCase());
 
@@ -189,13 +188,7 @@ export default {
 
                 return subjectMatch && statusMatch && priorityMatch && dateFromMatch && dateToMatch;
             });
-            });
-
-
-
-
-
-
+        });
 
 
 
@@ -209,13 +202,15 @@ export default {
             }
             return date.toLocaleString(); // e.g., "7/15/2025, 9:44 AM"
         }
-const handleLogout = () => {
-  auth.logout();
-  router.push('/login');
-};
+
+        const handleLogout = () => {
+        auth.logout();
+        router.push('/login');
+        };
 
         const fetchTickets = async () => {
             const token = auth.token;  
+            console.log("Token Tickets: "+token)
             if(token){
             try {
                const response = await fetch('http://localhost:8080/api/tickets', {
@@ -442,11 +437,11 @@ const handleLogout = () => {
          // Set up polling for updates
         onMounted(() => {
             const token = auth.token;
+            console.log("On Mounted "+token);
             if(token){
                  fetchTickets();
                  fetchUsers();
-            }else{
-                handleLogout();
+                 fetchTicketStatuses();
             }
          
             // Poll for updates every 30 seconds
@@ -480,6 +475,29 @@ const handleLogout = () => {
         };
 
 
+          const fetchTicketStatuses = async () => {
+            const token = auth.token;
+            try {
+                if (!token) return;
+                currentUser.value = jwtDecode(token);
+                if(currentUser.value.admin){
+                router.push('/')
+
+                }
+                const response = await fetch('http://localhost:8080/api/ticket-statuses',
+                {
+                            headers: {
+                                "Authorization": "Bearer "+ token,
+                                "Content-Type": "application/json"
+                            }
+                        });
+                if (!response.ok) throw new Error('Failed to ticket status');
+                ticketStatuses.value = await response.json();
+            } catch (error) {
+                console.error('Error fetching ticket status:', error);
+            }
+    };
+
         return { 
             tickets, 
             showChat, 
@@ -504,7 +522,10 @@ const handleLogout = () => {
             showForm,
             users,
             fetchUsers,
-            updateAssignedTo,handleLogout
+            updateAssignedTo,
+            handleLogout,
+            fetchTicketStatuses,
+            ticketStatuses
             
 
         };

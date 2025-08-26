@@ -61,6 +61,7 @@ export default {
                     emit('login-success', data.user); // Pass the user data including is_admin
                 
                    if (data.user.admin) {
+                    console.log("User Admin: "+data.user.admin)
                    // await nextTick();
                         router.push('/tickets');
                     } else {
