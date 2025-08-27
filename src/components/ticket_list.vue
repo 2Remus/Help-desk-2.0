@@ -29,9 +29,9 @@
 
         <select v-model="selectedStatus" class="filter-input">
             <option value="">All Statuses</option>
-            <option value="open">Open</option>
-            <option value="closed">Closed</option>
-            <option value="in Progress">In Progress</option>
+            <option v-for="ticketStatus in ticketStatuses" :key="ticketStatus.id" :value="ticketStatus.name">
+            {{ ticketStatus.name }}
+            </option>
         </select>
 
         <select v-model="selectedPriority" class="filter-input">
@@ -459,7 +459,7 @@ export default {
              const token = localStorage.getItem('token');
             try {
                
-                const response = await fetch('http://localhost:8080/api/users', {
+                const response = await fetch('http://localhost:8080/api/available-users', {
                     headers: {
                          "Authorization": "Bearer "+ token,
                          "Content-Type": "application/json"
