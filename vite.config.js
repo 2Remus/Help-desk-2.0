@@ -5,7 +5,7 @@ import vue from '@vitejs/plugin-vue'
 export default defineConfig({
   plugins: [vue()],
   base: '/help-desk/', // Set the base path for the application
-   server: {
+/*   server: {
      proxy: {
       '/api': {
         target: 'http://192.168.1.112:8080',
@@ -13,5 +13,5 @@ export default defineConfig({
       },
     },
     historyApiFallback: true
-  },
+  },*/
 })

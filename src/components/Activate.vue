@@ -34,7 +34,7 @@ onMounted(async () => {
   }
 
   try {
-    const res = await fetch(`http://localhost:8080/api/activate/${token}`, {
+    const res = await fetch(`https://learnvswift.gov.vc:8080/api/activate/${token}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
