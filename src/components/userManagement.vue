@@ -54,7 +54,7 @@
             <th>Actions</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody>   
           <tr v-for="sysuser in users" :key="sysuser.id">
              <td>{{ sysuser.name }}</td>
             <td>{{ sysuser.email }}</td>
