@@ -90,7 +90,7 @@ import { useAuthStore } from '../stores/auth';
           router.push('/')
 
         }
-        const response = await fetch('https://learnvswift.gov.vc:8080/api/ticket-statuses',
+        const response = await fetch('http://138.68.58.185:8080/api/ticket-statuses',
         {
                     headers: {
                         "Authorization": "Bearer "+ token,
@@ -108,7 +108,7 @@ import { useAuthStore } from '../stores/auth';
      const handleAddTicketStatus = async () => {
       try {
         const token = auth.token; // localStorage.getItem('token');
-        const response = await fetch('https://learnvswift.gov.vc:8080/api/ticket-status/create', {
+        const response = await fetch('http://138.68.58.185:8080/api/ticket-status/create', {
           method: 'POST',
           headers: {
             'Authorization': 'Bearer '+ token,
@@ -137,7 +137,7 @@ import { useAuthStore } from '../stores/auth';
       if (!confirm('Are you sure you want to delete this Ticket status?')) return;
       try {
         const token = auth.token;//localStorage.getItem('token');
-        const response = await fetch(`https://learnvswift.gov.vc:8080/api/ticket-status/${ticketStatusId}`, {
+        const response = await fetch(`http://138.68.58.185:8080/api/ticket-status/${ticketStatusId}`, {
           method: 'DELETE',
            headers: {
             'Authorization': 'Bearer '+ token,

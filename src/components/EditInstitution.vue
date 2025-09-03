@@ -69,7 +69,7 @@ export default {
   const fetchInstitution = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`https://learnvswift.gov.vc:8080/api/institutions/${instId}`, 
+        const response = await fetch(`http://138.68.58.185:8080/api/institutions/${instId}`, 
         {
                     headers: {
                         "Authorization": "Bearer "+ token,
@@ -91,7 +91,7 @@ export default {
    const handleEditInstitution = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`https://learnvswift.gov.vc:8080/api/institutions/edit/${instId}`, {
+        const response = await fetch(`http://138.68.58.185:8080/api/institutions/edit/${instId}`, {
           method: 'PUT',
           headers: {
              'Authorization': 'Bearer '+ token,

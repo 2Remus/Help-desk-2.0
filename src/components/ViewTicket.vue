@@ -32,26 +32,47 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute ,useRouter } from 'vue-router';
 import MainTemplate from './MainTemplate.vue';
+import { useAuthStore } from '../stores/auth';
 
+const router = useRouter();
 const route = useRoute();
 const ticketId = route.params.id;
-
+const auth = useAuthStore();
 const ticket = ref(null);
 const messages = ref([]);
-
 const token = localStorage.getItem('token');
+
+// helper for handling auth errors
+const handleAuthError = (status) => {
+  if (status === 401 || status === 403 || !token) {
+    handleLogout();
+  }
+};
+
+ const handleLogout = () => {
+        auth.logout();
+        router.push('/login');
+  };
+
 
 const fetchTicketDetails = async () => {
   const token = localStorage.getItem('token');
+
+  
   try {
-    const res = await fetch(`https://learnvswift.gov.vc:8080/api/tickets/view/${ticketId}`, {
+    const res = await fetch(`http://138.68.58.185:8080/api/tickets/view/${ticketId}`, {
       headers: {
         'Authorization': 'Bearer ' + token,
         'Content-Type': 'application/json',
       },
     });
+
+     if (!res.ok) {
+      handleAuthError(res.status);
+      return;
+    }
     const data = await res.json();
     
     ticket.value = data; // Your endpoint returns a TicketResponseDTO directly
@@ -63,7 +84,7 @@ const fetchTicketDetails = async () => {
 const fetchMessages = async () => {
   try {
     const token = localStorage.getItem('token');
-    const res = await fetch(`https://learnvswift.gov.vc:8080/api/tickets/${ticketId}/messages`, {
+    const res = await fetch(`http://138.68.58.185:8080/api/tickets/${ticketId}/messages`, {
       headers: {
         'Authorization': 'Bearer ' + token,
         'Content-Type': 'application/json',
@@ -84,8 +105,12 @@ const formatDate = (dateString) => {
 
 
 onMounted(() => {
-  fetchTicketDetails();
-  fetchMessages();
+   if (!token) {
+    router.push({ name: 'Login' });
+  } else {
+    fetchTicketDetails();
+    fetchMessages();
+  }
 });
 </script>
 

@@ -23,14 +23,23 @@ const handleLogout = () => {
   auth.logout();
   router.push('/login');
 };
+/*
+const goToUsers = () => window.location.href = 'http://138.68.58.185/help-desk/user-management';
+const goToInstitutions = () => window.location.href = 'http://138.68.58.185//help-desk/institution-management';
+const goToTickets = () => window.location.href = 'http://138.68.58.185//help-desk/tickets';
+const goToSubmitTicket = () => window.location.href = 'http://138.68.58.185//help-desk/';
+const goToFequentlyAskedQuestions = () => window.location.href = 'http://138.68.58.185//help-desk/frequently-asked-questions';
+const goToIssueTypes = () => window.location.href = 'http://138.68.58.185//help-desk/issue-types';
+const goToTicketStatuses = () => window.location.href = 'http://138.68.58.185//help-desk/ticket-statuses';
+*/
 
-const goToUsers = () => window.location.href = '/help-desk/user-management';
-const goToInstitutions = () => window.location.href = '/help-desk/institution-management';
-const goToTickets = () => window.location.href = '/help-desk/tickets';
-const goToSubmitTicket = () => window.location.href = '/help-desk/';
-const goToFequentlyAskedQuestions = () => window.location.href = '/help-desk/frequently-asked-questions';
-const goToIssueTypes = () => window.location.href = '/help-desk/issue-types';
-const goToTicketStatuses = () => window.location.href = '/help-desk/ticket-statuses';
+const goToUsers = () => router.push('/user-management');
+const goToInstitutions = () => router.push('/institution-management');
+const goToTickets = () => router.push('/tickets');
+const goToSubmitTicket = () => router.push('/help-desk/');
+const goToFequentlyAskedQuestions = () => router.push('/frequently-asked-questions');
+const goToIssueTypes = () => router.push('/issue-types');
+const goToTicketStatuses = () => router.push('/ticket-statuses');
 
 
 // Optional: close menu on ESC key
