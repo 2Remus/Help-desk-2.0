@@ -15,12 +15,12 @@
                 <textarea id="description" v-model="description" required></textarea>
             </div>
             <div class="form-group">
-                <label for="priority">Priority:</label>
+               <!-- <label for="priority">Priority:</label>
                 <select id="priority" v-model="priority" required>
                     <option value="low">Low</option>
                     <option value="medium">Medium</option>
                     <option value="high">High</option>
-                </select>
+                </select>-->
 
                 <label for="type">Type:</label>
                
@@ -45,6 +45,7 @@
                 <tr>
                     <th>Ticket ID</th>
                     <th>Subject</th>
+                    <th>Type</th>
                     <th>Status</th>
                     <th>Priority</th>
                     <th>Assignee</th>
@@ -56,6 +57,7 @@
                 <tr v-for="ticket in tickets" :key="ticket.id">
                     <td>{{ ticket.id }}</td>
                     <td><RouterLink :to="`/tickets/view/${ticket.id}`">{{ ticket.subject }}</RouterLink></td>
+                    <td>{{ ticket.issueType }}</td>
                     <td>{{ ticket.status }}</td>
                     <td>{{ ticket.priority }}</td>
                      <td>{{ ticket.assignedTo }}</td>
@@ -171,7 +173,7 @@ export default {
                     body: JSON.stringify({
                         subject: subject.value,
                         description: description.value,
-                        priority: priority.value,
+                        priority: "low",
                         type: type.value
                     })
                 });
@@ -183,7 +185,7 @@ export default {
                 subject.value = '';
                 description.value = '';
                 priority.value = 'low';
-                type.value = 'payment';  // Reset type to default
+                type.value = '';  // Reset type to default
                
                 toast.success('Ticket submitted successfully!')
 

@@ -7,13 +7,14 @@
     <div class="user-form-container">
       <form class="add-user-form" @submit.prevent="handleAddUser">
         <h3>Add New User</h3>
-        <div class="form-group">
-          <label for="email">Email:</label>
-          <input type="email" id="email" v-model="newUser.email" required />
-        </div>
+       
             <div class="form-group">
           <label for="name">Name:</label>
           <input type="text" id="name" v-model="newUser.name" required />
+        </div>
+         <div class="form-group">
+          <label for="email">Email:</label>
+          <input type="email" id="email" v-model="newUser.email" required />
         </div>
         <div class="form-group">
           <label for="password">Password:</label>
@@ -26,6 +27,7 @@
             <option :value="true">Admin</option>
           </select>
         </div>
+        
         <div class="form-group" v-if="newUser.isAdmin">
           <label for="issueType">Issue Type:</label>
           <select id="issueType" v-model="newUser.issueType">
@@ -36,6 +38,16 @@
           
           
         </div>
+
+        <div class="form-group">
+          <label for="userInstitution">Institution:</label>
+         <select id="userInstitution" v-model="newUser.institution">
+            <option v-for="institution in institutions" :key="institution.id" :value="institution.name">
+                        {{ institution.name }}
+                    </option>
+          </select>
+        </div>
+    
         <button type="submit"><i class="pi pi-check" style="font-size: 1rem"></i>Add User</button>
       </form>
     </div>
@@ -50,8 +62,11 @@
             <th>Email</th>
             <th>Role</th>
             <th>Issue Type</th>
-            <th>Status</th>
+       
+             <th>Institution</th>
+                  <th>Status</th>
             <th>Actions</th>
+           
           </tr>
         </thead>
         <tbody>   
@@ -69,15 +84,21 @@
                 <span v-else>User</span>
           </td>
             <td v-if="isAdmin">
-             <select              
+              <span v-if="sysuser.admin">
+                <select              
                  @change="handleIssueTypeChange(sysuser)" v-model="sysuser.issueType">
-               <option v-for="issue in issueTypes" :key="issue.id" :value="issue.name">
+                <option v-for="issue in issueTypes" :key="issue.id" :value="issue.name">
                         {{ issue.name }}
                     </option>
               </select>
+              </span>
+              <span v-else> - </span>
+            
             
             </td>
             <td v-else>{{ sysuser.issueType }}</td>
+            
+            <td ><span v-if="sysuser.institution">{{ sysuser.institution.name }}</span></td>
             <td v-if="isAdmin">
              <select              
                  @change="handleActiveStatusChange(sysuser)" v-model="sysuser.active">
@@ -101,6 +122,8 @@
       </table>
     </div>
   </div>
+
+
   </MainTemplate>
 </template>
 
@@ -133,9 +156,11 @@ export default {
       email: '',
       password: '',
       isAdmin: false,
-      issueType: 'payment'
+      issueType: '',
+      institution: ''
     });
     const issueTypes = ref([]);
+    const institutions = ref([]);
 
     const fetchUsers = async () => {
       try {
@@ -187,7 +212,8 @@ export default {
           email: '',
           password: '',
           isAdmin: false,
-          issueType: 'payment'
+          issueType: 'payment',
+          userInstitution: ''
         };
       } catch (error) {
         console.error('Error adding user:', error);
@@ -202,7 +228,7 @@ export default {
       if (!confirm('Are you sure you want to delete this user?')) return;
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`http://localhost:8080/api/users/${userId}`, {
+        const response = await fetch(`http://localhost:8080/api/users/change/${userId}`, {
           method: 'DELETE',
           headers: {
             'Authorization': 'Bearer '+ token,
@@ -318,6 +344,28 @@ export default {
         toast.error('Error fetching issue types');
       }
     };
+
+
+ const fetchInstitutions = async () => {
+      try {
+        const token = localStorage.getItem('token');
+           if (!token) return;
+       
+        const response = await fetch('http://localhost:8080/api/institutions',
+        {
+                    headers: {
+                        "Authorization": "Bearer "+ token,
+                         "Content-Type": "application/json"
+                    }
+                });
+        if (!response.ok) throw new Error('Failed to fetch Issues');
+        institutions.value = await response.json();
+      } catch (error) {
+        console.error('Error fetching Institutions:', error);
+        toast.error('Error fetching Institutions');
+      }
+    };
+
     const handleLogout = () => {
             auth.logout();
             router.push('/login');
@@ -333,6 +381,8 @@ export default {
             }
             fetchUsers()
             fetchIssueTypes()
+            fetchInstitutions()
+
      });
 
     return {
@@ -347,7 +397,9 @@ export default {
       handleLogout,
       handleActiveStatusChange,
       issueTypes,
-      fetchIssueTypes
+      fetchIssueTypes,
+      fetchInstitutions,
+      institutions
 
       
     };
@@ -356,6 +408,11 @@ export default {
 </script>
 
 <style scoped>
+.user-list1{
+  background-color: orange;
+  display: flex;
+
+}
 .user-management {
   padding: 20px;
  /* max-width: 1000px;*/
@@ -485,11 +542,12 @@ li a {
 }
 /* Table styling */
 .user-list ,table {
-  width: 100%;
+  /* width: 980px;*/
+  width: 980px;
   border-collapse: collapse;
- 
-  
-}
+  box-sizing: border-box;
+ }
+
 .user-list th,
 .user-list td {
   /*border: 1px solid #ddd;*/

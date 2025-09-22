@@ -220,31 +220,10 @@ export default {
         router.push('/login');
         };
 
-        const fetchTickets = async () => {
-            const token = auth.token;  
-            console.log("Token Tickets: "+token)
-            if(token){
-            try {
-               const response = await fetch('http://localhost:8080/api/tickets-by-issues', {
-                    headers: {
-                         "Authorization": "Bearer "+ token,
-                         "Content-Type": "application/json"
-                    }
-                });
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                tickets.value = await response.json();
-            } catch (error) {
-                console.error('Error fetching tickets:', error);
-              //  toast.error('Error fetching tickets');
-            }
-            }        
-            
-        };
+     
 
 
-         const fetchAllTickets = async () => {
+         const fetchTickets = async () => {
             const token = auth.token;  
             console.log("Token Tickets: "+token)
             if(token){

@@ -1,7 +1,5 @@
 
 <script setup>
-import NavBar from './components/NavBar.vue';
-import Sidebar from './components/sidebar.vue';
 
 </script>
 

@@ -27,6 +27,8 @@ const handleLogout = () => {
 const goToUsers = () => window.location.href = '/help-desk/user-management';
 const goToInstitutions = () => window.location.href = '/help-desk/institution-management';
 const goToTickets = () => window.location.href = '/help-desk/tickets';
+const goToAllTickets = () => window.location.href = '/help-desk/all-tickets';
+
 const goToSubmitTicket = () => window.location.href = '/help-desk/';
 const goToFequentlyAskedQuestions = () => window.location.href = '/help-desk/frequently-asked-questions';
 const goToIssueTypes = () => window.location.href = '/help-desk/issue-types';
@@ -52,8 +54,8 @@ onBeforeUnmount(() => {
     <header class="topbar">
       <button class="hamburger" @click="toggleSidebar">☰</button>
       <div class="topbar-title">
-        <img src="../assets/cardtp.png" alt="cardtp logo" class="logo" />
-        <!--  <img src="../assets/vswift.png" alt="vswift logo" class="logo" />--> 
+        <!--<img src="../assets/cardtp.png" alt="cardtp logo" class="logo" />-->
+         <img src="../assets/vswift.png" alt="vswift logo" class="logo" /> 
         <div> <h2 class="title">Help Desk</h2></div>
 
       </div>
@@ -103,6 +105,11 @@ onBeforeUnmount(() => {
             <i class="pi pi-list-check"></i><span>Tickets</span>
           </button>
         </li>
+          <li v-if="isAdmin">
+          <button class="sidebar-link" @click="goToAllTickets">
+            <i class="pi pi-list-check"></i><span>All Tickets</span>
+          </button>
+        </li>
         <li v-if="isAdmin">
           <button class="sidebar-link" @click="goToTicketStatuses">
             <i class="pi pi-list-check"></i><span>Ticket Statuses</span>
@@ -131,6 +138,7 @@ onBeforeUnmount(() => {
 <style scoped>
 .title{
   color: black;
+  margin-top: 35px;
 }
 .layout {
   display: flex;

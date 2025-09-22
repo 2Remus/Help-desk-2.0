@@ -24,12 +24,23 @@
             <option :value="true">Admin</option>
           </select>
         </div>
+ <div class="form-group">
+  <label for="institution">Institution:</label>
+  <select id="institution" v-model="user.institution">
+    <option v-for="institution in institutions" 
+            :key="institution.id" 
+            :value="institution">
+      {{ institution.name }}
+    </option>
+  </select>
+</div>
         <div class="form-group" >
           <label for="issueType">Issue Type:</label>
-          <select id="issueType" v-model="user.issueType">
-            <option value="payment">Payment</option>
-            <option value="service">Service</option>
-            <option value="account">Account</option>
+           <select id="issueType" v-model="user.issueType">
+            <option value=""></option>
+            <option v-for="issue in issueTypes" :key="issue.id" :value="issue.name">
+                        {{ issue.name }}
+                    </option>
           </select>
         </div>
         <div class="button-group">
@@ -65,9 +76,12 @@ export default {
       email: '',
       password: '',
       admin: false,
-      issueType: 'payment'
-    });
+      issueType: '',
+      institution: ''
 
+    });
+    const institutions = ref([]);
+    const issueTypes = ref([]);
 
 
       const fetchUser = async () => {
@@ -89,17 +103,41 @@ export default {
     };
 
 
+    const fetchInstitutions = async () => {
+      try {
+        const token = localStorage.getItem('token');
+           if (!token) return;
+       
+        const response = await fetch('http://localhost:8080/api/institutions',
+        {
+                    headers: {
+                        "Authorization": "Bearer "+ token,
+                         "Content-Type": "application/json"
+                    }
+                });
+        if (!response.ok) throw new Error('Failed to fetch Issues');
+        institutions.value = await response.json();
+      } catch (error) {
+        console.error('Error fetching Institutions:', error);
+        toast.error('Error fetching Institutions');
+      }
+    };
+
 
    const handleEditUser = async () => {
       try {
         const token = localStorage.getItem('token');
+        const payload = {
+      ...user.value,
+      institution: user.value.institution?.name || "" // ✅ only send name
+    };
         const response = await fetch(`http://localhost:8080/api/users/edit/${usId}`, {
           method: 'PUT',
           headers: {
             'Authorization': 'Bearer '+ token,
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify(user.value)
+          body: JSON.stringify(payload)
         });
         if (!response.ok) throw new Error('Failed to add user');
         toast.success('User updated successfully!')
@@ -112,14 +150,38 @@ export default {
       }
     };
 
-  
+    const fetchIssueTypes = async () => {
+      try {
+        const token = localStorage.getItem('token');
+           if (!token) return;
+       
+        const response = await fetch('http://localhost:8080/api/issue-types',
+        {
+                    headers: {
+                        "Authorization": "Bearer "+ token,
+                         "Content-Type": "application/json"
+                    }
+                });
+        if (!response.ok) throw new Error('Failed to fetch Issues');
+        issueTypes.value = await response.json();
+      } catch (error) {
+        console.error('Error fetching issue types:', error);
+        toast.error('Error fetching issue types');
+      }
+    };
    
-    onMounted(fetchUser);
+    onMounted(
+      fetchUser(),
+      fetchInstitutions());
+      fetchIssueTypes();
+
 
     return {
       user,
+      institutions,
+      issueTypes,
       fetchUser,
-      handleEditUser
+      handleEditUser,fetchInstitutions,fetchIssueTypes
     };
   }
 };
