@@ -54,9 +54,39 @@
             <td>{{ ticket.id }}</td>
             <td>{{ ticket.subject }}</td>
             <td>{{ ticket.description }}</td>
-            <td>{{ ticket.status }}</td>
-            <td>{{ ticket.priority }}</td>
-            <td>{{ ticket.issueType }}</td>
+            <td>
+              <select 
+                v-model="ticket.status" 
+                @change="updateTicketStatus(ticket.id, ticket.status)"
+                :class="['status-select', ticket.status?.toLowerCase()]"
+              >
+                <option v-for="status in ticketStatuses" :key="status" :value="status">
+                  {{ status }}
+                </option>
+              </select>
+            </td>
+            <td>
+              <select 
+                v-model="ticket.priority" 
+                @change="updateTicketPriority(ticket.id, ticket.priority)"
+                :class="['priority-select', ticket.priority?.toLowerCase()]"
+              >
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+              </select>
+            </td>
+            <td>
+              <select 
+                v-model="ticket.issueType" 
+                @change="updateTicketIssueType(ticket.id, ticket.issueType)"
+                :class="['status-select', ticket.issueType?.toLowerCase()]"
+              >
+                <option v-for="type in issueTypes" :key="type" :value="type">
+                  {{ type }}
+                </option>
+              </select>
+            </td>
             <td>{{ ticket.assignedTo }}</td>
             <td>{{ formatDate(ticket.createdAt) }}</td>
           </tr>
@@ -85,7 +115,30 @@ export default {
     const dateTo = ref('')
     const selectedStatus = ref('')
     const selectedPriority = ref('')
-    const ticketStatuses = ref(['Open', 'In Progress', 'Closed']) // Adjust as needed
+    // These should match your backend values
+    const ticketStatuses = ref(['Open', 'In Progress', 'Closed'])
+    const issueTypes = ref(['Bug', 'Feature', 'Support']) // Replace with your actual types
+
+    // Fetch issue types from backend if needed
+    const fetchIssueTypes = async () => {
+      const token = auth.token
+      if (!token) return
+      try {
+        const response = await fetch('http://138.68.58.185:8080/api/issue-types', {
+          headers: {
+            'Authorization': 'Bearer ' + token,
+            'Content-Type': 'application/json'
+          }
+        })
+        if (!response.ok) throw new Error('Failed to fetch issue types')
+        const data = await response.json()
+        issueTypes.value = Array.isArray(data)
+          ? data.map(type => type.name || type)
+          : issueTypes.value
+      } catch (error) {
+        console.error('Error fetching issue types:', error)
+      }
+    }
 
     const fetchMyTickets = async () => {
       const token = auth.token
@@ -102,6 +155,61 @@ export default {
       } catch (error) {
         console.error('Error fetching my tickets:', error)
         tickets.value = []
+      }
+    }
+
+    // Update functions
+    const updateTicketStatus = async (ticketId, status) => {
+      try {
+        const token = auth.token
+        const response = await fetch(`http://138.68.58.185:8080/api/tickets/status/${ticketId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+          },
+          body: JSON.stringify({ status })
+        })
+        if (!response.ok) throw new Error('Failed to update ticket status')
+      } catch (error) {
+        console.error('Error updating ticket status:', error)
+        await fetchMyTickets()
+      }
+    }
+
+    const updateTicketPriority = async (ticketId, priority) => {
+      try {
+        const token = auth.token
+        const response = await fetch(`http://138.68.58.185:8080/api/tickets/priority/${ticketId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+          },
+          body: JSON.stringify({ priority })
+        })
+        if (!response.ok) throw new Error('Failed to update ticket priority')
+      } catch (error) {
+        console.error('Error updating ticket priority:', error)
+        await fetchMyTickets()
+      }
+    }
+
+    const updateTicketIssueType = async (ticketId, issueType) => {
+      try {
+        const token = auth.token
+        const response = await fetch(`http://138.68.58.185:8080/api/tickets/issue-type/${ticketId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+          },
+          body: JSON.stringify({ issueType })
+        })
+        if (!response.ok) throw new Error('Failed to update ticket issue type')
+      } catch (error) {
+        console.error('Error updating ticket issue type:', error)
+        await fetchMyTickets()
       }
     }
 
@@ -125,7 +233,10 @@ export default {
       return date.toLocaleString()
     }
 
-    onMounted(fetchMyTickets)
+    onMounted(() => {
+      fetchMyTickets()
+      fetchIssueTypes()
+    })
 
     return {
       tickets,
@@ -135,15 +246,18 @@ export default {
       selectedStatus,
       selectedPriority,
       ticketStatuses,
+      issueTypes,
       filteredTickets,
-      formatDate
+      formatDate,
+      updateTicketStatus,
+      updateTicketPriority,
+      updateTicketIssueType
     }
   }
 }
 </script>
 
 <style scoped>
-/* Reuse styles from ticket_list.vue or import them if shared */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
 .ticket-list-container { width: 100%; max-width: 100%; margin: 0; padding: 16px; border-radius: 16px; background-color: #fff; box-shadow: 0 2px 12px rgba(0,0,0,0.08); font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; box-sizing: border-box; }
 h1 { text-align: center; font-weight: 600; color: #1a1a1a; font-size: clamp(1.5rem, 2vw, 1.75rem); margin-bottom: 16px; }
@@ -164,5 +278,15 @@ td { color: #334155; font-size: 0.9375rem; }
   .ticket-list td::before { content: attr(data-label); position: absolute; left: 15px; font-weight: bold; }
   .ticket-list { width: 100%; }
   table { width: 100%; }
+}
+.status-select,
+.priority-select {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  border: 1px solid #e2e8f0;
+  background-color: white;
+  cursor: pointer;
 }
 </style>
