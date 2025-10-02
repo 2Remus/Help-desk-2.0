@@ -15,6 +15,7 @@ import TicketStatusManagement from '../components/TicketStatusManagement.vue'
 import AllTickets from '../components/AllTickets.vue'
 import ForgotPassword from '../components/ForgotPassword.vue'
 import ResetPassword from '../components/ResetPassword.vue'
+import MyTickets from '../components/mytickets.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL || '/'),
@@ -89,6 +90,11 @@ const router = createRouter({
       name: 'ticket-statuses',
       component: TicketStatusManagement
       },
+      {
+        path: '/my-tickets',
+        name: 'my-tickets',
+        component: MyTickets
+        },
       {
       path: '/forgot-password',
       name: 'forgot password',

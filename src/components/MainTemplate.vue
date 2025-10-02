@@ -33,6 +33,7 @@ const goToSubmitTicket = () => window.location.href = '/help-desk/';
 const goToFequentlyAskedQuestions = () => window.location.href = '/help-desk/frequently-asked-questions';
 const goToIssueTypes = () => window.location.href = '/help-desk/issue-types';
 const goToTicketStatuses = () => window.location.href = '/help-desk/ticket-statuses';
+const goToMyTickets = () => window.location.href = '/help-desk/my-tickets';
 
 
 // Optional: close menu on ESC key
@@ -94,6 +95,11 @@ onBeforeUnmount(() => {
             <i class="pi pi-building-columns"></i><span>Institutions</span>
           </button>
         </li>
+        <li>
+          <button class="sidebar-link" @click="goToMyTickets">
+            <i class="pi pi-ticket"></i><span>Assigned Tickets</span>
+          </button>
+        </li>
 
         <li v-if="isAdmin">
           <button class="sidebar-link" @click="goToIssueTypes">
@@ -107,19 +113,19 @@ onBeforeUnmount(() => {
         </li>
           <li v-if="isAdmin">
           <button class="sidebar-link" @click="goToAllTickets">
-            <i class="pi pi-list-check"></i><span>All Tickets</span>
+            <i class="pi pi-database"></i><span>All Tickets</span>
           </button>
         </li>
         <li v-if="isAdmin">
           <button class="sidebar-link" @click="goToTicketStatuses">
-            <i class="pi pi-list-check"></i><span>Ticket Statuses</span>
+            <i class="pi pi-calendar-clock"></i><span>Ticket Statuses</span>
           </button>
         </li>
-         <li>
+         <!-- <li>
           <button class="sidebar-link" @click="goToFequentlyAskedQuestions">
             <i class="pi pi-question"></i><span>FAQ</span>
           </button>
-        </li>
+        </li> -->
         <li v-if="isLoggedIn">
           <button class="sidebar-link" @click="handleLogout">
             <i class="pi pi-sign-out"></i><span>Logout</span>
@@ -279,6 +285,12 @@ onBeforeUnmount(() => {
   .content {
     margin-left: 0;
     padding: 80px 5px 20px;
+  }
+}
+
+@media (min-width: 769px) {
+  .overlay {
+    display: none !important;
   }
 }
 </style>
