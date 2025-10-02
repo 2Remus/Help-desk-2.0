@@ -25,7 +25,26 @@
 
         <p><strong>Created At:</strong> {{ formatDate(ticket.createdAt) }}</p>
         <p><strong>Created By:</strong> {{ ticket.reporter?.email || 'Unknown' }}</p>
-        <p><strong>Assignee:</strong> {{ ticket.assignedTo }}</p>
+        <div v-if="isAdmin"><strong>Assignee: </strong>
+          <select 
+                            v-model="ticket.assignedTo" 
+                            @change="updateAssignedTo(ticket.id, ticket.assignedTo)"
+                            :class="['status-select', ticket.assignedTo.toLowerCase()]"
+                        >
+                           
+                             <option v-for="user in users" :key="user.id" :value="user.name">
+                                {{ user.name }}
+                            </option>
+          </select>
+        </div>
+        <div v-else>
+          <p><strong>Assignee:</strong> {{ ticket.assignedTo }}</p>
+        </div>
+
+
+
+
+        
       </div>
       <div v-else>
         <p>Loading ticket details...</p>
@@ -33,7 +52,7 @@
     
 
       <h3 class="text-lg font-semibold mt-6">Messages</h3>
-      <div class="messages-container" ref="messagesContainer">
+      <div class="messages-container" ref="messagesContainer" @scroll="handleScroll">
         <div v-if="messages.length > 0" class="messages">
           <div v-for="msg in messages" :key="msg.id"  :class="['message border-b py-2', msg.sender === currentUser ? 'received' : 'sent']">
             <p><strong>{{ msg.sender || 'Unknown' }}:</strong></p>
@@ -91,11 +110,11 @@ const textarea = ref(null)
 const messagesContainer = ref(null)
 const currentUser = computed(() => auth.user?.email);
  const toast = useToast();
-
+const users = ref([]);
 const fetchTicketDetails = async () => {
   const token = localStorage.getItem('token')
   try {
-    const res = await fetch(`http://localhost:8080/api/tickets/view/${ticketId}`, {
+    const res = await fetch(`http://138.68.58.185:8080/api/tickets/view/${ticketId}`, {
       headers: {
         Authorization: 'Bearer ' + token,
         'Content-Type': 'application/json',
@@ -118,7 +137,7 @@ const fetchTicketStatuses = async () => {
                 router.push('/')
 
                 }
-                const response = await fetch('http://localhost:8080/api/ticket-statuses',
+                const response = await fetch('http://138.68.58.185:8080/api/ticket-statuses',
                 {
                             headers: {
                                 "Authorization": "Bearer "+ token,
@@ -138,7 +157,7 @@ const fetchTicketStatuses = async () => {
 const fetchMessages = async () => {
   const token = localStorage.getItem('token')
   try {
-    const res = await fetch(`http://localhost:8080/api/tickets/${ticketId}/messages`, {
+    const res = await fetch(`http://138.68.58.185:8080/api/tickets/${ticketId}/messages`, {
       headers: {
         Authorization: 'Bearer ' + token,
         'Content-Type': 'application/json',
@@ -160,8 +179,8 @@ const startMessagePolling = () => {
  /**Functional 28-July-2025 */
         const updateTicketStatus = async (ticketId, status) => {
             try {
-                const token = localStorage.getItem('token');
-                const response = await fetch(`http://localhost:8080/api/tickets/status/${ticketId}`, {
+                const token = auth.token; //localStorage.getItem('token');
+                const response = await fetch(`http://138.68.58.185:8080/api/tickets/status/${ticketId}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -185,7 +204,7 @@ const startMessagePolling = () => {
                 console.error('Error updating ticket status:', error);
                 toast.error('Error updating ticket status');
                 // Revert the change on error
-                await fetchTickets();
+                //await fetchTickets();
             }
         };
 
@@ -197,7 +216,7 @@ const sendMessage = async () => {
   const token = localStorage.getItem('token')
 
   try {
-    const res = await fetch(`http://localhost:8080/api/tickets/${ticketId}/message`, {
+    const res = await fetch(`http://138.68.58.185:8080/api/tickets/${ticketId}/message`, {
       method: 'POST',
       headers: {
         Authorization: 'Bearer ' + token,
@@ -241,16 +260,86 @@ const formatDate = (dateString) => {
   return isNaN(d) ? 'Invalid date' : d.toLocaleString()
 }
 
+
+   const fetchUsers = async () => {
+             const token = localStorage.getItem('token');
+            try {
+               
+                const response = await fetch('http://138.68.58.185:8080/api/available-users', {
+                    headers: {
+                         "Authorization": "Bearer "+ token,
+                         "Content-Type": "application/json"
+                    }
+                });
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                users.value = await response.json();
+            } catch (error) {
+                console.error('Error fetching Users:', error);
+            }
+        };
+
+            const updateAssignedTo = async (ticketId, assignment) => {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`http://138.68.58.185:8080/api/tickets/assign/${ticketId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer '+ token,
+                    },
+                    body: JSON.stringify({ assignment })
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to update ticket');
+                }
+                
+                // Update local state
+              //  const ticket = tickets.value.find(t => t.id === ticketId);
+                if (ticket) {
+                    ticket.assignedTo = assignment;
+                    toast.success('Ticket updated');
+
+                }
+            } catch (error) {
+                console.error('Error updating ticket:', error);
+                toast.error('Error updating ticket');
+
+                
+            }
+        };
+
+
+        const isAtBottom = ref(true)
+
+        const handleScroll = () => {
+          if (!messagesContainer.value) return
+          const { scrollTop, scrollHeight, clientHeight } = messagesContainer.value
+          // If within ~50px of bottom, consider "at bottom"
+          isAtBottom.value = scrollTop + clientHeight >= scrollHeight - 50
+        }
+
 onMounted(async () => {
   await fetchTicketDetails()
   await fetchMessages()
   await fetchTicketStatuses()
   nextTick(scrollToBottom)
   startMessagePolling()
+  fetchUsers()
+  
 })
 
 // auto-scroll when messages change
-watch(messages, () => nextTick(scrollToBottom))
+/*watch(messages, () => nextTick(scrollToBottom))*/
+
+watch(messages, async () => {
+  await nextTick()
+  if (isAtBottom.value) {
+    scrollToBottom()
+  }
+})
 </script>
 
 

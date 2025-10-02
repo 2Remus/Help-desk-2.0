@@ -2,6 +2,7 @@
     <div align="center">        
         <img src="../assets/vswift.png" alt="cardtp logo" class="logo"  />
         <h2>Support</h2>
+        <h4>Forgot Password</h4>
     </div>
     <div class="login-form">
         
@@ -11,86 +12,71 @@
             <div class="form-group">
                 <label for="email">Email:</label>
                 <input type="email" id="email" v-model="email" required />
-            </div>
-            <div class="form-group">
-                <label for="password">Password:</label>
-                <input type="password" id="password" v-model="password" required />
-            </div>
-            <button type="submit">Login</button>
+            </div> 
+          
+            <button type="submit">Submit</button>
         </form>
         <br/>
-        <div class="options-group">
+  <div class="options-group">
         <div class="option-item">
-        <RouterLink to="/register"><i class="pi pi-user"></i>Register</RouterLink>
+        <RouterLink to="/login"><i class="pi pi-user"></i>Login</RouterLink>
         </div>
-     <div class="option-item"><RouterLink to="/forgot-password"><i class="pi pi-exclamation-triangle"></i> Forgot password</RouterLink></div>
+   
      </div>
+       <div v-if="message" class="message">{{ message }}</div>
         <div v-if="error" class="error">{{ error }}</div>
     </div>
 </template>
 
-<script>
+<script setup>
 import { ref ,nextTick} from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '../stores/auth';
 
-export default {
-    name: 'Login',
-    setup(_, { emit }) {
+
         const email = ref('');
         const password = ref('');
         const error = ref('');
         const router = useRouter();
         const auth = useAuthStore();
+        const message = ref('');
 
         const handleLogin = async (event) => {
             event.preventDefault(); 
             try {
-                const response = await fetch('http://138.68.58.185:8080/api/login', {
+                const response = await fetch('http://138.68.58.185:8080/api/forgot-password', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        email: email.value,
-                        password: password.value,
+                        email: email.value
                     }),
                 });
+                if(response.ok){
+                message.value = 'A reset link has been sent to your email.'
+                }else{
+                    const resData = await response.json().catch(() => ({})) // safe parse
+                    error.value = resData.message || 'Reset Password Failed.'
+                    setTimeout(() => {
+                        router.push('/login')
+                        }, 5000)
+    
                 
-                const data = await response.json();
-                if (response.ok) {
-                //    localStorage.setItem('token', data.token);
-                //   localStorage.setItem('user', JSON.stringify(data.user));
-                    auth.setUser(data.user, data.token); // store both
-                    emit('login-success', data.user); // Pass the user data including is_admin
-                
-                   if (data.user.admin) {
-                   // console.log("User Admin: "+data.user.admin)
-                   // await nextTick();
-                        router.push('/tickets');
-                    } else {
-                        router.push('/');
-                    }
-                } else {
-                    error.value = data.detail ;
                 }
+               
+           
             } catch (err) {
-                error.value = 'Login failed. Please try again.';
+                error.value = 'Reset Password Failed.';
+                console.log("Error encountered ",err)
             }
         };
 
-        return {
-            email,
-            password,
-            error,
-            handleLogin
-        };
-    }
-};
+      
+ 
 </script>
 
 <style scoped>
-
 .options-group{
      display: flex;
     margin: auto;

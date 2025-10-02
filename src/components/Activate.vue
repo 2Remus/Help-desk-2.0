@@ -4,7 +4,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup> 
 import { ref, onMounted,computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
@@ -34,7 +34,7 @@ onMounted(async () => {
   }
 
   try {
-    const res = await fetch(`http://localhost:8080/api/activate/${token}`, {
+    const res = await fetch(`http://138.68.58.185:8080/api/activate/${token}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

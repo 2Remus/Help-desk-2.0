@@ -13,6 +13,8 @@ import FequentlyAskedQuestions from '../components/FequentlyAskedQuestions.vue'
 import IssueTypeManagement from '../components/IssueTypeManagement.vue'
 import TicketStatusManagement from '../components/TicketStatusManagement.vue'
 import AllTickets from '../components/AllTickets.vue'
+import ForgotPassword from '../components/ForgotPassword.vue'
+import ResetPassword from '../components/ResetPassword.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL || '/'),
@@ -86,6 +88,16 @@ const router = createRouter({
       path: '/ticket-statuses',
       name: 'ticket-statuses',
       component: TicketStatusManagement
+      },
+      {
+      path: '/forgot-password',
+      name: 'forgot password',
+      component: ForgotPassword
+      },
+       {
+      path: '/reset-password',
+      name: 'reset password',
+      component: ResetPassword
       },
     { path: '/:pathMatch(.*)*', redirect: '/' }
   ]

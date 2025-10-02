@@ -1,4 +1,9 @@
 <template>
+
+  <div align="center">
+     <img src="../assets/vswift.png" alt="cardtp logo" class="logo"  />
+        <h2>Support</h2>
+  </div>
   <div class="login-container">
     
   <form class="login-form" @submit.prevent="register">
@@ -17,7 +22,7 @@
     <div class="input-button-group">
       <button type="submit">Register</button>
     </div>
-            <RouterLink to="/login">Login</RouterLink>
+          <RouterLink to="/login"><i class="pi pi-user"></i>Login</RouterLink>
 
     <p v-if="message">{{ message }}</p>
   </form>
@@ -36,7 +41,7 @@ const message = ref('')
 
 const register = async () => {
   try {
-    const response = await fetch('http://localhost:8080/api/register', {
+    const response = await fetch('http://138.68.58.185:8080/api/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -53,6 +58,9 @@ const register = async () => {
 </script>
 
 <style scoped>
+.logo{
+  height: 80px;
+}
 .form-group {
     margin-bottom: 15px;
 }

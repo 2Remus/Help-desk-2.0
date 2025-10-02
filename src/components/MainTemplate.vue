@@ -56,7 +56,7 @@ onBeforeUnmount(() => {
       <div class="topbar-title">
         <!--<img src="../assets/cardtp.png" alt="cardtp logo" class="logo" />-->
          <img src="../assets/vswift.png" alt="vswift logo" class="logo" /> 
-        <div> <h2 class="title">Help Desk</h2></div>
+        <div> <h2 class="title">Support</h2></div>
 
       </div>
       
