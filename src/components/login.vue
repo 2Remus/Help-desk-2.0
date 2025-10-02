@@ -38,7 +38,7 @@ export default {
     name: 'Login',
     setup(_, { emit }) {
         const email = ref('');
-        const password = ref('');
+        const password = ref('');           
         const error = ref('');
         const router = useRouter();
         const auth = useAuthStore();

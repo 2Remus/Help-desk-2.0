@@ -8,13 +8,18 @@
       <form class="add-form" @submit.prevent="handleEditUser">
         <div class="form-group">
             <input type="hidden" id="id" v-model="user.id" required />        </div>
+       
         <div class="form-group">
+          <label for="name">Name:</label>
+          <input type="text" id="name" v-model="user.name" required />
+        </div>
+            <div class="form-group">
           <label for="email">Email:</label>
           <input type="email" id="email" v-model="user.email" required />
         </div>
-            <div class="form-group">
-          <label for="name">Name:</label>
-          <input type="text" id="name" v-model="user.name" required />
+           <div class="form-group">
+          <label for="password">Password:</label>
+          <input type="password" id="password" v-model="user.password" required />
         </div>
         
         <div class="form-group">
