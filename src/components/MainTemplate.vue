@@ -28,6 +28,8 @@ const goToUsers = () => window.location.href = '/help-desk/user-management';
 const goToInstitutions = () => window.location.href = '/help-desk/institution-management';
 const goToTickets = () => window.location.href = '/help-desk/tickets';
 const goToAllTickets = () => window.location.href = '/help-desk/all-tickets';
+const goToAddRoleManager = () => window.location.href = '/help-desk/role-management';
+
 
 const goToSubmitTicket = () => window.location.href = '/help-desk/';
 const goToFequentlyAskedQuestions = () => window.location.href = '/help-desk/frequently-asked-questions';
@@ -119,6 +121,12 @@ onBeforeUnmount(() => {
         <li v-if="isAdmin">
           <button class="sidebar-link" @click="goToTicketStatuses">
             <i class="pi pi-calendar-clock"></i><span>Ticket Statuses</span>
+          </button>
+        </li>
+
+        <li >
+          <button class="sidebar-link" @click="goToAddRoleManager">
+            <i class="pi pi-user"></i><span>Roles</span>
           </button>
         </li>
          <!-- <li>
