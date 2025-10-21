@@ -46,7 +46,7 @@ export default {
         const handleLogin = async (event) => {
             event.preventDefault(); 
             try {
-                const response = await fetch('http://138.68.58.185:8080/api/login', {
+                const response = await fetch('http://localhost:8080/api/login', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -64,13 +64,9 @@ export default {
                     auth.setUser(data.user, data.token); // store both
                     emit('login-success', data.user); // Pass the user data including is_admin
                 
-                   if (data.user.admin) {
-                   // console.log("User Admin: "+data.user.admin)
-                   // await nextTick();
-                        router.push('/tickets');
-                    } else {
+                  
                         router.push('/');
-                    }
+                    
                 } else {
                     error.value = data.detail ;
                 }

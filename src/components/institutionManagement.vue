@@ -120,7 +120,7 @@ export default {
           router.push('/')
 
         }
-        const response = await fetch('http://138.68.58.185:8080/api/institutions',
+        const response = await fetch('http://localhost:8080/api/institutions',
         {
                     headers: {
                         "Authorization": "Bearer "+ token,
@@ -141,7 +141,7 @@ export default {
     const handleAddInstitution = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch('http://138.68.58.185:8080/api/institutions/create', {
+        const response = await fetch('http://localhost:8080/api/institutions/create', {
           method: 'POST',
           headers: {
             'Authorization': 'Bearer '+ token,
@@ -171,7 +171,7 @@ export default {
       if (!confirm('Are you sure you want to delete this Institution?')) return;
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`http://138.68.58.185:8080/api/institutions/${instID}`, {
+        const response = await fetch(`http://localhost:8080/api/institutions/${instID}`, {
           method: 'DELETE',
            headers: {
             'Authorization': 'Bearer '+ token,

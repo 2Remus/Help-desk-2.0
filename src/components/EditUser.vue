@@ -92,7 +92,7 @@ export default {
       const fetchUser = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`http://138.68.58.185:8080/api/users/${usId}`,  {
+        const response = await fetch(`http://localhost:8080/api/users/${usId}`,  {
                     headers: {
                         "Authorization": "Bearer "+ token,
                          "Content-Type": "application/json"
@@ -113,7 +113,7 @@ export default {
         const token = localStorage.getItem('token');
            if (!token) return;
        
-        const response = await fetch('http://138.68.58.185:8080/api/institutions',
+        const response = await fetch('http://localhost:8080/api/institutions',
         {
                     headers: {
                         "Authorization": "Bearer "+ token,
@@ -136,7 +136,7 @@ export default {
       ...user.value,
       institution: user.value.institution?.name || "" // ✅ only send name
     };
-        const response = await fetch(`http://138.68.58.185:8080/api/users/edit/${usId}`, {
+        const response = await fetch(`http://localhost:8080/api/users/edit/${usId}`, {
           method: 'PUT',
           headers: {
             'Authorization': 'Bearer '+ token,
@@ -160,7 +160,7 @@ export default {
         const token = localStorage.getItem('token');
            if (!token) return;
        
-        const response = await fetch('http://138.68.58.185:8080/api/issue-types',
+        const response = await fetch('http://localhost:8080/api/issue-types',
         {
                     headers: {
                         "Authorization": "Bearer "+ token,

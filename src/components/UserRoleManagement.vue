@@ -1,19 +1,19 @@
 <template>
 <MainTemplate>
    <div class="">
-    <h2>Issue Type Management</h2>
+    <h2>User Role Management</h2>
     <!-- Add insitution Form -->
     <div class="institution-form-container">
     
-      <form class="add-institution-form" @submit.prevent="handleAddTicketStatus">
-          <h3>Add New Ticket Status</h3>
+      <form class="add-institution-form" @submit.prevent="handleAddUserRole">
+          <h3>Add New User Role</h3>
           <div class="form-group">
           <label for="name">Name:</label>
-          <input type="name" id="name" v-model="newTicketStatus.name" required />
+          <input type="name" id="name" v-model="newUserRole.name" required />
         </div>
         <div class="form-group">
           <label for="description">Description:</label>
-          <input type="text" id="description" v-model="newTicketStatus.description" required />
+          <input type="text" id="description" v-model="newUserRole.description" required />
         </div>
               
       
@@ -23,7 +23,7 @@
 
     <!-- User List -->
     <div class="listings">
-      <h3>Ticket Statuses</h3>
+      <h3>User Roles</h3>
       <table>
         <thead>
           <tr>
@@ -33,9 +33,9 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="ticketStatus in ticketStatuses" :key="ticketStatus.id">
-             <td>{{ ticketStatus.name }}</td>
-            <td>{{ ticketStatus.description }}</td>
+          <tr v-for="userRole in userRoles" :key="userRole.id">
+             <td>{{ userRole.name }}</td>
+            <td>{{ userRole.description }}</td>
            
              
           
@@ -43,7 +43,7 @@
               <div class="button-group">
                           
               
-                <i class="pi pi-trash" style="font-size: 1rem"  @click="handleDeleteTicketStatus(ticketStatus.id)" title="Delete"></i>
+                <i class="pi pi-trash" style="font-size: 1rem"  @click="handleDeleteUserRole(userRole.id)" title="Delete"></i>
               
               </div>
             </td>
@@ -55,7 +55,7 @@
   </MainTemplate>
 </template>
 
-<script setup>
+<script>
 import { ref, onMounted,computed } from 'vue';
 import { jwtDecode } from 'jwt-decode';
 import { useRouter } from 'vue-router';
@@ -63,101 +63,125 @@ import MainTemplate from './MainTemplate.vue';
 import { useToast } from 'vue-toastification'
 import { useAuthStore } from '../stores/auth';
 
-  
+export default {
+  name: 'UserRoleManagement',
+  components: {
+    MainTemplate
+  },
+  setup() {
     const toast = useToast();
-    const ticketStatuses = ref([]);
     const router = useRouter();
     const currentUser = ref(null);
     const isAdmin = computed(() => {
       return currentUser.value?.admin === true;
     });
   
-      const newTicketStatus = ref({
+    
+
+     const newUserRole = ref({
       name: '',
       description: ''
    
     });
     
     const auth = useAuthStore();
-
+    const userRoles = ref([]);
    
-    const fetchTicketStatuses = async () => {
+   
+ const fetchUserRoles = async () => {
       const token = auth.token;
+      console.log("Roles "+token)
       try {
            if (!token) return;
-        currentUser.value = jwtDecode(token);
-        if(!currentUser.value.admin){
-          router.push('/')
+            currentUser.value = jwtDecode(token);
+          if(!currentUser.value.admin){
+            router.push('/')
 
-        }
-        const response = await fetch('http://localhost:8080/api/ticket-statuses',
+          }
+          const response = await fetch('http://localhost:8080/api/user-roles',
         {
                     headers: {
                         "Authorization": "Bearer "+ token,
                          "Content-Type": "application/json"
                     }
                 });
-        if (!response.ok) throw new Error('Failed to ticket status');
-        ticketStatuses.value = await response.json();
+        if (!response.ok) throw new Error('Failed to fetch roles');
+        userRoles.value = await response.json();
       } catch (error) {
-        console.error('Error fetching ticket status:', error);
+        console.error('Error fetching roles:', error);
+       // toast.error('Error fetching issue types');
       }
     };
 
 
-     const handleAddTicketStatus = async () => {
+
+  
+
+
+     const handleAddUserRole = async () => {
       try {
-        const token = auth.token; // localStorage.getItem('token');
-        const response = await fetch('http://localhost:8080/api/ticket-status/create', {
+        const token = localStorage.getItem('token');
+        const response = await fetch('http://localhost:8080/api/user-roles/create', {
           method: 'POST',
           headers: {
             'Authorization': 'Bearer '+ token,
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify(newTicketStatus.value)
+          body: JSON.stringify(newUserRole.value)
         });
-        if (!response.ok) throw new Error('Failed to add ticket status');
-        toast.success('Ticket Status added successfully.');
-        await fetchTicketStatuses();
+        if (!response.ok) throw new Error('Failed to add User role');
+        toast.success('User role added successfully.');
+        await fetchUserRoles();
 
         // Reset form
-        newTicketStatus.value = {
+        newUserRole.value = {
           name:'',
           description: ''
        
         };
       } catch (error) {
-        console.error('Error adding ticket status:', error);
-        toast.error('Error adding ticket status');
+        console.error('Error adding user role:', error);
+        toast.error('Error adding user role');
       }
     };
 
+ 
 
-   const handleDeleteTicketStatus = async (ticketStatusId) => {
-      if (!confirm('Are you sure you want to delete this Ticket status?')) return;
+
+     const handleDeleteUserRole = async (usrid) => {
+      if (!confirm('Are you sure you want to delete this Issue type?')) return;
       try {
-        const token = auth.token;//localStorage.getItem('token');
-        const response = await fetch(`http://localhost:8080/api/ticket-status/${ticketStatusId}`, {
+        const token = localStorage.getItem('token');
+        const response = await fetch(`http://localhost:8080/api/user-roles/${usrid}`, {
           method: 'DELETE',
            headers: {
             'Authorization': 'Bearer '+ token,
             'Content-Type': 'application/json'
           },
         });
-        if (!response.ok) throw new Error('Failed to delete ticket status');
-        toast.success('Ticket status deleted successfully.');
-        await fetchTicketStatuses();
+        if (!response.ok) throw new Error('Failed to delete user role');
+        toast.success('User role deleted successfully.');
+        await fetchUserRoles();
       } catch (error) {
-        console.error('Error deleting ticket status:', error);
-        toast.error('Error deleting ticket status');
+        console.error('Error deleting user role:', error);
+        toast.error('Error deleting user role');
 
       }
     };
 
+    onMounted(fetchUserRoles);
 
-    onMounted(fetchTicketStatuses);
-
-
+    return {
+   
+      isAdmin,
+      newUserRole,
+      userRoles,
+      handleDeleteUserRole,
+      fetchUserRoles,handleAddUserRole
+      
+    };
+  }
+};
 </script>
 
 <style scoped>

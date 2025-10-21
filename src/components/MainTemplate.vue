@@ -25,6 +25,8 @@ const handleLogout = () => {
 };
 
 const goToUsers = () => window.location.href = '/help-desk/user-management';
+const goToUserRoles = () => window.location.href = '/help-desk/user-roles';
+const goToUserPermissions = () => window.location.href = '/help-desk/user-permissions';
 const goToInstitutions = () => window.location.href = '/help-desk/institution-management';
 const goToTickets = () => window.location.href = '/help-desk/tickets';
 const goToAllTickets = () => window.location.href = '/help-desk/all-tickets';
@@ -83,6 +85,16 @@ onBeforeUnmount(() => {
         <li v-if="isAdmin">
           <button class="sidebar-link" @click="goToUsers">
             <i class="pi pi-users"></i><span>Users</span>
+          </button>
+        </li>
+         <li v-if="isAdmin">
+          <button class="sidebar-link" @click="goToUserRoles">
+            <i class="pi pi-user-edit"></i><span>User Roles</span>
+          </button>
+        </li>
+          <li v-if="isAdmin">
+          <button class="sidebar-link" @click="goToUserPermissions">
+            <i class="pi pi-user-edit"></i><span>User Permissions</span>
           </button>
         </li>
         <li>

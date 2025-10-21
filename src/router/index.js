@@ -16,6 +16,9 @@ import AllTickets from '../components/AllTickets.vue'
 import ForgotPassword from '../components/ForgotPassword.vue'
 import ResetPassword from '../components/ResetPassword.vue'
 import MyTickets from '../components/mytickets.vue'
+import UserRoleManagement from '../components/UserRoleManagement.vue'
+import UserPermissionManagement from '../components/UserPermissionManagement.vue'
+import ViewUser from '../views/ViewUser.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL || '/'),
@@ -104,6 +107,21 @@ const router = createRouter({
       path: '/reset-password',
       name: 'reset password',
       component: ResetPassword
+      },
+      {
+      path: '/user-roles',
+      name: 'user roles',
+      component: UserRoleManagement
+      },
+        {
+      path: '/user-permissions',
+      name: 'user permissions',
+      component: UserPermissionManagement
+      },
+        {
+      path: '/users/view/:id',
+      name: 'view user',
+      component: ViewUser
       },
     { path: '/:pathMatch(.*)*', redirect: '/' }
   ]

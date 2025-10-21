@@ -39,7 +39,7 @@ import { useAuthStore } from '../stores/auth';
         const handleReset = async (event) => {
             event.preventDefault(); 
             try {
-                const response = await fetch(`http://138.68.58.185:8080/api/reset-password/${token}`, {
+                const response = await fetch(`http://localhost:8080/api/reset-password/${token}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

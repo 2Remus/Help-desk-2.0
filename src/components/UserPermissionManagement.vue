@@ -1,19 +1,27 @@
 <template>
 <MainTemplate>
    <div class="">
-    <h2>Issue Type Management</h2>
+    <h2>User Permission Management</h2>
     <!-- Add insitution Form -->
     <div class="institution-form-container">
     
-      <form class="add-institution-form" @submit.prevent="handleAddIssueType">
-          <h3>Add New Issue Type</h3>
+      <form class="add-institution-form" @submit.prevent="handleAddUserPermission">
+          <h3>Add New Permission</h3>
+            <div class="form-group">
+          <label for="userRole">Role:</label>
+          <select id="userRole" v-model="newUserPermission.userRole">
+            <option v-for="ur in userRoles" :key="ur.id" :value="ur.name">
+                        {{ ur.name }}
+                    </option>
+          </select>
+        </div>
           <div class="form-group">
           <label for="name">Name:</label>
-          <input type="name" id="name" v-model="newIssueType.name" required />
+          <input type="name" id="name" v-model="newUserPermission.permission" required />
         </div>
         <div class="form-group">
           <label for="description">Description:</label>
-          <input type="text" id="description" v-model="newIssueType.description" required />
+          <input type="text" id="description" v-model="newUserPermission.description" required />
         </div>
               
       
@@ -23,19 +31,21 @@
 
     <!-- User List -->
     <div class="listings">
-      <h3>Issue Types</h3>
+      <h3>Permissions</h3>
       <table>
         <thead>
           <tr>
-             <th>Name</th>
+            <th>Role</th>
+             <th>Permission</th>
             <th>Description</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="issueType in issueTypes" :key="issueType.id">
-             <td>{{ issueType.name }}</td>
-            <td>{{ issueType.description }}</td>
+          <tr v-for="userPermission in userPermissions" :key="userPermission.id">
+            <td>{{ userPermission.userRole.name }}</td> 
+            <td>{{ userPermission.permission }}</td>
+            <td>{{ userPermission.description }}</td>
            
              
           
@@ -43,7 +53,7 @@
               <div class="button-group">
                           
               
-                <i class="pi pi-trash" style="font-size: 1rem"  @click="handleDeleteIssueType(issueType.id)" title="Delete"></i>
+                <i class="pi pi-trash" style="font-size: 1rem"  @click="handleDeleteUserPermission(userPermission.id)" title="Delete"></i>
               
               </div>
             </td>
@@ -64,113 +74,146 @@ import { useToast } from 'vue-toastification'
 import { useAuthStore } from '../stores/auth';
 
 export default {
-  name: 'IssueTypeManagement',
+  name: 'UserRoleManagement',
   components: {
     MainTemplate
   },
   setup() {
     const toast = useToast();
-    const issueTypes = ref([]);
     const router = useRouter();
     const currentUser = ref(null);
     const isAdmin = computed(() => {
       return currentUser.value?.admin === true;
     });
   
-      const newIssueType = ref({
-      name: '',
+    
+
+     const newUserPermission = ref({
+      permission: '',
       description: ''
    
     });
     
     const auth = useAuthStore();
-
+    const userPermissions = ref([]);
+   const userRoles = ref([]);
    
-    const fetchIssueTypes = async () => {
+ const fetchUserPermissions = async () => {
       const token = auth.token;
-      console.log("Issues "+token)
+      console.log("Roles "+token)
       try {
-       // const token = localStorage.getItem('token');
            if (!token) return;
-        currentUser.value = jwtDecode(token);
-        if(!currentUser.value.admin){
-          router.push('/')
+            currentUser.value = jwtDecode(token);
+          if(!currentUser.value.admin){
+            router.push('/')
 
-        }
-        const response = await fetch('http://localhost:8080/api/issue-types',
+          }
+          const response = await fetch('http://localhost:8080/api/user-permissions',
         {
                     headers: {
                         "Authorization": "Bearer "+ token,
                          "Content-Type": "application/json"
                     }
                 });
-        if (!response.ok) throw new Error('Failed to fetch Issues');
-        issueTypes.value = await response.json();
+        if (!response.ok) throw new Error('Failed to fetch permissions');
+        userPermissions.value = await response.json();
       } catch (error) {
-        console.error('Error fetching issue types:', error);
+        console.error('Error fetching permissions:', error);
        // toast.error('Error fetching issue types');
       }
     };
 
 
-     const handleAddIssueType = async () => {
+
+  
+
+
+     const handleAddUserPermission = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch('http://localhost:8080/api/issue-types/create', {
+        const response = await fetch('http://localhost:8080/api/user-permissions/create', {
           method: 'POST',
           headers: {
             'Authorization': 'Bearer '+ token,
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify(newIssueType.value)
+          body: JSON.stringify(newUserPermission.value)
         });
-        if (!response.ok) throw new Error('Failed to add issue type');
-        toast.success('Issue type added successfully.');
-        await fetchIssueTypes();
+        if (!response.ok) throw new Error('Failed to add User permission');
+        toast.success('User permission added successfully.');
+        await fetchUserPermissions();
 
         // Reset form
-        newIssueType.value = {
-          name:'',
+        newUserPermission.value = {
+          permission:'',
           description: ''
        
         };
       } catch (error) {
-        console.error('Error adding issue type:', error);
-        toast.error('Error adding issue type');
+        console.error('Error adding user role:', error);
+        toast.error('Error adding user role');
       }
     };
-   const handleDeleteIssueType = async (issueTypeId) => {
-      if (!confirm('Are you sure you want to delete this Issue type?')) return;
+
+ 
+
+
+     const handleDeleteUserPermission = async (perid) => {
+      if (!confirm('Are you sure you want to delete this user permission?')) return;
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`http://localhost:8080/api/issue-types/${issueTypeId}`, {
+        const response = await fetch(`http://localhost:8080/api/user-permissions/${perid}`, {
           method: 'DELETE',
            headers: {
             'Authorization': 'Bearer '+ token,
             'Content-Type': 'application/json'
           },
         });
-        if (!response.ok) throw new Error('Failed to delete issue type');
-        toast.success('Issue type deleted successfully.');
-        await fetchIssueTypes();
+        if (!response.ok) throw new Error('Failed to delete user permission');
+        toast.success('User permission deleted successfully.');
+        await fetchUserPermissions();
       } catch (error) {
-        console.error('Error deleting issue type:', error);
-        toast.error('Error deleting issue type');
+        console.error('Error deleting user permission:', error);
+        toast.error('Error deleting user permission');
 
       }
     };
 
 
-    onMounted(fetchIssueTypes);
+      
+ const fetchUserRoles = async () => {
+      const token = auth.token;
+      console.log("Roles "+token)
+      try {
+           if (!token) return;
+       
+          const response = await fetch('http://localhost:8080/api/user-roles',
+        {
+                    headers: {
+                        "Authorization": "Bearer "+ token,
+                         "Content-Type": "application/json"
+                    }
+                });
+        if (!response.ok) throw new Error('Failed to fetch roles');
+        userRoles.value = await response.json();
+      } catch (error) {
+        console.error('Error fetching roles:', error);
+       // toast.error('Error fetching issue types');
+      }
+    };
+
+
+
+    onMounted(fetchUserPermissions(),fetchUserRoles());
 
     return {
    
-      issueTypes,
       isAdmin,
-      newIssueType,
-      fetchIssueTypes,
-      handleAddIssueType,
-      handleDeleteIssueType
+      newUserPermission,
+      userPermissions,
+      userRoles,
+      handleDeleteUserPermission,
+      fetchUserPermissions,handleAddUserPermission,fetchUserRoles
       
     };
   }
