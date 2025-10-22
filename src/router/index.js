@@ -15,15 +15,14 @@ import TicketStatusManagement from '../components/TicketStatusManagement.vue'
 import AllTickets from '../components/AllTickets.vue'
 import ForgotPassword from '../components/ForgotPassword.vue'
 import ResetPassword from '../components/ResetPassword.vue'
-import MyTickets from '../components/mytickets.vue'
-<<<<<<< HEAD
+import MyTickets from '../components/mytickets.vue';
 import UserRoleManagement from '../components/UserRoleManagement.vue'
 import UserPermissionManagement from '../components/UserPermissionManagement.vue'
-import ViewUser from '../views/ViewUser.vue'
-=======
+import ViewUser from '../views/ViewUser.vue';
 import RoleManager from '../components/RoleManager.vue'
 import UpdateRole from '../components/updateRole.vue'
->>>>>>> d81c0d74f7afa7beac1c4b77559aead47a9d3796
+import NewRole from '../components/newrole.vue'
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL || '/'),
@@ -113,11 +112,26 @@ const router = createRouter({
       name: 'reset password',
       component: ResetPassword
       },
-<<<<<<< HEAD
       {
       path: '/user-roles',
       name: 'user roles',
       component: UserRoleManagement
+      },
+       {
+      path: '/role-management',
+      name: 'role management',
+      component: RoleManager
+      },
+        {
+      path: '/create-role',
+      name: 'create role',
+      component: NewRole
+      },
+
+       {
+      path: '/update-role/:id',
+      name: 'update role',
+      component: UpdateRole
       },
         {
       path: '/user-permissions',
@@ -129,21 +143,6 @@ const router = createRouter({
       name: 'view user',
       component: ViewUser
       },
-=======
-
-
-      {
-        path: '/role-management',
-        name: 'role management',
-        component: RoleManager
-        },
-
-        {
-          path: '/update-role',
-          name: 'update role',
-          component: UpdateRole
-          },
->>>>>>> d81c0d74f7afa7beac1c4b77559aead47a9d3796
     { path: '/:pathMatch(.*)*', redirect: '/' }
   ]
 })

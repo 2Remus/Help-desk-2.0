@@ -158,5 +158,17 @@ onMounted(
 })
 </script>
 <style scoped>
+button {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 4px;
+}
 
+button:hover {
+  background: #0056b3;
+}
 </style>

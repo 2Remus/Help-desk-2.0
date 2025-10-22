@@ -54,7 +54,7 @@
           const token = localStorage.getItem('token');
           if (!token) return;
   
-          const response = await fetch('http://138.68.58.185:8080/api/roles', {
+          const response = await fetch('http://localhost:8080/api/user-roles', {
             headers: {
               Authorization: 'Bearer ' + token,
               'Content-Type': 'application/json'

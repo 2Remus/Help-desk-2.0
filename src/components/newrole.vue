@@ -18,6 +18,17 @@
                 placeholder="Enter role name"
               />
             </div>
+
+              <div class="form-group">
+              <label for="description">Description:</label>
+              <input
+                type="text"
+                id="description"
+                v-model="role.description"
+                required
+                placeholder="Enter role description"
+              />
+            </div>
   
             <div class="form-group">
               <label for="permissions">Assign Permissions:</label>
@@ -30,11 +41,11 @@
                   <input
                     type="checkbox"
                     :id="'perm-' + permission.id"
-                    :value="permission.name"
+                    :value="permission.permission"
                     v-model="role.permissions"
                   />
                   <label :for="'perm-' + permission.id">
-                    {{ permission.name }}
+                    {{ permission.permission }}
                   </label>
                 </div>
               </div>
@@ -71,6 +82,7 @@
   
       const role = ref({
         name: '',
+        descriptions:'',
         permissions: []
       });
   
@@ -81,7 +93,7 @@
           const token = localStorage.getItem('token');
           if (!token) return;
   
-          const response = await fetch('http://138.68.58.185:8080/api/permissions', {
+          const response = await fetch('http://localhost:8080/api/user-permissions', {
             headers: {
               Authorization: 'Bearer ' + token,
               'Content-Type': 'application/json'
@@ -104,7 +116,7 @@
             permissions: role.value.permissions
           };
   
-          const response = await fetch('http://138.68.58.185:8080/api/roles', {
+          const response = await fetch('http://localhost:8080/api/roles', {
             method: 'POST',
             headers: {
               Authorization: 'Bearer ' + token,

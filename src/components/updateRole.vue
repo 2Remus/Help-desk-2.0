@@ -1,7 +1,7 @@
 <template>
     <MainTemplate>
         <h2>Update Role</h2>
-  
+   {{ role.name }}  
         <div class="form-container">
           <h3>Edit Role: {{ role.name }}</h3>
   
@@ -16,22 +16,34 @@
                 placeholder="Enter role name"
               />
             </div>
+            <div class="form-group">
+              <label for="description">Description:</label>
+              <input
+                type="text"
+                id="description"
+                v-model="role.description"
+                required
+                placeholder="Enter role description"
+              />
+            </div>
   
             <div class="form-group">
               <label for="permissions">Edit Permissions:</label>
               <div class="checkbox-group">
-                <div
+               
+
+                 <div
                   v-for="permission in permissions"
                   :key="permission.id"
-                  class="checkbox-item"
-                >
+                  class="checkbox-item">
                   <input
                     type="checkbox"
                     :id="'perm-' + permission.id"
-                    :value="permission.name"
-                    v-model="role.permissions"
+                    :value="permission.id"
+                    v-model="rolePermissions.permissionIds"
                   />
-                  <label :for="'perm-' + permission.id">{{ permission.name }}</label>
+                  
+                  <label :for="'perm-' + permission.id">{{ permission.permission }}</label>
                 </div>
               </div>
             </div>
@@ -65,17 +77,26 @@
       const route = useRoute();
       const router = useRouter();
       const toast = useToast();
-  
-      const role = ref({ name: '', permissions: [] });
+      const role = ref('');
+     // const role = ref({ name: '',description:'', permissionIds: [] });
       const permissions = ref([]);
-  
-      const fetchRole = async () => {
+      const rolePermissions = ref({
+      roleId: '',
+      permissionIds: []
+   
+      });
+
+    const assignedRolePermissions = ref([]);
+
+      const fetchRoleDetails = async () => {
         try {
           const token = localStorage.getItem('token');
           const id = route.params.id;
-  
-          const response = await fetch(`http://138.68.58.185:8080/api/roles/${id}`, {
-            headers: { Authorization: 'Bearer ' + token }
+          const response = await fetch(`http://localhost:8080/api/user-roles/role/${id}`, {
+            headers: {
+                        "Authorization": "Bearer "+ token,
+                         "Content-Type": "application/json"
+                    }
           });
   
           if (!response.ok) throw new Error('Failed to fetch role');
@@ -86,15 +107,35 @@
         }
       };
   
+
       const fetchPermissions = async () => {
         try {
           const token = localStorage.getItem('token');
-          const response = await fetch('http://138.68.58.185:8080/api/permissions', {
+          const response = await fetch('http://localhost:8080/api/user-permissions', {
+            headers: { Authorization: 'Bearer ' + token }
+          });
+          if (!response.ok) throw new Error('Failed to fetch permissions');
+          permissions.value = await response.json();
+        } catch (error) {
+          console.error('Error fetching permissions:', error);
+          toast.error('Error fetching permissions');
+        }
+      };
+
+
+      const fetchRolePermissions = async () => {
+        try {
+          const token = localStorage.getItem('token');
+          const id = route.params.id;
+
+          const response = await fetch(`http://localhost:8080/api/user-permissions/role/${id}`, {
             headers: { Authorization: 'Bearer ' + token }
           });
   
           if (!response.ok) throw new Error('Failed to fetch permissions');
-          permissions.value = await response.json();
+          assignedRolePermissions.value = await response.json();
+          console.log("assigned per "+assignedRolePermissions.value )
+          rolePermissions.value.permissionIds = assignedRolePermissions.value.map(p => p.id)
         } catch (error) {
           console.error('Error fetching permissions:', error);
           toast.error('Error fetching permissions');
@@ -111,7 +152,7 @@
             permissions: role.value.permissions
           };
   
-          const response = await fetch(`http://138.68.58.185:8080/api/roles/${id}`, {
+          const response = await fetch(`http://localhost:8080/api/roles/${id}`, {
             method: 'PUT',
             headers: {
               Authorization: 'Bearer ' + token,
@@ -130,20 +171,99 @@
       };
   
       onMounted(() => {
-        fetchRole();
-        fetchPermissions();
+        fetchRoleDetails();
+       fetchPermissions();
+       fetchRolePermissions();
       });
   
       return {
         role,
         permissions,
-        handleUpdateRole
+        handleUpdateRole,
+        fetchRoleDetails,
+        fetchRolePermissions,
+        rolePermissions,
+        assignedRolePermissions
       };
     }
   };
   </script>
   
   <style scoped>
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  font-weight: 600;
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+.checkbox-group {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 0.6rem 1.2rem;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background-color: #fafafa;
+}
+
+.checkbox-item {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border-radius: 8px;
+  padding: 6px 10px;
+  transition: background 0.2s ease, transform 0.1s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.checkbox-item:hover {
+  background-color: #f0f8ff;
+  transform: translateY(-1px);
+}
+
+.checkbox-item input[type="checkbox"] {
+  accent-color: #007bff; /* modern browsers */
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.checkbox-item label {
+  cursor: pointer;
+  font-size: 0.95rem;
+  color: #333;
+  user-select: none;
+}
+
+/* Optional: subtle animation on check */
+.checkbox-item input[type="checkbox"]:checked + label {
+  color: #007bff;
+  font-weight: 600;
+}
+
+
+
+button {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 4px;
+}
+
+button:hover {
+  background: #0056b3;
+}
+
+
 
   </style>
   
