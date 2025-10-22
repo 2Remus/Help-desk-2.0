@@ -201,37 +201,20 @@
   color: #333;
 }
 
-.checkbox-group {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 0.6rem 1.2rem;
-  padding: 0.75rem;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  background-color: #fafafa;
-}
-
 .checkbox-item {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   background: #fff;
-  border-radius: 8px;
-  padding: 6px 10px;
+  border-radius: 10px;
+  padding: 10px 14px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
   transition: background 0.2s ease, transform 0.1s ease;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 .checkbox-item:hover {
-  background-color: #f0f8ff;
-  transform: translateY(-1px);
-}
-
-.checkbox-item input[type="checkbox"] {
-  accent-color: #007bff; /* modern browsers */
-  width: 18px;
-  height: 18px;
-  cursor: pointer;
-  margin-right: 10px;
+  background-color: #f9fbff;
+  transform: translateY(-2px);
 }
 
 .checkbox-item label {
@@ -239,12 +222,50 @@
   font-size: 0.95rem;
   color: #333;
   user-select: none;
+  font-weight: 500;
 }
 
-/* Optional: subtle animation on check */
-.checkbox-item input[type="checkbox"]:checked + label {
-  color: #007bff;
-  font-weight: 600;
+/* Hide the default checkbox */
+.checkbox-item input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 44px;
+  height: 24px;
+  background: #ccc;
+  border-radius: 24px;
+  position: relative;
+  outline: none;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+/* The circle (the "thumb") */
+.checkbox-item input[type="checkbox"]::before {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  transition: transform 0.3s ease;
+}
+
+/* When checked */
+.checkbox-item input[type="checkbox"]:checked {
+  background: linear-gradient(135deg, #007bff, #00bfff);
+}
+
+/* Move the thumb to the right when checked */
+.checkbox-item input[type="checkbox"]:checked::before {
+  transform: translateX(20px);
+}
+
+/* Add subtle glow when active */
+.checkbox-item input[type="checkbox"]:active::before {
+  width: 20px;
 }
 
 
