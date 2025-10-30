@@ -1,9 +1,9 @@
 <template>
 <MainTemplate>
    <div class="">
-    <h2>Issue Type Management</h2>
+    <h2>Ticket Status Management</h2>
     <!-- Add insitution Form -->
-    <div class="institution-form-container">
+    <div class="institution-form-container"   v-if="$can('create ticket status')">
     
       <form class="add-institution-form" @submit.prevent="handleAddTicketStatus">
           <h3>Add New Ticket Status</h3>
@@ -43,7 +43,7 @@
               <div class="button-group">
                           
               
-                <i class="pi pi-trash" style="font-size: 1rem"  @click="handleDeleteTicketStatus(ticketStatus.id)" title="Delete"></i>
+                <i class="pi pi-trash" style="font-size: 1rem"  @click="handleDeleteTicketStatus(ticketStatus.id)" title="Delete"   v-if="$can('delete ticket status')"></i>
               
               </div>
             </td>

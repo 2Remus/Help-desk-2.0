@@ -7,7 +7,7 @@
         <p><strong>Subject:</strong> {{ ticket.subject }}</p>
         
 
-        <div v-if="isAdmin"><strong>Status: </strong>
+        <div v-if="$can('update ticket')"><strong>Status: </strong>
           <select 
                             v-model="ticket.status" 
                             @change="updateTicketStatus(ticket.id, ticket.status)"
@@ -25,11 +25,11 @@
 
         <p><strong>Created At:</strong> {{ formatDate(ticket.createdAt) }}</p>
         <p><strong>Created By:</strong> {{ ticket.reporter?.email || 'Unknown' }}</p>
-        <div v-if="isAdmin"><strong>Assignee: </strong>
+        <div v-if="$can('assign ticket')"><strong>Assignee: </strong>
           <select 
                             v-model="ticket.assignedTo" 
                             @change="updateAssignedTo(ticket.id, ticket.assignedTo)"
-                            :class="['status-select', ticket.assignedTo.toLowerCase()]"
+                            :class="['status-select', ticket.assignedTo.toLowerCase()]" 
                         >
                            
                              <option v-for="user in users" :key="user.id" :value="user.name">

@@ -7,14 +7,14 @@
     
       <form class="add-institution-form" @submit.prevent="handleAddUserPermission">
           <h3>Add New Permission</h3>
-            <div class="form-group">
+        <!--   <div class="form-group">
           <label for="userRole">Role:</label>
           <select id="userRole" v-model="newUserPermission.userRole">
             <option v-for="ur in userRoles" :key="ur.id" :value="ur.name">
                         {{ ur.name }}
                     </option>
           </select>
-        </div>
+        </div>--> 
           <div class="form-group">
           <label for="name">Name:</label>
           <input type="name" id="name" v-model="newUserPermission.permission" required />
@@ -35,7 +35,7 @@
       <table>
         <thead>
           <tr>
-            <th>Role</th>
+           <!-- <th>Role</th>-->
              <th>Permission</th>
             <th>Description</th>
             <th>Actions</th>
@@ -43,7 +43,7 @@
         </thead>
         <tbody>
           <tr v-for="userPermission in userPermissions" :key="userPermission.id">
-            <td>{{ userPermission.userRole.name }}</td> 
+          <!--  <td>{{ userPermission.userRole.name }}</td> -->
             <td>{{ userPermission.permission }}</td>
             <td>{{ userPermission.description }}</td>
            

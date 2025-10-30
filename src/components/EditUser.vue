@@ -19,7 +19,7 @@
         </div>
            <div class="form-group">
           <label for="password">Password:</label>
-          <input type="password" id="password" v-model="user.password" required />
+          <input type="password" id="password" v-model="user.password"/>
         </div>
         
         <div class="form-group">
@@ -132,10 +132,17 @@ export default {
    const handleEditUser = async () => {
       try {
         const token = localStorage.getItem('token');
+  
         const payload = {
       ...user.value,
       institution: user.value.institution?.name || "" // ✅ only send name
+      
     };
+
+             // ✅ Only include password if it's non-empty
+    if (user.value.password && user.value.password.trim() !== "") {
+      payload.password = user.value.password;
+    }
         const response = await fetch(`http://localhost:8080/api/users/edit/${usId}`, {
           method: 'PUT',
           headers: {

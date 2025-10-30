@@ -1,18 +1,18 @@
 
 <script setup>
 
+import { useAuthStore } from './stores/auth';
+const auth = useAuthStore();
 </script>
 
 <template>
  <div class="container" v-cloak>
 
     <div class="content">
-   <!--   <RouterView v-slot="{ Component }">
-        <Transition mode="out-in">
-          <component :is="Component" />
-        </Transition>
-      </RouterView>-->
-      <RouterView/>
+   <div v-if="auth.isReady">
+    <RouterView />
+  </div>
+  <div v-else class="loading-screen">Loading...</div>
     </div>
   </div>
 </template>

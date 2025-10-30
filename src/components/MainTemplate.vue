@@ -1,14 +1,14 @@
 <script setup>
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
-import { useRouter } from 'vue-router';
+import { RouterLink, useRouter } from 'vue-router';
 import { useAuthStore } from '../stores/auth';
+import { can } from '../utils/permissions.js'
 
 const auth = useAuthStore();
 const router = useRouter();
 const userEmail = computed(() => auth.user?.email);
 const isLoggedIn = computed(() => auth.isLoggedIn);
 const isAdmin = computed(() => auth.user?.admin);
-
 const sidebarOpen = ref(false); // For mobile toggle
 
 const toggleSidebar = () => {
@@ -24,20 +24,23 @@ const handleLogout = () => {
   router.push('/login');
 };
 
-const goToUsers = () => window.location.href = '/help-desk/user-management';
-const goToUserRoles = () => window.location.href = '/help-desk/user-roles';
-const goToUserPermissions = () => window.location.href = '/help-desk/user-permissions';
-const goToInstitutions = () => window.location.href = '/help-desk/institution-management';
-const goToTickets = () => window.location.href = '/help-desk/tickets';
-const goToAllTickets = () => window.location.href = '/help-desk/all-tickets';
-const goToAddRoleManager = () => window.location.href = '/help-desk/role-management';
+
+const goToUsers = () => {
+  router.push('/user-management');
+}; 
+const goToUserRoles = () => router.push('/user-roles'); //window.location.href = '/help-desk/user-roles';
+const goToUserPermissions = () => router.push('/user-permissions');// window.location.href = '/help-desk/user-permissions';
+const goToInstitutions = () => router.push('/institution-management');//window.location.href = '/help-desk/institution-management';
+const goToTickets = () => router.push('/tickets');//window.location.href = '/help-desk/tickets';
+const goToAllTickets = () => router.push('/all-tickets'); //window.location.href = '/help-desk/all-tickets';
+const goToAddRoleManager = () =>router.push('/role-management'); //window.location.href = '/help-desk/role-management';
 
 
-const goToSubmitTicket = () => window.location.href = '/help-desk/';
-const goToFequentlyAskedQuestions = () => window.location.href = '/help-desk/frequently-asked-questions';
-const goToIssueTypes = () => window.location.href = '/help-desk/issue-types';
-const goToTicketStatuses = () => window.location.href = '/help-desk/ticket-statuses';
-const goToMyTickets = () => window.location.href = '/help-desk/my-tickets';
+const goToSubmitTicket = () => router.push('/');//window.location.href = '/help-desk/';
+//const goToFequentlyAskedQuestions = () => window.location.href = '/help-desk/frequently-asked-questions';
+const goToIssueTypes = () => router.push('/issue-types');//window.location.href = '/help-desk/issue-types';
+const goToTicketStatuses = () => router.push('/ticket-statuses');//window.location.href = '/help-desk/ticket-statuses';
+const goToMyTickets = () => router.push('/my-tickets');//window.location.href = '/help-desk/my-tickets';
 
 
 // Optional: close menu on ESC key
@@ -54,7 +57,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="layout" v-cloak>
+  <div class="layout" v-cloak v-if="auth.isReady">
     <!-- Topbar -->
     <header class="topbar">
       <button class="hamburger" @click="toggleSidebar">☰</button>
@@ -68,6 +71,7 @@ onBeforeUnmount(() => {
 <!-- User email on the right -->
   <div v-if="isLoggedIn" class="topbar-user">
     <i class="pi pi-user"></i> {{ userEmail }}
+  
   </div>
      
     </header>
@@ -84,19 +88,32 @@ onBeforeUnmount(() => {
     <!-- Sidebar -->
     <nav class="sidebar" :class="{ open: sidebarOpen }">
       <ul>
-        <li v-if="isAdmin">
+        <li v-if="can('view users')">
           <button class="sidebar-link" @click="goToUsers">
             <i class="pi pi-users"></i><span>Users</span>
           </button>
         </li>
-         <li v-if="isAdmin">
+      <li v-if="can('view roles')" >
+          <button class="sidebar-link" @click="goToAddRoleManager">
+            <i class="pi pi-user"></i><span>Roles</span>
+          </button>
+        </li>
+        
+       
+       <!--<li v-if="can('admin')">
           <button class="sidebar-link" @click="goToUserRoles">
             <i class="pi pi-user-edit"></i><span>User Roles</span>
           </button>
         </li>
-          <li v-if="isAdmin">
+        --> 
+        <li v-if="can('view permissions')">
           <button class="sidebar-link" @click="goToUserPermissions">
             <i class="pi pi-user-edit"></i><span>User Permissions</span>
+          </button>
+        </li>
+       <li v-if="can('view institutions')">
+          <button class="sidebar-link" @click="goToInstitutions">
+            <i class="pi pi-building-columns"></i><span>Institutions</span>
           </button>
         </li>
         <li>
@@ -104,48 +121,39 @@ onBeforeUnmount(() => {
             <i class="pi pi-plus"></i><span>Submit a ticket</span>
           </button>
         </li>
-        <li v-if="isAdmin">
-          <button class="sidebar-link" @click="goToInstitutions">
-            <i class="pi pi-building-columns"></i><span>Institutions</span>
-          </button>
-        </li>
-        <li>
+        
+        <li v-if="can('view assigned tickets')">
           <button class="sidebar-link" @click="goToMyTickets">
             <i class="pi pi-ticket"></i><span>Assigned Tickets</span>
           </button>
         </li>
 
-        <li v-if="isAdmin">
-          <button class="sidebar-link" @click="goToIssueTypes">
-            <i class="pi pi-objects-column"></i><span>Issue Types</span>
-          </button>
-        </li>
-        <li v-if="isAdmin">
+       
+        <li v-if="can('view categorized tickets')">
           <button class="sidebar-link" @click="goToTickets">
             <i class="pi pi-list-check"></i><span>Tickets</span>
           </button>
         </li>
-          <li v-if="isAdmin">
+          <li v-if="can('view tickets')">
           <button class="sidebar-link" @click="goToAllTickets">
             <i class="pi pi-database"></i><span>All Tickets</span>
           </button>
         </li>
-        <li v-if="isAdmin">
+        <li v-if="can('view ticket statuses')">
           <button class="sidebar-link" @click="goToTicketStatuses">
             <i class="pi pi-calendar-clock"></i><span>Ticket Statuses</span>
           </button>
         </li>
 
-        <li >
-          <button class="sidebar-link" @click="goToAddRoleManager">
-            <i class="pi pi-user"></i><span>Roles</span>
+         
+         <li v-if="can('view issue types')">
+          <button class="sidebar-link" @click="goToIssueTypes">
+            <i class="pi pi-objects-column"></i><span>Issue Types</span>
           </button>
         </li>
-         <!-- <li>
-          <button class="sidebar-link" @click="goToFequentlyAskedQuestions">
-            <i class="pi pi-question"></i><span>FAQ</span>
-          </button>
-        </li> -->
+
+        
+     
         <li v-if="isLoggedIn">
           <button class="sidebar-link" @click="handleLogout">
             <i class="pi pi-sign-out"></i><span>Logout</span>

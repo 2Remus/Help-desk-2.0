@@ -8,7 +8,8 @@ import 'primeicons/primeicons.css'
 
 // Import Vue Router
 import router from './router'
-
+import { useAuthStore } from './stores/auth'
+import { can } from './utils/permissions'
 
 // Create and mount app
 const app = createApp(App)
@@ -19,5 +20,12 @@ app.use(Toast, {
 })
 
 app.use(pinia);
-app.use(router)
+app.use(router);
+
+// Load user data from token if available
+const auth = useAuthStore()
+auth.loadFromStorage()
+
+// ✅ Make `can()` globally available
+app.config.globalProperties.$can = can
 app.mount('#app')

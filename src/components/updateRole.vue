@@ -1,9 +1,7 @@
 <template>
     <MainTemplate>
-        <h2>Update Role</h2>
-   {{ role.name }}  
         <div class="form-container">
-          <h3>Edit Role: {{ role.name }}</h3>
+          <h3>Update Role: {{ role.name }}</h3>
   
           <form class="add-form" @submit.prevent="handleUpdateRole">
             <div class="form-group">
@@ -33,14 +31,14 @@
                
 
                  <div
-                  v-for="permission in permissions"
+                  v-for="permission in allpermissions"
                   :key="permission.id"
                   class="checkbox-item">
                   <input
                     type="checkbox"
                     :id="'perm-' + permission.id"
                     :value="permission.id"
-                    v-model="rolePermissions.permissionIds"
+                    v-model="role.permissions"
                   />
                   
                   <label :for="'perm-' + permission.id">{{ permission.permission }}</label>
@@ -77,16 +75,14 @@
       const route = useRoute();
       const router = useRouter();
       const toast = useToast();
-      const role = ref('');
-     // const role = ref({ name: '',description:'', permissionIds: [] });
-      const permissions = ref([]);
-      const rolePermissions = ref({
-      roleId: '',
-      permissionIds: []
-   
+      const role = ref({
+        name: '',
+        description:'',
+        permissions: []
       });
-
-    const assignedRolePermissions = ref([]);
+      const allpermissions = ref([]);
+  
+      const assignedRolePermissions = ref([]);
 
       const fetchRoleDetails = async () => {
         try {
@@ -115,7 +111,7 @@
             headers: { Authorization: 'Bearer ' + token }
           });
           if (!response.ok) throw new Error('Failed to fetch permissions');
-          permissions.value = await response.json();
+          allpermissions.value = await response.json();
         } catch (error) {
           console.error('Error fetching permissions:', error);
           toast.error('Error fetching permissions');
@@ -127,15 +123,15 @@
         try {
           const token = localStorage.getItem('token');
           const id = route.params.id;
-
           const response = await fetch(`http://localhost:8080/api/user-permissions/role/${id}`, {
             headers: { Authorization: 'Bearer ' + token }
           });
   
           if (!response.ok) throw new Error('Failed to fetch permissions');
           assignedRolePermissions.value = await response.json();
-          console.log("assigned per "+assignedRolePermissions.value )
-          rolePermissions.value.permissionIds = assignedRolePermissions.value.map(p => p.id)
+         // rolePermissions.value.permissionIds = assignedRolePermissions.value.map(p => p.id)
+       //  role.value.permissions = assignedRolePermissions.value.map(p => p.userPermission.id)
+         role.value.permissions = assignedRolePermissions.value.map(p => Number(p.userPermission.id))
         } catch (error) {
           console.error('Error fetching permissions:', error);
           toast.error('Error fetching permissions');
@@ -146,13 +142,13 @@
         try {
           const token = localStorage.getItem('token');
           const id = route.params.id;
-  
           const payload = {
             name: role.value.name,
-            permissions: role.value.permissions
+            description: role.value.description,
+            permissionIds: role.value.permissions
           };
   
-          const response = await fetch(`http://localhost:8080/api/roles/${id}`, {
+          const response = await fetch(`http://localhost:8080/api/user-roles/update/${id}`, {
             method: 'PUT',
             headers: {
               Authorization: 'Bearer ' + token,
@@ -170,19 +166,18 @@
         }
       };
   
-      onMounted(() => {
-        fetchRoleDetails();
-       fetchPermissions();
-       fetchRolePermissions();
+      onMounted(async () => {
+         await fetchPermissions();
+         await fetchRoleDetails();
+         await fetchRolePermissions();
       });
   
       return {
         role,
-        permissions,
+        allpermissions,
         handleUpdateRole,
         fetchRoleDetails,
         fetchRolePermissions,
-        rolePermissions,
         assignedRolePermissions
       };
     }

@@ -59,13 +59,9 @@ export default {
                 
                 const data = await response.json();
                 if (response.ok) {
-                //    localStorage.setItem('token', data.token);
-                //   localStorage.setItem('user', JSON.stringify(data.user));
                     auth.setUser(data.user, data.token); // store both
                     emit('login-success', data.user); // Pass the user data including is_admin
-                
-                  
-                        router.push('/');
+                    router.push('/');
                     
                 } else {
                     error.value = data.detail ;

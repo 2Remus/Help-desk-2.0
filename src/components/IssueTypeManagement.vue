@@ -3,7 +3,7 @@
    <div class="">
     <h2>Issue Type Management</h2>
     <!-- Add insitution Form -->
-    <div class="institution-form-container">
+    <div class="institution-form-container"  v-if="$can('Create Issue Type')">
     
       <form class="add-institution-form" @submit.prevent="handleAddIssueType">
           <h3>Add New Issue Type</h3>
@@ -43,7 +43,7 @@
               <div class="button-group">
                           
               
-                <i class="pi pi-trash" style="font-size: 1rem"  @click="handleDeleteIssueType(issueType.id)" title="Delete"></i>
+                <i class="pi pi-trash" style="font-size: 1rem"  @click="handleDeleteIssueType(issueType.id)" title="Delete" v-if="$can('delete issue type')"></i>
               
               </div>
             </td>

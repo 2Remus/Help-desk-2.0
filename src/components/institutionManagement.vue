@@ -3,7 +3,7 @@
    <div class="">
     <h2>Institution Management</h2>
     <!-- Add insitution Form -->
-    <div class="institution-form-container">
+    <div class="institution-form-container" v-if="$can('create institution')">
     
       <form class="add-institution-form" @submit.prevent="handleAddInstitution">
           <h3>Add New Institution</h3>
@@ -57,11 +57,11 @@
             <td>
               <div class="button-group">
                           
-                <RouterLink :to="`/institutions/edit/${institution.id}`"> 
+                <RouterLink :to="`/institutions/edit/${institution.id}`" v-if="$can('update institution')"> 
                   <i class="pi pi-pencil" style="font-size: 1rem" title="Edit"></i>
                 </RouterLink>
 
-                <i class="pi pi-trash" style="font-size: 1rem"  @click="handleDeleteInstitution(institution.id)" title="Delete"></i>
+                <i class="pi pi-trash" style="font-size: 1rem"  @click="handleDeleteInstitution(institution.id)" title="Delete" v-if="$can('delete institution')"></i>
               
               </div>
             </td>

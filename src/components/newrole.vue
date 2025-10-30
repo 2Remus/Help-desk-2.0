@@ -41,7 +41,7 @@
                   <input
                     type="checkbox"
                     :id="'perm-' + permission.id"
-                    :value="permission.permission"
+                    :value="permission.id"
                     v-model="role.permissions"
                   />
                   <label :for="'perm-' + permission.id">
@@ -82,7 +82,7 @@
   
       const role = ref({
         name: '',
-        descriptions:'',
+        description:'',
         permissions: []
       });
   
@@ -113,10 +113,11 @@
           const token = localStorage.getItem('token');
           const payload = {
             name: role.value.name,
-            permissions: role.value.permissions
+            description: role.value.description,
+            permissionIds: role.value.permissions
           };
   
-          const response = await fetch('http://localhost:8080/api/roles', {
+          const response = await fetch('http://localhost:8080/api/user-roles/add', {
             method: 'POST',
             headers: {
               Authorization: 'Bearer ' + token,
@@ -144,7 +145,7 @@
     }
   };
   </script>
-  
+  <!--
   <style scoped>
   label {
     display: block;
@@ -200,5 +201,69 @@
       flex-direction: column;
     }
   }
-  </style>
+  </style>-->
+  <style scoped>
+    .checkbox-group {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 0.6rem 1.2rem;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background-color: #fafafa;
+}
+
+.checkbox-item {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border-radius: 8px;
+  padding: 6px 10px;
+  transition: background 0.2s ease, transform 0.1s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.checkbox-item:hover {
+  background-color: #f0f8ff;
+  transform: translateY(-1px);
+}
+
+.checkbox-item input[type="checkbox"] {
+  accent-color: #007bff; /* modern browsers */
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.checkbox-item label {
+  cursor: pointer;
+  font-size: 0.95rem;
+  color: #333;
+  user-select: none;
+}
+
+/* Optional: subtle animation on check */
+.checkbox-item input[type="checkbox"]:checked + label {
+  color: #007bff;
+  font-weight: 600;
+}
+
+
+
+button {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 4px;
+}
+
+button:hover {
+  background: #0056b3;
+}
+
+</style>
   

@@ -61,49 +61,54 @@
             <tbody>
                 <tr v-for="ticket in filteredTickets" :key="ticket.id">
                     <td>{{ ticket.id }}</td>
-                    <td><RouterLink :to="`/tickets/view/${ticket.id}`">{{ ticket.subject }}</RouterLink></td>
+                    <td><RouterLink :to="`/tickets/view/${ticket.id}`" >{{ ticket.subject }}</RouterLink></td>
                     <td><select 
                             v-model="ticket.issueType" 
                             @change="updateTicketIssueType(ticket.id, ticket.issueType)"
                             :class="['status-select', ticket.issueType.toLowerCase()]"
-                        >
+                         v-if="$can('update ticket')">
                              <option v-for="issueType in issueTypes" :key="issueType.id" :value="issueType.name">
                                 {{ issueType.name }}
                             </option>
-                        </select></td>
+                        </select>
+                        <p v-else>{{ ticket.issueType }}</p>
+
+                    </td>
                     <td>
                         <select 
                             v-model="ticket.status" 
                             @change="updateTicketStatus(ticket.id, ticket.status)"
                             :class="['status-select', ticket.status.toLowerCase()]"
-                        >
+                        v-if="$can('update ticket')">
                              <option v-for="ticketStatus in ticketStatuses" :key="ticketStatus.id" :value="ticketStatus.name">
                                 {{ ticketStatus.name }}
                             </option>
                         </select>
+                        <p v-else>{{ ticket.status }}</p>
                     </td>
                     <td>
                         <select 
                             v-model="ticket.priority" 
                             @change="updateTicketPriority(ticket.id, ticket.priority)"
                             :class="['priority-select', ticket.priority.toLowerCase()]"
-                        >
+                        v-if="$can('update ticket')">
                             <option value="low">Low</option>
                             <option value="medium">Medium</option>
                             <option value="high">High</option>
                         </select>
+                         <p v-else>{{ ticket.priority }}</p>
                     </td>
                       <td>
                         
                         <select 
-                            v-model="ticket.assignedTo"   @change="updateAssignedTo(ticket.id, ticket.assignedTo)">
+                            v-model="ticket.assignedTo"   @change="updateAssignedTo(ticket.id, ticket.assignedTo)"  v-if="$can('assign ticket')">
                             <option value="Unassigned"></option> 
-                            <option v-for="sysuser in users" :key="sysuser.id" :value="sysuser.name">
+                            <option v-for="sysuser in users" :key="sysuser.id" :value="sysuser.name" >
                               
                                 {{ sysuser.name }}
                             </option>
                         </select>
-                     
+                       <p v-else>{{ ticket.assignedTo }}</p>
                     </td>
                     <td>{{ formatDate(ticket.createdAt) }}</td>
                     <td>

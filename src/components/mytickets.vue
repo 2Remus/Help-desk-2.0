@@ -1,7 +1,7 @@
 <template>
   <MainTemplate>
     <div class="ticket-list-container">
-      <h1>My Tickets</h1>
+      <h1>My Assigned Tickets</h1>
       <div class="filters">
         <input
           v-model="searchQuery"
@@ -59,33 +59,37 @@
                 v-model="ticket.status" 
                 @change="updateTicketStatus(ticket.id, ticket.status)"
                 :class="['status-select', ticket.status?.toLowerCase()]"
-              >
+              v-if="$can('update ticket')" >
                 <option v-for="status in ticketStatuses" :key="status" :value="status">
                   {{ status }}
                 </option>
               </select>
+              <p v-else>{{ ticket.status }}</p>
+            
             </td>
             <td>
               <select 
                 v-model="ticket.priority" 
                 @change="updateTicketPriority(ticket.id, ticket.priority)"
                 :class="['priority-select', ticket.priority?.toLowerCase()]"
-              >
+              v-if="$can('update ticket')">
                 <option value="low">Low</option>
                 <option value="medium">Medium</option>
                 <option value="high">High</option>
               </select>
+                <p v-else>{{ ticket.priority }}</p>
             </td>
             <td>
               <select 
                 v-model="ticket.issueType" 
                 @change="updateTicketIssueType(ticket.id, ticket.issueType)"
                 :class="['status-select', ticket.issueType?.toLowerCase()]"
-              >
+              v-if="$can('update ticket')" >
                 <option v-for="type in issueTypes" :key="type" :value="type">
                   {{ type }}
                 </option>
               </select>
+                <p v-else>{{ ticket.issueType }}</p>
             </td>
             <td>{{ ticket.assignedTo }}</td>
             <td>{{ formatDate(ticket.createdAt) }}</td>

@@ -4,8 +4,8 @@
     <h2>User Management</h2>
 
     <!-- Add User Form -->
-    <div class="user-form-container">
-      <form class="add-user-form" @submit.prevent="handleAddUser">
+    <div class="user-form-container"  v-if="$can('create user')">
+      <form class="add-user-form" @submit.prevent="handleAddUser"  >
         <h3>Add New User</h3>
        
             <div class="form-group">
@@ -53,7 +53,7 @@
     </div>
 
     <!-- User List -->
-    <div class="user-list">
+    <div class="user-list" v-if="$can('admin')">
       <h3>Users</h3>
       <table>
         <thead>
@@ -73,7 +73,7 @@
           <tr v-for="sysuser in users" :key="sysuser.id">
              <td>{{ sysuser.name }}</td>
             <td>{{ sysuser.email }}</td>
-           <td v-if="isAdmin">
+           <td v-if="$can('update user')">
                 <select @change="handleRoleChange(sysuser)" v-model="sysuser.admin">
                   <option :value="true">Admin</option>
                   <option :value="false">User</option>
@@ -83,8 +83,8 @@
                 <span v-if="sysuser.admin">Admin</span>
                 <span v-else>User</span>
           </td>
-            <td v-if="isAdmin">
-              <span v-if="sysuser.admin">
+            <td >
+              <span v-if="$can('update user')">
                 <select              
                  @change="handleIssueTypeChange(sysuser)" v-model="sysuser.issueType">
                 <option v-for="issue in issueTypes" :key="issue.id" :value="issue.name">
@@ -92,14 +92,13 @@
                     </option>
               </select>
               </span>
-              <span v-else> - </span>
+              <span v-else>{{ sysuser.issueType }} </span>
             
             
-            </td>
-            <td v-else>{{ sysuser.issueType }}</td>
+            </td>   
             
             <td ><span v-if="sysuser.institution">{{ sysuser.institution.name }}</span></td>
-            <td v-if="isAdmin">
+            <td v-if="$can('update user')">
              <select              
                  @change="handleActiveStatusChange(sysuser)" v-model="sysuser.active">
                 <option value="true">Active</option>
@@ -111,16 +110,16 @@
              <div class="button-group">
                
 
-               <RouterLink :to="`/users/view/${sysuser.id}`"> 
+               <RouterLink :to="`/users/view/${sysuser.id}`" > 
                   <i class="pi pi-eye" style="font-size: 1rem" title="View"></i>
                 </RouterLink>
 
 
-                <RouterLink :to="`/users/edit/${sysuser.id}`"> 
+                <RouterLink :to="`/users/edit/${sysuser.id}`" v-if="$can('update user')"> 
                   <i class="pi pi-pencil" style="font-size: 1rem" title="Edit"></i>
                 </RouterLink>
 
-                 <i class="pi pi-trash" style="font-size: 1rem" @click="handleDeleteUser(sysuser.id)" title="Delete"></i>
+                 <i class="pi pi-trash" style="font-size: 1rem" @click="handleDeleteUser(sysuser.id)" title="Delete" v-if="$can('delete user')"></i>
               </div>
             </td>
           </tr>
@@ -167,7 +166,7 @@ export default {
     });
     const issueTypes = ref([]);
     const institutions = ref([]);
-
+    const roles  = ref([]);
     const fetchUsers = async () => {
       try {
         const token = localStorage.getItem('token');
@@ -391,6 +390,31 @@ export default {
             fetchInstitutions()
 
      });
+
+     const fetchUserRoles = async () => {
+      const token = auth.token;
+      console.log("Roles "+token)
+      try {
+           if (!token) return;
+            currentUser.value = jwtDecode(token);
+          if(!currentUser.value.admin){
+            router.push('/')
+
+          }
+          const response = await fetch('http://localhost:8080/api/user-roles',
+        {
+                    headers: {
+                        "Authorization": "Bearer "+ token,
+                         "Content-Type": "application/json"
+                    }
+                });
+        if (!response.ok) throw new Error('Failed to fetch roles');
+        roles.value = await response.json();
+      } catch (error) {
+        console.error('Error fetching roles:', error);
+      }
+    };
+
 
     return {
       users,
