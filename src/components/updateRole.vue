@@ -103,6 +103,7 @@
         }
       };
   
+      
 
       const fetchPermissions = async () => {
         try {
@@ -196,7 +197,7 @@
   color: #333;
 }
 
-.checkbox-item {
+checkbox-item {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -205,6 +206,7 @@
   padding: 10px 14px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.05);
   transition: background 0.2s ease, transform 0.1s ease;
+  padding-bottom: 10px;
 }
 
 .checkbox-item:hover {
