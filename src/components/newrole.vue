@@ -160,18 +160,74 @@
     box-sizing: border-box;
   }
   
-  .checkbox-group {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 8px;
-  }
-  
-  .checkbox-item {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-  }
+  checkbox-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fff;
+  border-radius: 10px;
+  padding: 10px 14px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  transition: background 0.2s ease, transform 0.1s ease;
+  padding-bottom: 10px;
+}
+
+.checkbox-item:hover {
+  background-color: #f9fbff;
+  transform: translateY(-2px);
+}
+
+.checkbox-item label {
+  cursor: pointer;
+  font-size: 0.95rem;
+  color: #333;
+  user-select: none;
+  font-weight: 500;
+}
+
+/* Hide the default checkbox */
+.checkbox-item input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 44px;
+  height: 24px;
+  background: #ccc;
+  border-radius: 24px;
+  position: relative;
+  outline: none;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+/* The circle (the "thumb") */
+.checkbox-item input[type="checkbox"]::before {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  transition: transform 0.3s ease;
+}
+
+/* When checked */
+.checkbox-item input[type="checkbox"]:checked {
+  background: linear-gradient(135deg, #007bff, #00bfff);
+}
+
+/* Move the thumb to the right when checked */
+.checkbox-item input[type="checkbox"]:checked::before {
+  transform: translateX(20px);
+}
+
+/* Add subtle glow when active */
+.checkbox-item input[type="checkbox"]:active::before {
+  width: 20px;
+}
+
   
   button {
     background: #007bff;

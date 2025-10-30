@@ -111,7 +111,7 @@
       const fetchPermissions = async () => {
         try {
           const token = localStorage.getItem('token');
-          const response = await fetch('http://localhost:8080/api/user-permissions', {
+          const response = await fetch('http://192.168.1.111:8080/api/user-permissions', {
             headers: { Authorization: 'Bearer ' + token }
           });
           if (!response.ok) throw new Error('Failed to fetch permissions');
@@ -128,7 +128,7 @@
           const token = localStorage.getItem('token');
           const id = route.params.id;
 
-          const response = await fetch(`http://localhost:8080/api/user-permissions/role/${id}`, {
+          const response = await fetch(`http://192.168.1.111:8080/api/user-permissions/role/${id}`, {
             headers: { Authorization: 'Bearer ' + token }
           });
   
@@ -152,7 +152,7 @@
             permissions: role.value.permissions
           };
   
-          const response = await fetch(`http://localhost:8080/api/roles/${id}`, {
+          const response = await fetch(`http://192.168.1.111:8080/api/roles/${id}`, {
             method: 'PUT',
             headers: {
               Authorization: 'Bearer ' + token,
@@ -201,7 +201,7 @@
   color: #333;
 }
 
-.checkbox-item {
+checkbox-item {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -210,6 +210,7 @@
   padding: 10px 14px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.05);
   transition: background 0.2s ease, transform 0.1s ease;
+  padding-bottom: 10px;
 }
 
 .checkbox-item:hover {
