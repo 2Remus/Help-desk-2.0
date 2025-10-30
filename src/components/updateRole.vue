@@ -196,8 +196,7 @@
   margin-bottom: 0.5rem;
   color: #333;
 }
-
-checkbox-item {
+.checkbox-item {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -206,7 +205,7 @@ checkbox-item {
   padding: 10px 14px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.05);
   transition: background 0.2s ease, transform 0.1s ease;
-  padding-bottom: 10px;
+  margin-bottom: 10px;
 }
 
 .checkbox-item:hover {
@@ -265,6 +264,21 @@ checkbox-item {
   width: 20px;
 }
 
+
+
+button {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 4px;
+}
+
+button:hover {
+  background: #0056b3;
+}
 
 
 button {
