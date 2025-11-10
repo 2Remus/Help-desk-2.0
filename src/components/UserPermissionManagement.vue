@@ -108,7 +108,7 @@ export default {
             router.push('/')
 
           }
-          const response = await fetch('http://localhost:8080/api/user-permissions',
+          const response = await fetch('http://10.181.1.64:8080/api/user-permissions',
         {
                     headers: {
                         "Authorization": "Bearer "+ token,
@@ -131,7 +131,7 @@ export default {
      const handleAddUserPermission = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch('http://localhost:8080/api/user-permissions/create', {
+        const response = await fetch('http://10.181.1.64:8080/api/user-permissions/create', {
           method: 'POST',
           headers: {
             'Authorization': 'Bearer '+ token,
@@ -162,7 +162,7 @@ export default {
       if (!confirm('Are you sure you want to delete this user permission?')) return;
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`http://localhost:8080/api/user-permissions/${perid}`, {
+        const response = await fetch(`http://10.181.1.64:8080/api/user-permissions/${perid}`, {
           method: 'DELETE',
            headers: {
             'Authorization': 'Bearer '+ token,
@@ -187,7 +187,7 @@ export default {
       try {
            if (!token) return;
        
-          const response = await fetch('http://localhost:8080/api/user-roles',
+          const response = await fetch('http://10.181.1.64:8080/api/user-roles',
         {
                     headers: {
                         "Authorization": "Bearer "+ token,

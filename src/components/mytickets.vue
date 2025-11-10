@@ -52,7 +52,7 @@
         <tbody>
           <tr v-for="ticket in filteredTickets" :key="ticket.id">
             <td>{{ ticket.id }}</td>
-            <td>{{ ticket.subject }}</td>
+            <td><RouterLink :to="`/tickets/view/${ticket.id}`" >{{ ticket.subject }}</RouterLink></td>
             <td>{{ ticket.description }}</td>
             <td>
               <select 
@@ -128,7 +128,7 @@ export default {
       const token = auth.token
       if (!token) return
       try {
-        const response = await fetch('http://localhost:8080/api/issue-types', {
+        const response = await fetch('http://10.181.1.64:8080/api/issue-types', {
           headers: {
             'Authorization': 'Bearer ' + token,
             'Content-Type': 'application/json'
@@ -148,7 +148,7 @@ export default {
       const token = auth.token
       if (!token) return
       try {
-        const response = await fetch('http://localhost:8080/api/tickets/my-assigned', {
+        const response = await fetch('http://10.181.1.64:8080/api/tickets/my-assigned', {
           headers: {
             'Authorization': 'Bearer ' + token,
             'Content-Type': 'application/json'
@@ -166,7 +166,7 @@ export default {
     const updateTicketStatus = async (ticketId, status) => {
       try {
         const token = auth.token
-        const response = await fetch(`http://localhost:8080/api/tickets/status/${ticketId}`, {
+        const response = await fetch(`http://10.181.1.64:8080/api/tickets/status/${ticketId}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -184,7 +184,7 @@ export default {
     const updateTicketPriority = async (ticketId, priority) => {
       try {
         const token = auth.token
-        const response = await fetch(`http://localhost:8080/api/tickets/priority/${ticketId}`, {
+        const response = await fetch(`http://10.181.1.64:8080/api/tickets/priority/${ticketId}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -202,7 +202,7 @@ export default {
     const updateTicketIssueType = async (ticketId, issueType) => {
       try {
         const token = auth.token
-        const response = await fetch(`http://localhost:8080/api/tickets/issue-type/${ticketId}`, {
+        const response = await fetch(`http://10.181.1.64:8080/api/tickets/issue-type/${ticketId}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -266,6 +266,8 @@ export default {
 .ticket-list-container { width: 100%; max-width: 100%; margin: 0; padding: 16px; border-radius: 16px; background-color: #fff; box-shadow: 0 2px 12px rgba(0,0,0,0.08); font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; box-sizing: border-box; }
 h1 { text-align: center; font-weight: 600; color: #1a1a1a; font-size: clamp(1.5rem, 2vw, 1.75rem); margin-bottom: 16px; }
 .filters { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; }
+
+
 .filter-input { width: 100%; padding: 8px 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; box-sizing: border-box; }
 .ticket-list { width: 900px; }
 table { width: 980px; border-collapse: separate; border-spacing: 0; margin: 16px 0; }

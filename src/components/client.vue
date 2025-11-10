@@ -79,7 +79,7 @@
     <div v-if="showChat" class="chat-modal">
         <div class="chat-content">
             <div class="chat-header">
-                <h3>Ticket #{{ selectedTicketId }} Chat</h3>
+                <h3>Ticket #{{ selectedTicketId }} {{ ticket.subject }}Chat</h3>
                 <button class="close-button" @click="closeChat">&times;</button>
             </div>
             <div class="chat-messages">
@@ -146,6 +146,7 @@ export default {
         const successMessage = ref('');
         const errorMessage = ref('');
         const tickets = ref([]);
+        const ticket = ref('');
         const showChat = ref(false);
         const selectedTicketId = ref(null);
         const newMessage = ref('');
@@ -164,7 +165,7 @@ export default {
         const handleSubmit = async () => {  
             try {
                 const token = localStorage.getItem('token');
-                const response = await fetch('http://localhost:8080/api/tickets/create', {
+                const response = await fetch('http://10.181.1.64:8080/api/tickets/create', {
                     method: 'POST',
                     headers: {
                         "Authorization": "Bearer "+ token,
@@ -204,7 +205,7 @@ export default {
             try {
                 const token = auth.token;//localStorage.getItem('token');
                 console.log("token "+ token)
-                const response = await fetch('http://localhost:8080/api/myTickets',
+                const response = await fetch('http://10.181.1.64:8080/api/myTickets',
                      {
                     headers: {
                         "Authorization": "Bearer "+ token,
@@ -245,6 +246,7 @@ export default {
             selectedTicketId.value = ticketId;
             showChat.value = true;
             await fetchMessages(ticketId);
+            fetchTicketDetails(ticketId);
             startMessagePolling(ticketId);
         };
 
@@ -261,7 +263,7 @@ export default {
         const fetchMessages = async (ticketId) => {
             try {
                 const token = localStorage.getItem('token');
-                const response = await fetch(`http://localhost:8080/api/tickets/${ticketId}/messages`,
+                const response = await fetch(`http://10.181.1.64:8080/api/tickets/${ticketId}/messages`,
                  {
                     headers: {
                         "Authorization": "Bearer "+ token,
@@ -276,6 +278,21 @@ export default {
             }
         };
 
+const fetchTicketDetails = async (ticketId) => {
+  const token = localStorage.getItem('token')
+  try {
+    const res = await fetch(`http://10.181.1.64:8080/api/tickets/view/${ticketId}`, {
+      headers: {
+        Authorization: 'Bearer ' + token,
+        'Content-Type': 'application/json',
+      },
+    })
+    ticket.value = await res.json()
+    console.log("Ticket details "+ticket.value)
+  } catch (error) {
+    console.error('Error fetching ticket:', error)
+  }
+}
         
 
         const sendMessage = async () => {
@@ -283,7 +300,7 @@ export default {
 
             try {
                 const token = localStorage.getItem('token');
-                const response = await fetch(`http://localhost:8080/api/tickets/${selectedTicketId.value}/message`, {
+                const response = await fetch(`http://10.181.1.64:8080/api/tickets/${selectedTicketId.value}/message`, {
                     method: 'POST',
                     headers: {
                          'Authorization': 'Bearer '+ token,
@@ -330,7 +347,7 @@ export default {
         const token = localStorage.getItem('token');
            if (!token) return;
        
-        const response = await fetch('http://localhost:8080/api/issue-types',
+        const response = await fetch('http://10.181.1.64:8080/api/issue-types',
         {
                     headers: {
                         "Authorization": "Bearer "+ token,
@@ -364,6 +381,7 @@ export default {
             successMessage, 
             errorMessage, 
             tickets,
+            ticket,
             handleSubmit, 
             showChat, 
             selectedTicketId, 
@@ -376,7 +394,9 @@ export default {
             formatDate,
             fetchMyTickets,
             issueTypes,
-            fetchIssueTypes,currentUser
+            fetchIssueTypes,
+            currentUser,
+            fetchTicketDetails
 
         };
     }

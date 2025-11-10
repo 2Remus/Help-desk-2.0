@@ -88,7 +88,7 @@
         try {
           const token = localStorage.getItem('token');
           const id = route.params.id;
-          const response = await fetch(`http://localhost:8080/api/user-roles/role/${id}`, {
+          const response = await fetch(`http://10.181.1.64:8080/api/user-roles/role/${id}`, {
             headers: {
                         "Authorization": "Bearer "+ token,
                          "Content-Type": "application/json"
@@ -108,7 +108,7 @@
       const fetchPermissions = async () => {
         try {
           const token = localStorage.getItem('token');
-          const response = await fetch('http://localhost:8080/api/user-permissions', {
+          const response = await fetch('http://10.181.1.64:8080/api/user-permissions', {
             headers: { Authorization: 'Bearer ' + token }
           });
           if (!response.ok) throw new Error('Failed to fetch permissions');
@@ -124,7 +124,7 @@
         try {
           const token = localStorage.getItem('token');
           const id = route.params.id;
-          const response = await fetch(`http://localhost:8080/api/user-permissions/role/${id}`, {
+          const response = await fetch(`http://10.181.1.64:8080/api/user-permissions/role/${id}`, {
             headers: { Authorization: 'Bearer ' + token }
           });
   
@@ -149,7 +149,7 @@
             permissionIds: role.value.permissions
           };
   
-          const response = await fetch(`http://localhost:8080/api/user-roles/update/${id}`, {
+          const response = await fetch(`http://10.181.1.64:8080/api/user-roles/update/${id}`, {
             method: 'PUT',
             headers: {
               Authorization: 'Bearer ' + token,

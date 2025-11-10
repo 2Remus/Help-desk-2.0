@@ -6,31 +6,24 @@
     <!-- Add User Form -->
     <div class="form-container">
      
-      <form class="add-form" @submit.prevent="handleEditInstitution">
-         <h3>Edit Institution</h3>
+      <form class="add-form" @submit.prevent="handleEditIssueType">
+         <h3>Edit Issue Type</h3>
           <div class="form-group">
-          <input type="hidden" id="id" v-model="existingInstitution.id" required />
+          <input type="hidden" id="id" v-model="existingIssueType.id" required />
         </div>
           <div class="form-group">
           <label for="name">Name:</label>
-          <input type="name" id="name" v-model="existingInstitution.name" required />
+          <input type="text" id="name" v-model="existingIssueType.name" required />
         </div>
         <div class="form-group">
-          <label for="address">Address:</label>
-          <input type="text" id="address" v-model="existingInstitution.address" required />
+          <label for="description">Description:</label>
+          <input type="text" id="description" v-model="existingIssueType.description" required />
         </div>
-        <div class="form-group">
-          <label for="email">Email:</label>
-          <input type="email" id="email" v-model="existingInstitution.email" required />
-        </div>
-        <div class="form-group">
-          <label for="phoneNumber">Telephone:</label>
-          <input type="text" id="phoneNumber" v-model="existingInstitution.phoneNumber" required />
-        </div>
+     
        
         <div class="button-group">
         <button type="submit"><i class="pi pi-check" style="font-size: 1rem"></i>Save</button>
-        <RouterLink to="/institution-management"><button><i class="pi pi-ban" style="font-size: 1rem"></i>Cancel</button></RouterLink>
+        <RouterLink to="/issue-types"><button><i class="pi pi-ban" style="font-size: 1rem"></i>Cancel</button></RouterLink>
       </div>
       </form>
     </div>
@@ -39,45 +32,39 @@
   </MainTemplate>
 </template>
 
-<script>
+<script setup>
   import { ref, onMounted } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
-  import MainTemplate from './MainTemplate.vue';
+  import MainTemplate from './../components/MainTemplate.vue';
   import { useToast } from 'vue-toastification'
 
-export default {
-  name: 'InstitutionManagement',
-   components: {
-    MainTemplate
-  },
-  setup() {
+
     const toast = useToast();
     const route = useRoute();
     const router = useRouter();
-    const instId = route.params.id;
-    const existingInstitution = ref({
+    const issId = route.params.id;
+    const existingIssueType = ref({
       name: '',
-      address: '',
-      email: '',
-      telephone: ''
+      description: ''
+    
     });
    
 
 
   
 
-  const fetchInstitution = async () => {
+  const fetchIssueType = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`http://10.181.1.64:8080/api/institutions/${instId}`, 
+        const response = await fetch(`http://10.181.1.64:8080/api/issue-types/issue-type/${issId}`, 
         {
                     headers: {
                         "Authorization": "Bearer "+ token,
                          "Content-Type": "application/json"
                     }
                 });
-        if (!response.ok) throw new Error('Failed to fetch institution');
-        existingInstitution.value = await response.json();
+        if (!response.ok) throw new Error('Failed to fetch issue type');
+        existingIssueType.value = await response.json();
         
       } catch (error) {
         console.error('Error fetching institution:', error);
@@ -88,37 +75,32 @@ export default {
 
     
     
-   const handleEditInstitution = async () => {
+   const handleEditIssueType= async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`http://10.181.1.64:8080/api/institutions/edit/${instId}`, {
+        const response = await fetch(`http://10.181.1.64:8080/api/issue-types/edit/${issId}`, {
           method: 'PUT',
           headers: {
              'Authorization': 'Bearer '+ token,
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify(existingInstitution.value)
+          body: JSON.stringify(existingIssueType.value)
         });
-        if (!response.ok) throw new Error('Failed to edit institution');
-        toast.success('Institution edited successfully');
-          router.push('/institution-management');
+        if (!response.ok) throw new Error('Failed to edit issue type');
+        toast.success('Issue type edited successfully');
+          router.push('/issue-types');
       } catch (error) {
-        console.error('Error editing institution:', error);
-        toast.error('Error editing institution');
+        console.error('Error editing issue type:', error);
+        toast.error('Error editing issue type');
       }
     };
 
 
-    onMounted(fetchInstitution);
+    onMounted( () => {
+       fetchIssueType()});
 
-    return {
-      instId,
-      existingInstitution,
-      fetchInstitution ,
-      handleEditInstitution
-    };
-  }
-};
+
+
 </script>
 
 <style scoped>

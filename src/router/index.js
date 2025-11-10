@@ -22,6 +22,7 @@ import ViewUser from '../views/ViewUser.vue';
 import RoleManager from '../components/RoleManager.vue'
 import UpdateRole from '../components/updateRole.vue'
 import NewRole from '../components/newrole.vue'
+import EditIssueType from '../views/EditIssueType.vue'
 
 
 const router = createRouter({
@@ -92,11 +93,21 @@ const router = createRouter({
       name: 'issue-types',
       component: IssueTypeManagement
     },
+    {
+      path: '/issue-types/edit-form/:id',
+      name: 'edit-issue-type',
+      component: EditIssueType
+    },
      {
       path: '/ticket-statuses',
       name: 'ticket-statuses',
       component: TicketStatusManagement
       },
+      {
+      path: '/ticket-statuses/edit/:id',
+      name: 'edit-ticket-status',
+     // component: EditIssueType
+    },
       {
         path: '/my-tickets',
         name: 'my-tickets',

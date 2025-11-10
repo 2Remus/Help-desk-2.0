@@ -178,7 +178,7 @@ export default {
           router.push('/')
 
         }
-        const response = await fetch('http://localhost:8080/api/users',
+        const response = await fetch('http://10.181.1.64:8080/api/users',
                      {
                     headers: {
                         "Authorization": "Bearer "+ token,
@@ -198,7 +198,7 @@ export default {
     const handleAddUser = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch('http://localhost:8080/api/users/create', {
+        const response = await fetch('http://10.181.1.64:8080/api/users/create', {
           method: 'POST',
           headers: {
             'Authorization': 'Bearer '+ token,
@@ -233,7 +233,7 @@ export default {
       if (!confirm('Are you sure you want to delete this user?')) return;
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`http://localhost:8080/api/users/change/${userId}`, {
+        const response = await fetch(`http://10.181.1.64:8080/api/users/change/${userId}`, {
           method: 'DELETE',
           headers: {
             'Authorization': 'Bearer '+ token,
@@ -256,7 +256,7 @@ export default {
     const handleRoleChange = async (user) => {
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`http://localhost:8080/api/users/edit/role/${user.id}`, {
+        const response = await fetch(`http://10.181.1.64:8080/api/users/edit/role/${user.id}`, {
           method: 'PUT',
           headers: {
             'Authorization': 'Bearer '+token,
@@ -282,7 +282,7 @@ export default {
     const handleIssueTypeChange = async (user) => {
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`http://localhost:8080/api/users/edit/role/${user.id}`, {
+        const response = await fetch(`http://10.181.1.64:8080/api/users/edit/role/${user.id}`, {
           method: 'PUT',
           headers: {
             'Authorization': 'Bearer '+token,
@@ -308,7 +308,7 @@ export default {
      const handleActiveStatusChange = async (user) => {
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`http://localhost:8080/api/users/edit/activeStatus/${user.id}`, {
+        const response = await fetch(`http://10.181.1.64:8080/api/users/edit/activeStatus/${user.id}`, {
           method: 'PUT',
           headers: {
             'Authorization': 'Bearer '+token,
@@ -335,7 +335,7 @@ export default {
         const token = localStorage.getItem('token');
            if (!token) return;
        
-        const response = await fetch('http://localhost:8080/api/issue-types',
+        const response = await fetch('http://10.181.1.64:8080/api/issue-types',
         {
                     headers: {
                         "Authorization": "Bearer "+ token,
@@ -356,7 +356,7 @@ export default {
         const token = localStorage.getItem('token');
            if (!token) return;
        
-        const response = await fetch('http://localhost:8080/api/institutions',
+        const response = await fetch('http://10.181.1.64:8080/api/institutions',
         {
                     headers: {
                         "Authorization": "Bearer "+ token,
@@ -401,7 +401,7 @@ export default {
             router.push('/')
 
           }
-          const response = await fetch('http://localhost:8080/api/user-roles',
+          const response = await fetch('http://10.181.1.64:8080/api/user-roles',
         {
                     headers: {
                         "Authorization": "Bearer "+ token,

@@ -3,7 +3,7 @@
    <div class="">
     <h2>Issue Type Management</h2>
     <!-- Add insitution Form -->
-    <div class="institution-form-container"  v-if="$can('Create Issue Type')">
+    <div class="institution-form-container"  v-if="$can('create issue type')">
     
       <form class="add-institution-form" @submit.prevent="handleAddIssueType">
           <h3>Add New Issue Type</h3>
@@ -41,8 +41,9 @@
           
             <td>
               <div class="button-group">
-                          
-              
+              <RouterLink :to="`/issue-types/edit-form/${issueType.id}`" v-if="$can('update issue type')" > 
+
+              <i class="pi pi-pencil" style="font-size: 1rem" ></i></RouterLink>
                 <i class="pi pi-trash" style="font-size: 1rem"  @click="handleDeleteIssueType(issueType.id)" title="Delete" v-if="$can('delete issue type')"></i>
               
               </div>
@@ -97,7 +98,7 @@ export default {
           router.push('/')
 
         }
-        const response = await fetch('http://localhost:8080/api/issue-types',
+        const response = await fetch('http://10.181.1.64:8080/api/issue-types',
         {
                     headers: {
                         "Authorization": "Bearer "+ token,
@@ -116,7 +117,7 @@ export default {
      const handleAddIssueType = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch('http://localhost:8080/api/issue-types/create', {
+        const response = await fetch('http://10.181.1.64:8080/api/issue-types/create', {
           method: 'POST',
           headers: {
             'Authorization': 'Bearer '+ token,
@@ -143,7 +144,7 @@ export default {
       if (!confirm('Are you sure you want to delete this Issue type?')) return;
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`http://localhost:8080/api/issue-types/${issueTypeId}`, {
+        const response = await fetch(`http://10.181.1.64:8080/api/issue-types/${issueTypeId}`, {
           method: 'DELETE',
            headers: {
             'Authorization': 'Bearer '+ token,

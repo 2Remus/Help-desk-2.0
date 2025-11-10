@@ -57,7 +57,7 @@
           const token = localStorage.getItem('token');
           if (!token) return;
   
-          const response = await fetch('http://localhost:8080/api/user-roles', {
+          const response = await fetch('http://10.181.1.64:8080/api/user-roles', {
             headers: {
               Authorization: 'Bearer ' + token,
               'Content-Type': 'application/json'
@@ -85,7 +85,7 @@
       if (!confirm('Are you sure you want to delete this Issue type?')) return;
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`http://localhost:8080/api/user-roles/${usrid}`, {
+        const response = await fetch(`http://10.181.1.64:8080/api/user-roles/${usrid}`, {
           method: 'DELETE',
            headers: {
             'Authorization': 'Bearer '+ token,
