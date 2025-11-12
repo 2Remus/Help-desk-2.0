@@ -59,7 +59,7 @@ const userRolesAssignment = ref({
 const fetchUser = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`http://10.181.1.64:8080/api/users/${usId}`,  {
+        const response = await fetch(`http://localhost:8080/api/users/${usId}`,  {
                     headers: {
                         "Authorization": "Bearer "+ token,
                          "Content-Type": "application/json"
@@ -82,7 +82,7 @@ const fetchUser = async () => {
            if (!token) return;
             currentUser.value = jwtDecode(token);
          
-          const response = await fetch('http://10.181.1.64:8080/api/user-roles',
+          const response = await fetch('http://localhost:8080/api/user-roles',
         {
                     headers: {
                         "Authorization": "Bearer "+ token,
@@ -104,7 +104,7 @@ const fetchUser = async () => {
            if (!token) return;
             currentUser.value = jwtDecode(token);
          
-          const response = await fetch(`http://10.181.1.64:8080/api/user/${usId}/roles`,
+          const response = await fetch(`http://localhost:8080/api/user/${usId}/roles`,
         {
                     headers: {
                         "Authorization": "Bearer "+ token,
@@ -128,7 +128,7 @@ const fetchUser = async () => {
       try {
         const token = localStorage.getItem('token');
         userRolesAssignment.value.userId = usId;
-        const response = await fetch(`http://10.181.1.64:8080/api/user-roles-assigned/create`, {
+        const response = await fetch(`http://localhost:8080/api/user-roles-assigned/create`, {
           
           method: 'POST',
           headers: {

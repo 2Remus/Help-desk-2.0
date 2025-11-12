@@ -130,7 +130,7 @@ const issueTypes = ref([]);
 const fetchTicketDetails = async () => {
   const token = localStorage.getItem('token')
   try {
-    const res = await fetch(`http://10.181.1.64:8080/api/tickets/view/${ticketId}`, {
+    const res = await fetch(`http://localhost:8080/api/tickets/view/${ticketId}`, {
       headers: {
         Authorization: 'Bearer ' + token,
         'Content-Type': 'application/json',
@@ -153,7 +153,7 @@ const fetchTicketStatuses = async () => {
                 router.push('/')
 
                 }
-                const response = await fetch('http://10.181.1.64:8080/api/ticket-statuses',
+                const response = await fetch('http://localhost:8080/api/ticket-statuses',
                 {
                             headers: {
                                 "Authorization": "Bearer "+ token,
@@ -173,7 +173,7 @@ const fetchTicketStatuses = async () => {
 const fetchMessages = async () => {
   const token = localStorage.getItem('token')
   try {
-    const res = await fetch(`http://10.181.1.64:8080/api/tickets/${ticketId}/messages`, {
+    const res = await fetch(`http://localhost:8080/api/tickets/${ticketId}/messages`, {
       headers: {
         Authorization: 'Bearer ' + token,
         'Content-Type': 'application/json',
@@ -196,7 +196,7 @@ const startMessagePolling = () => {
         const updateTicketStatus = async (ticketId, status) => {
             try {
                 const token = auth.token; //localStorage.getItem('token');
-                const response = await fetch(`http://10.181.1.64:8080/api/tickets/status/${ticketId}`, {
+                const response = await fetch(`http://localhost:8080/api/tickets/status/${ticketId}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -232,7 +232,7 @@ const sendMessage = async () => {
   const token = localStorage.getItem('token')
 
   try {
-    const res = await fetch(`http://10.181.1.64:8080/api/tickets/${ticketId}/message`, {
+    const res = await fetch(`http://localhost:8080/api/tickets/${ticketId}/message`, {
       method: 'POST',
       headers: {
         Authorization: 'Bearer ' + token,
@@ -281,7 +281,7 @@ const formatDate = (dateString) => {
              const token = localStorage.getItem('token');
             try {
                
-                const response = await fetch('http://10.181.1.64:8080/api/available-users', {
+                const response = await fetch('http://localhost:8080/api/available-users', {
                     headers: {
                          "Authorization": "Bearer "+ token,
                          "Content-Type": "application/json"
@@ -299,7 +299,7 @@ const formatDate = (dateString) => {
             const updateAssignedTo = async (ticketId, assignment) => {
             try {
                 const token = localStorage.getItem('token');
-                const response = await fetch(`http://10.181.1.64:8080/api/tickets/assign/${ticketId}`, {
+                const response = await fetch(`http://localhost:8080/api/tickets/assign/${ticketId}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -343,7 +343,7 @@ const formatDate = (dateString) => {
       try {
            if (!token) return;
      
-        const response = await fetch('http://10.181.1.64:8080/api/issue-types',
+        const response = await fetch('http://localhost:8080/api/issue-types',
         {
                     headers: {
                         "Authorization": "Bearer "+ token,
@@ -360,7 +360,7 @@ const formatDate = (dateString) => {
        const updateTicketIssueType = async (ticketId, issueType) => {
             try {
                 const token = localStorage.getItem('token');
-                const response = await fetch(`http://10.181.1.64:8080/api/tickets/issue-type/${ticketId}`, {
+                const response = await fetch(`http://localhost:8080/api/tickets/issue-type/${ticketId}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',

@@ -67,6 +67,7 @@
   import { useToast } from 'vue-toastification';
   import MainTemplate from './MainTemplate.vue';
   import './RoleManager.vue';
+import { useAuthStore } from '../stores/auth';
   
   export default {
     name: 'UpdateRole',
@@ -75,6 +76,7 @@
       const route = useRoute();
       const router = useRouter();
       const toast = useToast();
+      const auth = useAuthStore();
       const role = ref({
         name: '',
         description:'',
@@ -86,9 +88,9 @@
 
       const fetchRoleDetails = async () => {
         try {
-          const token = localStorage.getItem('token');
+          const token = auth.token;//localStorage.getItem('token');
           const id = route.params.id;
-          const response = await fetch(`http://10.181.1.64:8080/api/user-roles/role/${id}`, {
+          const response = await fetch(`http://localhost:8080/api/user-roles/role/${id}`, {
             headers: {
                         "Authorization": "Bearer "+ token,
                          "Content-Type": "application/json"
@@ -108,7 +110,7 @@
       const fetchPermissions = async () => {
         try {
           const token = localStorage.getItem('token');
-          const response = await fetch('http://10.181.1.64:8080/api/user-permissions', {
+          const response = await fetch('http://localhost:8080/api/user-permissions', {
             headers: { Authorization: 'Bearer ' + token }
           });
           if (!response.ok) throw new Error('Failed to fetch permissions');
@@ -124,7 +126,7 @@
         try {
           const token = localStorage.getItem('token');
           const id = route.params.id;
-          const response = await fetch(`http://10.181.1.64:8080/api/user-permissions/role/${id}`, {
+          const response = await fetch(`http://localhost:8080/api/user-permissions/role/${id}`, {
             headers: { Authorization: 'Bearer ' + token }
           });
   
@@ -141,7 +143,7 @@
   
       const handleUpdateRole = async () => {
         try {
-          const token = localStorage.getItem('token');
+          const token = auth.token;
           const id = route.params.id;
           const payload = {
             name: role.value.name,
@@ -149,7 +151,7 @@
             permissionIds: role.value.permissions
           };
   
-          const response = await fetch(`http://10.181.1.64:8080/api/user-roles/update/${id}`, {
+          const response = await fetch(`http://localhost:8080/api/user-roles/update/${id}`, {
             method: 'PUT',
             headers: {
               Authorization: 'Bearer ' + token,

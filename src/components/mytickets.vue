@@ -128,7 +128,7 @@ export default {
       const token = auth.token
       if (!token) return
       try {
-        const response = await fetch('http://10.181.1.64:8080/api/issue-types', {
+        const response = await fetch('http://localhost:8080/api/issue-types', {
           headers: {
             'Authorization': 'Bearer ' + token,
             'Content-Type': 'application/json'
@@ -148,7 +148,7 @@ export default {
       const token = auth.token
       if (!token) return
       try {
-        const response = await fetch('http://10.181.1.64:8080/api/tickets/my-assigned', {
+        const response = await fetch('http://localhost:8080/api/tickets/my-assigned', {
           headers: {
             'Authorization': 'Bearer ' + token,
             'Content-Type': 'application/json'
@@ -166,7 +166,7 @@ export default {
     const updateTicketStatus = async (ticketId, status) => {
       try {
         const token = auth.token
-        const response = await fetch(`http://10.181.1.64:8080/api/tickets/status/${ticketId}`, {
+        const response = await fetch(`http://localhost:8080/api/tickets/status/${ticketId}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -184,7 +184,7 @@ export default {
     const updateTicketPriority = async (ticketId, priority) => {
       try {
         const token = auth.token
-        const response = await fetch(`http://10.181.1.64:8080/api/tickets/priority/${ticketId}`, {
+        const response = await fetch(`http://localhost:8080/api/tickets/priority/${ticketId}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -202,7 +202,7 @@ export default {
     const updateTicketIssueType = async (ticketId, issueType) => {
       try {
         const token = auth.token
-        const response = await fetch(`http://10.181.1.64:8080/api/tickets/issue-type/${ticketId}`, {
+        const response = await fetch(`http://localhost:8080/api/tickets/issue-type/${ticketId}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',

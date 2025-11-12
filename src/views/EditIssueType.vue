@@ -56,7 +56,7 @@
   const fetchIssueType = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`http://10.181.1.64:8080/api/issue-types/issue-type/${issId}`, 
+        const response = await fetch(`http://localhost:8080/api/issue-types/issue-type/${issId}`, 
         {
                     headers: {
                         "Authorization": "Bearer "+ token,
@@ -78,7 +78,7 @@
    const handleEditIssueType= async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`http://10.181.1.64:8080/api/issue-types/edit/${issId}`, {
+        const response = await fetch(`http://localhost:8080/api/issue-types/edit/${issId}`, {
           method: 'PUT',
           headers: {
              'Authorization': 'Bearer '+ token,

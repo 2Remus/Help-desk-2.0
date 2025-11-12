@@ -93,7 +93,7 @@
           const token = localStorage.getItem('token');
           if (!token) return;
   
-          const response = await fetch('http://10.181.1.64:8080/api/user-permissions', {
+          const response = await fetch('http://localhost:8080/api/user-permissions', {
             headers: {
               Authorization: 'Bearer ' + token,
               'Content-Type': 'application/json'
@@ -117,7 +117,7 @@
             permissionIds: role.value.permissions
           };
   
-          const response = await fetch('http://10.181.1.64:8080/api/user-roles/add', {
+          const response = await fetch('http://localhost:8080/api/user-roles/add', {
             method: 'POST',
             headers: {
               Authorization: 'Bearer ' + token,

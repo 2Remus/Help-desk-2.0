@@ -44,7 +44,7 @@ import { useAuthStore } from '../stores/auth';
         const handleLogin = async (event) => {
             event.preventDefault(); 
             try {
-                const response = await fetch('http://10.181.1.64:8080/api/forgot-password', {
+                const response = await fetch('http://localhost:8080/api/forgot-password', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

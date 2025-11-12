@@ -34,7 +34,7 @@ onMounted(async () => {
   }
 
   try {
-    const res = await fetch(`http://10.181.1.64:8080/api/activate/${token}`, {
+    const res = await fetch(`http://localhost:8080/api/activate/${token}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
