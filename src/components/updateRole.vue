@@ -90,7 +90,7 @@ import { useAuthStore } from '../stores/auth';
         try {
           const token = auth.token;//localStorage.getItem('token');
           const id = route.params.id;
-          const response = await fetch(`http://localhost:8080/api/user-roles/role/${id}`, {
+          const response = await fetch(`https://vswiftsupport.gov.vc/api/user-roles/role/${id}`, {
             headers: {
                         "Authorization": "Bearer "+ token,
                          "Content-Type": "application/json"
@@ -110,7 +110,7 @@ import { useAuthStore } from '../stores/auth';
       const fetchPermissions = async () => {
         try {
           const token = localStorage.getItem('token');
-          const response = await fetch('http://localhost:8080/api/user-permissions', {
+          const response = await fetch('https://vswiftsupport.gov.vc/api/user-permissions', {
             headers: { Authorization: 'Bearer ' + token }
           });
           if (!response.ok) throw new Error('Failed to fetch permissions');
@@ -126,7 +126,7 @@ import { useAuthStore } from '../stores/auth';
         try {
           const token = localStorage.getItem('token');
           const id = route.params.id;
-          const response = await fetch(`http://localhost:8080/api/user-permissions/role/${id}`, {
+          const response = await fetch(`https://vswiftsupport.gov.vc/api/user-permissions/role/${id}`, {
             headers: { Authorization: 'Bearer ' + token }
           });
   
@@ -151,7 +151,7 @@ import { useAuthStore } from '../stores/auth';
             permissionIds: role.value.permissions
           };
   
-          const response = await fetch(`http://localhost:8080/api/user-roles/update/${id}`, {
+          const response = await fetch(`https://vswiftsupport.gov.vc/api/user-roles/update/${id}`, {
             method: 'PUT',
             headers: {
               Authorization: 'Bearer ' + token,

@@ -41,7 +41,7 @@ const message = ref('')
 
 const register = async () => {
   try {
-    const response = await fetch('http://localhost:8080/api/register', {
+    const response = await fetch('https://vswiftsupport.gov.vc/api/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

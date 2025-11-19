@@ -229,7 +229,7 @@ export default {
             console.log("Token Tickets: "+token)
             if(token){
             try {
-               const response = await fetch('http://localhost:8080/api/tickets-by-issues', {
+               const response = await fetch('https://vswiftsupport.gov.vc/api/tickets-by-issues', {
                     headers: {
                          "Authorization": "Bearer "+ token,
                          "Content-Type": "application/json"
@@ -253,7 +253,7 @@ export default {
             console.log("Token Tickets: "+token)
             if(token){
             try {
-               const response = await fetch('http://localhost:8080/api/tickets', {
+               const response = await fetch('https://vswiftsupport.gov.vc/api/tickets', {
                     headers: {
                          "Authorization": "Bearer "+ token,
                          "Content-Type": "application/json"
@@ -276,7 +276,7 @@ export default {
             console.log("Token Tickets: "+token)
             if(token){
             try {
-               const response = await fetch('http://localhost:8080/api/tickets', {
+               const response = await fetch('https://vswiftsupport.gov.vc/api/tickets', {
                     headers: {
                          "Authorization": "Bearer "+ token,
                          "Content-Type": "application/json"
@@ -315,7 +315,7 @@ export default {
         const fetchMessages = async (ticketId) => {
             try {
                 const token = localStorage.getItem('token');
-                const response = await fetch(`http://localhost:8080/api/tickets/${ticketId}/messages`, {
+                const response = await fetch(`https://vswiftsupport.gov.vc/api/tickets/${ticketId}/messages`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -335,7 +335,7 @@ export default {
 
             try {
                 const token = localStorage.getItem('token');
-                const response = await fetch(`http://localhost:8080/api/tickets/${selectedTicketId.value}/message`, {
+                const response = await fetch(`https://vswiftsupport.gov.vc/api/tickets/${selectedTicketId.value}/message`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -397,7 +397,7 @@ export default {
         const updateTicketStatus = async (ticketId, status) => {
             try {
                 const token = localStorage.getItem('token');
-                const response = await fetch(`http://localhost:8080/api/tickets/status/${ticketId}`, {
+                const response = await fetch(`https://vswiftsupport.gov.vc/api/tickets/status/${ticketId}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -430,7 +430,7 @@ export default {
         const updateTicketPriority = async (ticketId, priority) => {
             try {
                 const token = localStorage.getItem('token');
-                const response = await fetch(`http://localhost:8080/api/tickets/priority/${ticketId}`, {
+                const response = await fetch(`https://vswiftsupport.gov.vc/api/tickets/priority/${ticketId}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -463,7 +463,7 @@ export default {
         const updateAssignedTo = async (ticketId, assignment) => {
             try {
                 const token = localStorage.getItem('token');
-                const response = await fetch(`http://localhost:8080/api/tickets/assign/${ticketId}`, {
+                const response = await fetch(`https://vswiftsupport.gov.vc/api/tickets/assign/${ticketId}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -495,7 +495,7 @@ export default {
          const updateTicketIssueType = async (ticketId, issueType) => {
             try {
                 const token = localStorage.getItem('token');
-                const response = await fetch(`http://localhost:8080/api/tickets/issue-type/${ticketId}`, {
+                const response = await fetch(`https://vswiftsupport.gov.vc/api/tickets/issue-type/${ticketId}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -558,7 +558,7 @@ export default {
              const token = localStorage.getItem('token');
             try {
                
-                const response = await fetch('http://localhost:8080/api/available-users', {
+                const response = await fetch('https://vswiftsupport.gov.vc/api/available-users', {
                     headers: {
                          "Authorization": "Bearer "+ token,
                          "Content-Type": "application/json"
@@ -583,7 +583,7 @@ export default {
                 router.push('/')
 
                 }
-                const response = await fetch('http://localhost:8080/api/ticket-statuses',
+                const response = await fetch('https://vswiftsupport.gov.vc/api/ticket-statuses',
                 {
                             headers: {
                                 "Authorization": "Bearer "+ token,
@@ -608,7 +608,7 @@ export default {
           router.push('/')
 
         }*/
-        const response = await fetch('http://localhost:8080/api/issue-types',
+        const response = await fetch('https://vswiftsupport.gov.vc/api/issue-types',
         {
                     headers: {
                         "Authorization": "Bearer "+ token,

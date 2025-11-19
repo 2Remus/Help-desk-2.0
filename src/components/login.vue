@@ -46,8 +46,8 @@ export default {
         const handleLogin = async (event) => {
             event.preventDefault(); 
             try {
-               /* const response = await fetch('http://localhost:8080/api/login', {*/
-                const response = await fetch('http://localhost:8080/api/login', {
+               /* const response = await fetch('https://vswiftsupport.gov.vc/api/login', {*/
+                const response = await fetch('https://vswiftsupport.gov.vc/api/login', {
 
                     method: 'POST',
                     headers: {
