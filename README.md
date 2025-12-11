@@ -58,14 +58,13 @@ A modern, full-stack help desk ticketing system built with Vue 3, Vite, and a ba
 - **Vue Toastification** - Toast notifications
 
 ### Backend
-- **Java/Kotlin** (Assumed)
+- **Java/Kotlin**
 - **REST API**
 - **JWT Authentication**
 
 ### Styling
 - **CSS 3** with scoped styles
-- **Responsive Design** (Mobile-first approach)
-- **Google Fonts (Inter)**
+- **Responsive Design**
 
 ## 📁 Project Structure
 
@@ -108,8 +107,12 @@ Help-desk-2.0/
    ```bash
    npm install
    ```
+   or
+   ```bash
+   yarn install
+   ```
 
-3. **Install missing packages** (if needed)
+4. **Install missing packages** (if needed)
    ```bash
    npm install @vitejs/plugin-vue
    ```
