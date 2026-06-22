@@ -1,0 +1,60 @@
+services:
+  db:
+    image: postgres:16
+    container_name: help_desk_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: helpdesk
+    ports:
+      - "5430:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - help_desk
+
+  redis:
+    image: redis:7-alpine
+    container_name: helpdesk_redis
+    restart: always
+    command: redis-server --appendonly yes
+    ports:
+      - "6379:6379"
+    volumes:
+      - redisdata:/data
+    networks:
+      - help_desk
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama_help_desk
+    restart: always
+    environment:
+      - OLLAMA_HOST=0.0.0.0
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    networks:
+      - help_desk
+
+networks:
+  help_desk:
+    driver: bridge
+
+volumes:
+  pgdata:
+    #external: true
+    #name: help_desk_pgdata
+  redisdata:
+   # external: true
+    #name: help_desk_redisdata
+  ollama_data:
+    #external: true
+    #name: help_desk_ollama
