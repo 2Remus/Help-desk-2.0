@@ -97,7 +97,7 @@ export default {
           router.push('/')
 
         }
-        const response = await fetch('http://138.68.58.185:8080/api/issue-types',
+        const response = await fetch('/api/issue-types',
         {
                     headers: {
                         "Authorization": "Bearer "+ token,
@@ -116,7 +116,7 @@ export default {
      const handleAddIssueType = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch('http://138.68.58.185:8080/api/issue-types/create', {
+        const response = await fetch('/api/issue-types/create', {
           method: 'POST',
           headers: {
             'Authorization': 'Bearer '+ token,
@@ -143,7 +143,7 @@ export default {
       if (!confirm('Are you sure you want to delete this Issue type?')) return;
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`http://138.68.58.185:8080/api/issue-types/${issueTypeId}`, {
+        const response = await fetch(`/api/issue-types/${issueTypeId}`, {
           method: 'DELETE',
            headers: {
             'Authorization': 'Bearer '+ token,

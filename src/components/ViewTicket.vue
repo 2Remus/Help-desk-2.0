@@ -62,7 +62,7 @@ const fetchTicketDetails = async () => {
 
   
   try {
-    const res = await fetch(`http://138.68.58.185:8080/api/tickets/view/${ticketId}`, {
+    const res = await fetch(`/api/tickets/view/${ticketId}`, {
       headers: {
         'Authorization': 'Bearer ' + token,
         'Content-Type': 'application/json',
@@ -84,7 +84,7 @@ const fetchTicketDetails = async () => {
 const fetchMessages = async () => {
   try {
     const token = localStorage.getItem('token');
-    const res = await fetch(`http://138.68.58.185:8080/api/tickets/${ticketId}/messages`, {
+    const res = await fetch("/api/tickets/${ticketId}/messages", {
       headers: {
         'Authorization': 'Bearer ' + token,
         'Content-Type': 'application/json',

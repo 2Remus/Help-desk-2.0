@@ -42,7 +42,7 @@ export default {
         const handleLogin = async (event) => {
             event.preventDefault(); 
             try {
-                const response = await fetch('http://138.68.58.185:8080/api/login', {
+                const response = await fetch("/api/login", {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
