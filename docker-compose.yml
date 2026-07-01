@@ -1,6 +1,8 @@
+version: '3.8'
+
 services:
   db:
-    image: postgres:16
+    image: postgres:16-alpine
     container_name: help_desk_postgres
     restart: always
     environment:
@@ -8,16 +10,37 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: helpdesk
     ports:
-      - "5430:5432"
+      - "5433:5432"  # Using 5433 to completely avoid local port conflicts
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - pgdata_v3:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
-      interval: 5s
+      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
+      interval: 10s
       timeout: 5s
       retries: 5
     networks:
-      - help_desk
+      - help_desk_v3
+
+  vector_db:
+    image: pgvector/pgvector:pg16
+    container_name: help_desk_vectors_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: helpdesk_vector
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    ports:
+      - "5435:5432"  # Using 5433 to completely avoid local port conflicts
+    volumes:
+      - pg_vec_data_v3:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - help_desk_v3
 
   redis:
     image: redis:7-alpine
@@ -27,9 +50,9 @@ services:
     ports:
       - "6379:6379"
     volumes:
-      - redisdata:/data
+      - redisdata_v3:/data
     networks:
-      - help_desk
+      - help_desk_v3
 
   ollama:
     image: ollama/ollama:latest
@@ -37,24 +60,21 @@ services:
     restart: always
     environment:
       - OLLAMA_HOST=0.0.0.0
+      - OLLAMA_NUM_PARALLEL=4
+      - OLLAMA_MAX_LOADED_MODELS=2
     ports:
       - "11434:11434"
     volumes:
-      - ollama_data:/root/.ollama
+      - ollama_data_v3:/root/.ollama
     networks:
-      - help_desk
-
-networks:
-  help_desk:
-    driver: bridge
+      - help_desk_v3
 
 volumes:
-  pgdata:
-    #external: true
-    #name: help_desk_pgdata
-  redisdata:
-   # external: true
-    #name: help_desk_redisdata
-  ollama_data:
-    #external: true
-    #name: help_desk_ollama
+  pgdata_v3:
+  redisdata_v3:
+  ollama_data_v3:
+  pg_vec_data_v3:
+
+networks:
+  help_desk_v3:
+    driver: bridge
